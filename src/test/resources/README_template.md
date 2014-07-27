@@ -7,7 +7,7 @@ implementation of complex data mappings and transformations.
 
 ### uniVocity is not like other data integration solutions: ###
 
-**maintain the information* that is mapped from one place to another:** uniVocity detects data updates and you can 
+**maintain the information that is mapped from one place to another:** uniVocity detects data updates and you can 
 easily configure how modifications in one or more data sources should reflect in one or more destinations. A client purchase was cancelled in one of your legacy systems? Just execute a uniVocity mapping cycle to transfer this update to the databases used by other systems in your company. uniVocity will detect when data has been updated, deleted or when it has to be inserted. All you need to do is to configure your data mappings.
 
 **Keep *information consistency* in mappings between different schemas:** you can generate and maintain associations among pieces of information extracted
@@ -108,7 +108,8 @@ As the source data store, we will be using a stripped-down version of the nutrie
 We provide this data in a couple of files that you can find  [here](./src/test/resources/examples/source_data/csv).
 Some of the original data was modified to make the examples easier to read.
 
-The tables we are interested in are: FD_GROUP for general groups of food and FOOD_DES for individual food descriptions. 
+The tables we are interested in are: [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) for general
+groups of food and [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) for individual food descriptions. 
 These are stored in 2 CSV files with the following content:
 
 
@@ -124,7 +125,7 @@ CSV data store implementation, so all you need to do is configure it:
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Example.getCsvDataStore)
 
 To make the following examples simple and easy to read, we will map the contents in these CSV files to a destination data store 
-that contains fixed-width entities. We don't have these entities physically on disk so all data will be written to a String.
+that contains fixed-width entities. We don't have these entities physically on disk so all data will be written to a `String`.
 This will require a little bit extra configuration to provide the essential information required by uniVocity. We will need to define the
 entities, their names, their fields and what fields should be used as identifiers.
 
@@ -135,11 +136,11 @@ Having the data stores configured, we can finally configure and initialize a dat
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Example.initializeEngine)
 
 In order to perform complex mappings and enable different data management strategies, uniVocity relies on a couple of metadata tables.
-If you don't provide an explicit configuration for these tables in an `EngineConfiguration` object, uniVocity will automatically start
+If you don't provide an explicit configuration for these tables in an @@LINK(EngineConfiguration) object, uniVocity will automatically start
 an in-memory database to store this information. All metadata information in this in-memory database will be lost once the engine is stopped.
 
 While the in-memory metadata is very convenient for testing and initial development purposes, it is probably not enough for most real-world applications.
-Make sure your `EngineConfiguration` provides access to these tables in a database of your preference, unless you just need basic persistence functionalities. 
+Make sure your @@LINK(EngineConfiguration) provides access to these tables in a database of your preference, unless you just need basic persistence functionalities. 
 
 ## Essential building blocks ##
 
@@ -147,7 +148,7 @@ The following sections introduce the basic building blocks that allow you to use
 
 ### Copying data from CSV to Fixed-width entities ###
 
-With a data integration engine registered into uniVocity, we can obtain an instance of DataIntegrationEngine and define data mappings:
+With a data integration engine registered into uniVocity, we can obtain an instance of @@LINK(DataIntegrationEngine) and define data mappings:
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example001SimpleCopy)
 
@@ -156,11 +157,11 @@ The first step is to map a source data store to destination data store, and then
 When establishing a mapping between entities, it is mandatory to define an identifier mapping. This mapping must ensure that both source and destination values
 form a unique representation of each record (similarly to primary keys in a database). The identifier does not need to be a primary key of a database, and uniVocity
 won't perform any validation against its contents. If the source data can contain duplicates, you can manage that and discard/transform any anomaly with the features
-described in the following sections. The identifier values of both source and destination will have their String representation used in uniVocity metadata tables.
-Therefore, you must ensure identifiers can be converted from/to String consistently. 
+described in the following sections. The identifier values of both source and destination will have their `String` representation used in uniVocity metadata tables.
+Therefore, you must ensure identifiers can be converted from/to `String` consistently. 
 uniVocity enables the use of transformations that can be used to achieve this if required. 
 
-Mappings can be auto-detected by default if field names match in both source in destination (or if you provide a NameMatcher).
+Mappings can be auto-detected by default if field names match in both source in destination (or if you provide a @@LINK(NameMatcher)).
 As this is not the case in the example, we must create the mappings between values manually. `value().copy("FdGrp_Desc").to("name")` does what it says: it copies
 the value in "FdGrp_Desc" to "name".
 
@@ -177,9 +178,9 @@ be much, much more intricate than that. uniVocity provides many tools for you to
 
 ### Using row readers to manage input/output rows ###
 
-One of the most powerful tools in uniVocity is the `RowReader`. With it you can intercept rows as soon as they are loaded from the source,
+One of the most powerful tools in uniVocity is the @@LINK(RowReader). With it you can intercept rows as soon as they are loaded from the source,
 then modify, log, perform calculations, etc, and then send them over to uniVocity to continue with the mapping process. Once uniVocity has a mapped row, and is ready
-to send it to the destination entity, you can use a RowReader to intercept and manipulate the row before it is written.
+to send it to the destination entity, you can use a @@LINK(RowReader) to intercept and manipulate the row before it is written.
 Finally, after the row is successfully persisted, uniVocity modifies the 
 row if needed (typically, when generated values are produced by the destination entity upon insertion of new records), and exposes it to RowReaders again.
 
@@ -188,20 +189,20 @@ We also attach a RowReader to the output for converting all food group names to 
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example002RowReaders)
 
-In this example we simply get the existing mapping, add our RowReaders and execute the mapping cycle again. The action happens in RowReader's `processRow` method:
-this method exposes the original input row and the mapped row (if any) that is going to be inserted into a destination entity. The `RowMappingContext` is provided by
+In this example we simply get the existing mapping, add our @@LINK(RowReader)s and execute the mapping cycle again. The action happens in @@LINK(RowReader)'s `processRow` method:
+this method exposes the original input row and the mapped row (if any) that is going to be inserted into a destination entity. The @@LINK(RowMappingContext) is provided by
 uniVocity so you can have more control and information about the mapping in execution. The names of each mapped field, both in the input or output, 
 can be obtained from this contextual object, as well as their positions in the input/output arrays. If you are manipulating a huge input, we recommend you
-to acquire the positions of fields you are interested in manipulating using the `initialize` method.    
+to acquire the positions of fields you are interested in manipulating using the `initialize()` method.    
 
-After executing a data mapping cycle with these `RowReader` implementations, the output will contain 2 rows (the first 3 rows in the input were skipped): 
+After executing a data mapping cycle with these @@LINK(RowReader) implementations, the output will contain 2 rows (the first 3 rows in the input were skipped): 
 
 @@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001Basics/example002RowReaders)
 
-Note that you can have multiple RowReaders defined for each step of the process (input, output, persisted). In this case they will be executed sequentially and
-changes made by the first RowReader will reflect on the next. A row discarded by one RowReader won't be passed on to the next. 
+Note that you can have multiple @@LINK(RowReader)s defined for each step of the process (input, output, persisted). In this case they will be executed sequentially and
+changes made by the first @@LINK(RowReader) will reflect on the next. A row discarded by one @@LINK(RowReader) won't be passed on to the next. 
  
-While powerful, RowReaders are more suitable for mappings that require very specific operations. In short, they are not particularly easy to reuse,
+While powerful, @@LINK(RowReader)s are more suitable for mappings that require very specific operations. In short, they are not particularly easy to reuse,
 especially when you just want to perform some common data cleanup or transformations on fields processed by different mappings.
 
 
@@ -211,7 +212,8 @@ uniVocity engines allow you to provide functions that can be used during the exe
 Functions are especially useful to transform input values, and to provide input to destination fields in data mappings.
 
 As functions can perform operations that are potentially expensive (such as invoking a web service somewhere to get an account number in another system),
-they are associated to a scope. The scope in uniVocity is bound to each individual data integration engine instance. The following scopes are supported:
+they are associated to a scope. The scope in uniVocity is bound to each individual data integration engine instance. 
+The following scopes, defined in @@LINK(EngineScope), are supported:
 
 1.	PERSISTENT: outlives the data integration engine (depends on user configuration)
 2.	APPLICATION: values are retained and reused while the engine is active
@@ -238,7 +240,7 @@ The result of the execution of this new mapping will be:
 
 @@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001Basics/example003Functions)
 
-The result shows the previous 2 rows in uppercase and 3 new, all in lower case and, as a result of the "toInteger" function, no leading zeros. 
+The result shows the previous 2 rows in uppercase and 3 new, all in lower case and, as a result of the `toInteger` function, no leading zeros. 
 
 ### Reference mappings ###
 
@@ -288,11 +290,11 @@ Each time the data integration engine is executed, several lifecycle events take
 
  - The engine stops completely
 
-To obtain notifications about one or more of such events when they happen, you can use an EngineLifecycleInterceptor. This allows you to
-prepare for, or to perform cleanup after, each lifecycle event. uniVocity provides an EngineLifecycleContext object to its interceptors,
+To obtain notifications about one or more of such events when they happen, you can use an @@LINK(EngineLifecycleInterceptor). This allows you to
+prepare for, or to perform cleanup after, each lifecycle event. uniVocity provides an @@LINK(EngineLifecycleContext) object to its interceptors,
 so you can obtain more detailed information about the current state of the engine.
 
-The following example prints out a few messages of an EngineLifecycleInterceptor in action.
+The following example prints out a few messages of an @@LINK(EngineLifecycleInterceptor) in action.
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example005LifecycleInterceptors)
 
@@ -302,11 +304,11 @@ The execution of this code will produce the following output:
 
 ### Map functions ###
 
-Maps can be used as functions, where the input parameter of the function is used as a key to retrieve a value from the map. For example:
+`Maps` can be used as functions, where the input parameter of the function is used as a key to retrieve a value from the map. For example:
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example006MapFunctions)
 
-In the above code, we created a map from group codes to their descriptions. By creating a mapping using `copy("FdGrp_CD").to("group").readingWith("getNameOfGroup")`, we
+In the above code, we created a `Map` from group codes to their descriptions. By creating a mapping using `copy("FdGrp_CD").to("group").readingWith("getNameOfGroup")`, we
 assign the values in `FdGrp_CD` as parameters of the map function `getNameOfGroup`. The function will then return a group name for each code, and this name will be
 written to the destination field `group`. 
 
@@ -319,16 +321,16 @@ The execution of this code will produce the following output:
 
 In many situations having functions in isolation is insufficient to handle more complex data mappings. There are cases when information must
 processed in multiple steps, or the value of one or more functions must be determined from the state of an object. To handle such cases, uniVocity
-lets you annotate multiple methods of your classes with the `@FunctionWrapper` annotation.
+lets you annotate multiple methods of your classes with the @@LINK(FunctionWrapper) annotation.
 
-In the following example, we use an instance of the [NameSpliter](./src/test/java/com/univocity/examples/NameSplitter.java) class. 
-It will be used split Strings between commas and assign a numeric value to each unique String. The numeric values that represent each
-component of the input String will then be concatenated with the pipe character. The `toCodes` method of this class is annotated with
+In the following example, we use an instance of the @@LINK(NameSplitter) class. 
+It will be used split `String`s between commas and assign a numeric value to each unique `String`. The numeric values that represent each
+component of the input `String` will then be concatenated with the pipe character. The `toCodes` method of this class is annotated with
 `@FunctionWrapper(scope = EngineScope.APPLICATION)`, and uniVocity will create a function with it so it can be used as a function in mappings:
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example007ObjectsWithFunctions)
 
-In the example above, `engine.addFunctions(splitter)` will create a function named *toCodes* in the engine. It is just a wrapper around the original
+In the example above, `engine.addFunctions(splitter)` will create a function named `toCodes` in the engine. It is just a wrapper around the original
 method of the *splitter* instance. The mapping declaring `copy("Long_Desc").to("description").readingWith("toCodes")` will send the original
 food descriptions to this *toCodes* function and the result will be written to the destination field *description*.
 
@@ -354,10 +356,10 @@ if multiple mappings depend on the data returned by *groupsInUse*, the SQL query
 
 The `.onDataStore("csvDataStore")` indicates to which data store the query applies.
 
-`.fromString(" select ... ` is the query itself. You can also use queries from files and resources in your classpath. Notice the select statement has a label for each
+`.from`String`(" select ... ` is the query itself. You can also use queries from files and resources in your classpath. Notice the select statement has a label for each
 selected column, and the labels match the fields names in the destination entity. We did that so we could use auto-detection, instead of mapping each field manually.
 
-Finally `.returnDataset` tells the engine to return the query results as a `com.univocity.api.data.Dataset`. Datasets can be used as a regular entity in any mapping.
+Finally `.returnDataset` tells the engine to return the query results as a @@LINK(Dataset). @@LINK(Dataset)s can be used as regular entities in any mapping.
 In this case, the dataset will be produced with the result of the query, and its field names will match the labels of the select statement.
 
 With the *groupsInUse* query properly built and initialized, an entity mapping is created using `map("{groupsInUse}", "food_group")`.
@@ -381,7 +383,7 @@ The first query, *findGroupCode*, contains the named parameter `:groupDescriptio
 `.directly` indicates no function will be applied to the result of this query, and `.onErrorAbort` will make the query throw an exception in case an 
 unexpected result is produced. In this case, an unexpected result would be more than one value, or no value at all, being produced.
 
-The next query, *foodsOfGroup*, contains two named parameters: `:foodGroupCode` and `:foodDescription`. This query returns a dataset.
+The next query, *foodsOfGroup*, contains two named parameters: `:foodGroupCode` and `:foodDescription`. This query returns a @@LINK(Dataset).
 
 With the queries defined, a very different entity mapping is created: `map("{foodsOfGroup(findGroupCode($groupName), $foodName)}", "food")`.
 This mapping uses the *foodsOfGroup* function to produce a dataset and map it to the destination entity *food*.
@@ -435,13 +437,13 @@ In this example, we will populate the following tables:
  * FOOD - food information: name, proteins, energy, etc.
  * GROUP_OF_FOOD - join table between foods and different groups.
 
-The data integration engine will now be initialized with a `JdbcDataStoreConfiguration`. First we need to create a configuration object for the database.
+The data integration engine will now be initialized with a @@LINK(JdbcDataStoreConfiguration). First we need to create a configuration object for the database.
 As uniVocity is able to query the JDBC data store to return all information it needs (tables, columns and primary keys), 
 the configuration effort is fairly minimal:
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/ExampleWithDatabase.getNewSchemaDataStore)
 
-The `CsvDataStoreConfiguration` remains the same as before. We just need to register the engine.
+The @@LINK(CsvDataStoreConfiguration) remains the same as before. We just need to register the engine.
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/ExampleWithDatabase.initializeEngine)
 
@@ -503,13 +505,13 @@ This example demonstrates how you can create a data increment and use it to exec
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial003SchemaMapping.example002UpdateAgainstDataset)
   
-In the example, we created a list of rows with some data and got a `DatasetFactory` from `Univocity`. With this factory, you can easily create implementations of 
-`com.univocity.api.data.Dataset` using common collections such as *java.util.List* or *java.util.Map*. Our dataset is created with 
+In the example, we created a list of rows with some data and got a @@LINK(DatasetFactory) from @@LINK(Univocity). With this factory, you can easily create implementations of 
+@@LINK(Dataset) using common collections such as `java.util.List` or `java.util.Map`. Our dataset is created with 
 `factory.newDataset(rows, "FdGrp_CD", "FdGrp_CD", "FdGrp_Desc")`, returns a dataset with the given rows, using "FdGrp_CD" as the identifier
 of these rows. The field names in this dataset are "FdGrp_CD" and "FdGrp_Desc". It's also important to note that this creates a dataset with field names
  that match the ones in entity *FD_GROUP*
 
-A `DataIncrement` is used to return datasets for each source entity used by the mappings you want to execute in a cycle. uniVocity will invoke its `getDataset` method
+A @@LINK(DataIncrement) is used to return datasets for each source entity used by the mappings you want to execute in a cycle. uniVocity will invoke its `getDataset()` method
 with the names of a data store and one of its entities. That's all data increment do: return a dataset with updates for a given entity.   
   
 Finally, we call `engine.executeCycle(increment)` to perform a mapping cycle using the data increment. 
@@ -519,7 +521,7 @@ After the cycle is executed, the destination entities *food_group* and *food_gro
 
 ## Update prevention ##
 
-Using uniVocity metadata, you can prevent further modification on some records that have already been mapped to the destination. Simply create a dataset 
+Using uniVocity metadata, you can prevent further modification on some records that have already been mapped to the destination. Simply create a @@LINK(Dataset) 
 with identifiers of those records of the destination entity that should not be modified, then call `engine.disableUpdateOnRecords(entityName, dataset)`
 
 To enable updates again, you can simply invoke `engine.enableUpdateOnAllRecords(entityName)`. You can also enable updates for a limited set of rows,
@@ -561,25 +563,25 @@ In the end, we will have FOOD with a reference to a FOOD_NAME, and a join table 
 Review the [entity-relationship diagram](./src/test/resources/examples/new_schema/diagram.png) again if you find this too confusing. 
 We made it complex on purpose in order to demonstrate how far you can go with uniVocity.
 
-In this example, a `DatasetProducer` will process the descriptions in each FOOD_DES record and generate different datasets for different destination entities.
+In this example, a @@LINK(DatasetProducer) will process the descriptions in each FOOD_DES record and generate different datasets for different destination entities.
 
-A `DatasetProducer` is an abstract class that tells uniVocity what datasets it is able to generate from a data entity. Entity mappings can be created using these datasets
-as the source. Once a mapping cycle is started, and the mapping that uses one of these datasets is executed, the `DatasetProducer` will produce
+A @@LINK(DatasetProducer) is an abstract class that tells uniVocity what datasets it is able to generate from a data entity. Entity mappings can be created using these datasets
+as the source. Once a mapping cycle is started, and the mapping that uses one of these datasets is executed, the @@LINK(DatasetProducer) will produce
 the expected dataset.
 
-In the mapping example (presented later on), we associate an instance of `FoodProcessor` to the *FOOD_DES* source entity. `FoodProcessor` will generate its datasets using
+In the mapping example (presented later on), we associate an instance of @@LINK(FoodProcessor) to the *FOOD_DES* source entity. @@LINK(FoodProcessor) will generate its datasets using
 data from fields *"Ndb_no"* and *"Long_Desc"*`:
 
 @@INCLUDE_CLASS(/src/test/java/com/univocity/examples/FoodProcessor)
 
-In the FoodProcessor constructor, we declare the names of each dataset it produces.
+In the @@LINK(FoodProcessor) constructor, we declare the names of each dataset it produces.
 
-The `processStarted` method is invoked by uniVocity to prepare the dataset producer to process incoming rows.
+The `processStarted()` method is invoked by uniVocity to prepare the dataset producer to process incoming rows.
 
-After notifying the producer, uniVocity will start reading rows from the input entity, and invoke `processNext` for each one. The FoodProcessor splits the original food 
+After notifying the producer, uniVocity will start reading rows from the input entity, and invoke `processNext()` for each one. The @@LINK(FoodProcessor) splits the original food 
 descriptions (in *"Long_Desc"*) into a food name and its states. The original food code (in *"Ndb_no"*) is also associated to each food name and state.
 
-After all rows were processed, uniVocity will invoke the `getDataset` method to execute its mappings. In the case of our `FoodProcessor`, the datasets will contain:
+After all rows were processed, uniVocity will invoke the `getDataset` method to execute its mappings. In the case of our @@LINK(FoodProcessor), the datasets will contain:
 
  * food_names = a set of all unique food names
  * food_name_details = a list containing the food name associated to the original value of *"Ndb_no"*
@@ -593,10 +595,10 @@ Finally. the mapping definition is as follows:
 As the destination tables depend on a locale, we created one for "American English" directly in the database and got its ID.
 This ID set as an engine constant with `engine.setConstant("locale", localeId)`. 
 
-Our `FoodProcessor` is then associated to the FOOD_DES entity, and configured to read values from fields *Ndb_no* and *Long_Desc*:
+Our @@LINK(FoodProcessor) is then associated to the FOOD_DES entity, and configured to read values from fields *Ndb_no* and *Long_Desc*:
  `engine.addDatasetProducer(EngineScope.CYCLE, new FoodProcessor()).on("FOOD_DES", "Ndb_no", "Long_Desc")` 
 
-The mapping `dsMapping.map("food_names", "food_name")` uses the "food_names" dataset from *FoodProcessor* to generate identifiers
+The mapping `dsMapping.map("food_names", "food_name")` uses the "food_names" dataset from @@LINK(FoodProcessor) to generate identifiers
 in *food_name*. uniVocity metadata will have associations between each food name and these identifiers.
 
 `dsMapping.map("food_names", "newSchema.food_name_details")` will copy the food names to "food_name_details", and create references
@@ -625,7 +627,7 @@ use a query to reconstruct the information. This way we can confirm whether ever
 ## Persistent scope ##
 
 uniVocity supports the concept of a persistent scope. This is a scope whose state is intended to outlive the data integration engine. 
-To use a persistent scope, you are expected to provide an implementation of `com.univocity.api.engine.ScopeStorageProvider` in an `EngineConfiguration` object.
+To use a persistent scope, you are expected to provide an implementation of @@LINK(ScopeStorageProvider) in an @@LINK(EngineConfiguration) object.
 The storage provider is the interface that is used by uniVocity store and retrieve values added to the persistent scope. 
 The storage is fully under your control, and you can choose whether to use files, a database, a distributed cache or anything else you need. 
 
@@ -637,26 +639,26 @@ demonstrates how the persistent scope works.
 uniVocity provides some basic data stores and entities but it also allows you to create your own. We created (and documented) examples exploring 
 the full set of features you can implement with custom entities [here](./src/test/java/com/univocity/examples/custom). These entities are based on in-memory data
 stored in lists. You will want to implement your custom entities to process file formats or other structures not natively supported by uniVocity.
-The examples we provided include primitive transactions and custom String-based queries so that you can explore and quickly adapt to your own needs.
+The examples we provided include primitive transactions and custom `String`-based queries so that you can explore and quickly adapt to your own needs.
 
 To keep it short, to use your own custom entities with uniVocity, you need:
 
-1. A configuration class for your data store, which extends `DataStoreConfiguration`
+1. A configuration class for your data store, which extends @@LINK(DataStoreConfiguration)
 
-2. An implementation of `CustomDataStore`
+2. An implementation of @@LINK(CustomDataStore)
 
-3. An implementation of `CustomDataStoreFactory`. This class receives your data store configuration and uses it to create an instance of your custom data store.
+3. An implementation of @@LINK(CustomDataStoreFactory). This class receives your data store configuration and uses it to create an instance of your custom data store.
 
-4. At the very least, an implementation of `CustomReadableEntity` (for read-only entitieS). Your data store should be able to initialize and return instances of these entities.
+4. At the very least, an implementation of @@LINK(CustomReadableEntity) (for read-only entitieS). Your data store should be able to initialize and return instances of these entities.
 
-5. (optional) If your entities must also be written to, implement `CustomDataEntity`. You don't need to support all data modification operations, 
+5. (optional) If your entities must also be written to, implement @@LINK(CustomDataEntity). You don't need to support all data modification operations, 
 simply return null and uniVocity will handle only the operations you implemented. Even with custom entities, you can enable database operations and load your data
 to uniVocity's in-memory database. If that is the case, you can implement only the `deleteAll()` and `write()` methods: at the end of a transaction, uniVocity will
-automatically invoke these methods and dump all contents in its in-memory database into your custom entity. This way you won't need to implement the `update` and `delete`
+automatically invoke these methods and dump all contents in its in-memory database into your custom entity. This way you won't need to implement the `update()` and `delete()`
 operations, which can be tricky in structures such as text files.
 
 6. (optional) If you want to be able to execute some form of querying against your data store, implement CustomQuery. A query does not need to be a SQL statement. It can
-be anything in a String that has a meaning in the context of your data store. 
+be anything in a `String` that has a meaning in the context of your data store. 
 
 The (Tutorial005CustomEntities)[./src/test/java/com/univocity/examples/Tutorial005CustomEntities.java] puts our examples of custom entities to use,
 and demonstrates how uniVocity simply isolates you from major intricacies. Please explore and let us know what you think of these examples.
@@ -674,7 +676,7 @@ uniVocity's JDBC entities provide configurations that allow you to handle such s
 
 For example, suppose the *locale* table supports the concept of "logical exclusion", where a "deleted" column is set to 'Y' to delete records. In such situation, the SQL
 produced by uniVocity must take into account this restriction when selecting/deleting from this table. As we can't predict what your requirement will be in a generic
-way, uniVocity delegates the control to you, through a `SqlProducer`, so you can define how SQL statements should be generated. 
+way, uniVocity delegates the control to you, through a @@LINK(SqlProducer), so you can define how SQL statements should be generated. 
 For example, to properly select rows from *locale*, with logical exclusion, we can configure it to use the following class:
 
 @@INCLUDE_CLASS(/src/test/java/com/univocity/examples/LogicalExclusionSelect.java)
@@ -686,28 +688,28 @@ following strategies:
  * Fetch from statement: the default option. Executes insert operations one by one, and retrieves the generated key after each insert. This is the slowest strategy
    and you should consider the other strategies to execute inserts in batch.
     
- * Fetch from statement, using batch: Depends on your JDBC driver. Some drivers support batch insert execution and the java.sql.Statement will return all generated
+ * Fetch from statement, using batch: Depends on your JDBC driver. Some drivers support batch insert execution and the `java.sql.Statement` will return all generated
    keys in a java.sql.ResultSet. If you can, use this option. If you can't, then read on.
    
  * Fetch from query: Executes a query to fetch the generated keys after a batch insertion. This is highly unsafe if there are multiple applications writing 
    to the table at the same time. It can only work reliably if you are sure no other modifications are occurring to the same table, or if your transaction
-   isolation level is set to SERIALIZABLE. If you choose this option, make sure to test it carefully.
+   isolation level is set to `SERIALIZABLE`. If you choose this option, make sure to test it carefully.
  
- * Use a String column: uniVocity will generate special String values to add to a column of your table. These values will then be used to query the table in order
-   to obtain generated keys after a batch. This requires you to create an extra VARCHAR(70) column to your table.
+ * Use a `String` column: uniVocity will generate special `String` values to add to a column of your table. These values will then be used to query the table in order
+   to obtain generated keys after a batch. This requires you to create an extra `VARCHAR(70)` column to your table.
    
- * Use a pair of numeric columns: similar to the String column, uniVocity will generate special integer values to add to a couple of columns of your table. 
-   These values are used to query your table and restore the generated keys after a batch of inserts. This requires you to add 2 extra INTEGER columns to your table.   
+ * Use a pair of numeric columns: similar to the `String` column, uniVocity will generate special integer values to add to a couple of columns of your table. 
+   These values are used to query your table and restore the generated keys after a batch of inserts. This requires you to add 2 extra `INTEGER` columns to your table.   
 		
 		
-The following example demonstrates how we modify the "locale" table to use a `SqlProducer` and the numeric column strategy to fetch generated keys after an insert batch.
+The following example demonstrates how we modify the "locale" table to use a @@LINK(SqlProducer) and the numeric column strategy to fetch generated keys after an insert batch.
 
 @@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial006JdbcConfigurationOptions.getNewSchemaDataStore)
 
 In this snippet, we modify the original "locale" table by adding a "deleted" column for logical exclusion. We also add 2 integer columns to the table in order to enable
 inserts in batch with generated key retrieval.
 
-In order to properly read from "locale" and bypass rows marked with `deleted='Y'`, we provide our implementation of SqlProducer: 
+In order to properly read from "locale" and bypass rows marked with `deleted='Y'`, we provide our implementation of @@LINK(SqlProducer): 
 `config.setSqlProducer(new LogicalExclusionSelect())`. This will ensure that when reading from "locale", only rows with "deleted='N'" will be selected.
 
 The `config.retrieveGeneratedKeysUsingNumericColumns("process_id", "id_tracker", "id")` configuration assigns the two integer columns to track generated keys and 
@@ -731,7 +733,7 @@ After executing this mapping, you should see the following messages in the log:
 > Preparing to execute query select ID,ACRONYM from locale where deleted = 'N'
 
 As you can see in the logs, the insert operation is being executed in a batch, and all generated keys are being retrieved using a custom tracker. Additionally, the
-select statement used to fetch data from "locale" came from the implementation in `LogicalExclusionSelect`.
+select statement used to fetch data from "locale" came from the implementation in @@LINK(LogicalExclusionSelect).
 
 The output of this mapping will display all rows in the "locale" table (including the ones where deleted = 'Y'), 
 and the values in the map wrapped by the `generatedLocaleIds` dataset. Note no locales with the deleted flag set to 'Y' are part of the map.
