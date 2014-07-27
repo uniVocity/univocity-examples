@@ -25,7 +25,7 @@ public class Tutorial001Basics extends Example {
 		//Obtains the configured engine instance
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
 
-		//Creates a mapping between the csv and fixed-width data stores.		
+		//Creates a mapping between the csv and fixed-width data stores.
 		DataStoreMapping mapping = engine.map("csvDataStore", "fixedWidthDestination");
 
 		//With a data store mapping, we can define the mapping between their entities.
@@ -33,10 +33,10 @@ public class Tutorial001Basics extends Example {
 		//We will map csvDataStore.FD_GROUP to fixedWidthDestination.food_group
 		EntityMapping foodGroupMapping = mapping.map("FD_GROUP", "food_group");
 
-		//Here we associate FD_GROUP.FdGrp_CD to food_group.id. Values will be copied directly between source and destination. 
+		//Here we associate FD_GROUP.FdGrp_CD to food_group.id. Values will be copied directly between source and destination.
 		//The identity mapping defines that an association should be created for each record mapped between source and destination.
 		//A new entry will be added to uniVocity's metadata, containing the source and destination values mapped here.
-		//This linkage enables complex mapping operations that will be demonstrated later on. 
+		//This linkage enables complex mapping operations that will be demonstrated later on.
 		foodGroupMapping.identity().associate("FdGrp_CD").to("id");
 
 		//Copies values from FD_GROUP.FdGrp_Desc to food_group.name
@@ -89,13 +89,13 @@ public class Tutorial001Basics extends Example {
 			@Override
 			public void initialize(RowMappingContext context) {
 				//for performance reasons, we use the initialize method to get the index of any fields we are interested in
-				//before changing the output Rows. Here we get index of the output field "name"  
+				//before changing the output Rows. Here we get index of the output field "name"
 				name = context.getOutputIndex("name");
 			}
 
 			@Override
 			public void processRow(Object[] inputRow, Object[] outputRow, RowMappingContext context) {
-				//converts the food group name in the destination row to uppercase 
+				//converts the food group name in the destination row to uppercase
 				outputRow[name] = outputRow[name].toString().toUpperCase();
 			}
 		});
@@ -117,7 +117,7 @@ public class Tutorial001Basics extends Example {
 
 		//##CODE_START
 
-		//Adds a function to the engine that converts Strings to Integers. 
+		//Adds a function to the engine that converts Strings to Integers.
 		//The APPLICATION scope makes the engine retain and reuse the result of function calls
 		//using a given parameter, until the engine is shut down.
 		engine.addFunction(EngineScope.APPLICATION, "toInteger", new FunctionCall<Integer, String>() {
@@ -127,7 +127,7 @@ public class Tutorial001Basics extends Example {
 			}
 		});
 
-		//Adds a function to the engine that converts Strings to lower case. 
+		//Adds a function to the engine that converts Strings to lower case.
 		//With the CYCLE scope, values are held while a cycle is active. Once it completes all
 		//values in this scope will be discarded.
 		engine.addFunction(EngineScope.CYCLE, "toLowerCase", new FunctionCall<String, String>() {
@@ -137,7 +137,7 @@ public class Tutorial001Basics extends Example {
 			}
 		});
 
-		//Adds a function to the engine that trims Strings. 
+		//Adds a function to the engine that trims Strings.
 		//With the STATELESS scope, results of function calls are never reused.
 		engine.addFunction(EngineScope.STATELESS, "trim", new FunctionCall<String, String>() {
 			@Override
@@ -196,7 +196,7 @@ public class Tutorial001Basics extends Example {
 		//
 		//Our mapping from FD_GROUP to "group" transformed the values in "FdGrp_Cd" to integers, using the "toInteger" function.
 		//Now, when reading the field in FOOD_DES that references FD_GROUP, we need to convert its values using the "toInteger" function.
-		//The results will be used to query uniVocity's metadata and restore the corresponding values used as identifiers of "food_group" 
+		//The results will be used to query uniVocity's metadata and restore the corresponding values used as identifiers of "food_group"
 		foodMapping.reference().using("FdGrp_Cd").referTo("FD_GROUP", "food_group").on("group").readingWith("toInteger");
 
 		foodMapping.persistence().usingMetadata().deleteAll().insertNewRows();
@@ -215,7 +215,7 @@ public class Tutorial001Basics extends Example {
 	@Test(dependsOnMethods = "example004ReferenceMapping")
 	public void example005LifecycleInterceptors() {
 		//In this test we will intercept lifecycle events of the data integration engine
-		//Let's print information obtained from these events into a String.   
+		//Let's print information obtained from these events into a String.
 		final StringBuilder out = new StringBuilder();
 
 		//Obtains the engine instance already configured
@@ -229,7 +229,7 @@ public class Tutorial001Basics extends Example {
 				return ". Current scope: " + context.getExecutionContext().getCurrentActiveScope();
 			}
 
-			//prints the current mapping being executed. The --X arrow represents a data removal 
+			//prints the current mapping being executed. The --X arrow represents a data removal
 			//operation, whilst the --> represents a data mapping.
 			private String getMapping(EngineLifecycleContext context) {
 				EntityMappingContext entityMapping = context.getCurrentEntityMapping();
@@ -305,7 +305,7 @@ public class Tutorial001Basics extends Example {
 		DataStoreMapping mapping = engine.map("csvDataStore", "fixedWidthDestination");
 
 		//##CODE_START
-		//Maps can be used as functions as well. Here we create a map from 
+		//Maps can be used as functions as well. Here we create a map from
 		//codes of food groups to descriptions:
 		Map<String, String> groupCodeToGroupNames = new HashMap<String, String>();
 		groupCodeToGroupNames.put("0100", "Dairy");
@@ -319,7 +319,7 @@ public class Tutorial001Basics extends Example {
 		EntityMapping foodMapping = mapping.map("FOOD_DES", "food");
 		foodMapping.identity().associate("NDB_No").to("id");
 		//Here we invoke the "getNameOfGroup" function using values read from FdGrp_CD
-		//This will return the description associated to each code in the map. 
+		//This will return the description associated to each code in the map.
 		foodMapping.value().copy("FdGrp_CD").to("group").readingWith("getNameOfGroup");
 		foodMapping.value().copy("Long_Desc").to("description");
 
@@ -348,7 +348,7 @@ public class Tutorial001Basics extends Example {
 		EntityMapping foodMapping = mapping.map("FOOD_DES", "food");
 		foodMapping.identity().associate("NDB_No").to("id");
 		//Here we call the "toCodes" function in our splitter object to convert each string after a comma into a code.
-		//Each description in the destination will have numeric codes concatenated with the pipe character. 
+		//Each description in the destination will have numeric codes concatenated with the pipe character.
 		foodMapping.value().copy("Long_Desc").to("description").readingWith("toCodes");
 
 		engine.executeCycle();

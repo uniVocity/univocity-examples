@@ -31,13 +31,13 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 		//Let's define the ID of the inserted locale as a constant which is accessible from anywhere.
 		engine.setConstant("locale", localeId);
 
-		//Here we add our dataset producer to the "FOOD_DES" entity and tell uniVocity to extract the columns used to generate the datasets.  
+		//Here we add our dataset producer to the "FOOD_DES" entity and tell uniVocity to extract the columns used to generate the datasets.
 		engine.addDatasetProducer(EngineScope.CYCLE, new FoodProcessor()).on("FOOD_DES", "Ndb_no", "Long_Desc");
 
 		DataStoreMapping dsMapping = engine.map("csvDataStore", "newSchema");
 		EntityMapping mapping;
 
-		//The first mapping uses the "food_names" dataset that is produced with our FoodProcessor. 
+		//The first mapping uses the "food_names" dataset that is produced with our FoodProcessor.
 		mapping = dsMapping.map("food_names", "food_name");
 		mapping.identity().associate("name").toGeneratedId("id");
 
@@ -47,7 +47,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 		mapping.reference().using("name").referTo("food_names", "food_name").on("id").directly().onMismatch().abort();
 		mapping.value().copy("name").to("description");
 
-		//"food_name_details" exist in multiple data stores. In this case uniVocity cannot resolve what source entity to use, 
+		//"food_name_details" exist in multiple data stores. In this case uniVocity cannot resolve what source entity to use,
 		//it is necessary to prepend the data store name to resolve the ambiguity.
 		//Datasets are part of a special data store named "<datasets>".
 		mapping = dsMapping.map("<datasets>.food_name_details", "food");
@@ -68,13 +68,13 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 		mapping.reference().using("food_code").referTo("<datasets>.food_name_details", "food").on("food_id").directly().onMismatch().abort();
 		mapping.value().copy("order").to("sequence");
 
-		//After mapping food names and food states, we still need to set the food properties. 
+		//After mapping food names and food states, we still need to set the food properties.
 		//This mapping will use the original source entity "FOOD_DES"
 		mapping = dsMapping.map("FOOD_DES", "food");
 		mapping.identity().associate("NDB_No").to("id");
 		mapping.reference().using("NDB_No").referTo("<datasets>.food_name_details", "food").on("id").directly().onMismatch().abort();
 		mapping.value().copy("CHO_Factor", "Fat_Factor", "Pro_Factor", "N_Factor").to("carbohydrate_factor", "fat_factor", "protein_factor", "nitrogen_protein_factor");
-		//The mapping defined above creates rows for "food", but they are updates to the records mapped from "<datasets>.food_name_details" to "food". 
+		//The mapping defined above creates rows for "food", but they are updates to the records mapped from "<datasets>.food_name_details" to "food".
 		//To avoid inserting these rows as new records, we use the "updateNewRows" insert option.
 		mapping.persistence().usingMetadata().deleteDisabled().updateDisabled().updateNewRows();
 
@@ -87,8 +87,8 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 		println(output, printFoodTable());
 		println(output, printFoodStateTables());
 		println(output, printStateOfFoodTable());
-		//As the data is distributed across too many tables, it may be a bit hard to reason about how things are associated. 
-		//We thought it would be easier for you to see it coming from a query that produces an output similar to the input data: 
+		//As the data is distributed across too many tables, it may be a bit hard to reason about how things are associated.
+		//We thought it would be easier for you to see it coming from a query that produces an output similar to the input data:
 		println(output, queryTablesAndPrintMigratedFoodData());
 		printAndValidate(output);
 		Univocity.shutdown("Producer");
@@ -121,14 +121,14 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 
 		//The persistent scope retains values persisted in variables other elements that should be made available
 		//after the engine is stopped and subsequently started. It depends on a storage provider defined by the user.
-		//The storage can be a file, database, distributed cache or anything else that will outlive the engine. 
+		//The storage can be a file, database, distributed cache or anything else that will outlive the engine.
 		config.setPersistentStorageProvider(new ScopeStorageProvider() {
 
 			//We will keep the state in a byte array.
 			private byte[] persistentState;
 
-			//This is where our data will be kept. It will be serialized to the byte array 
-			//When the persisted scope is deactivated. 
+			//This is where our data will be kept. It will be serialized to the byte array
+			//When the persisted scope is deactivated.
 			private Map<Object, Object> persistentMap;
 
 			@Override
@@ -174,7 +174,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 					out.flush();
 					out.close();
 
-					//update the byte array. In a "real" application that would be a file, database, 
+					//update the byte array. In a "real" application that would be a file, database,
 					//distributed cache or anything you need to use to persist these values.
 					persistentState = byteOutput.toByteArray();
 				} catch (Exception ex) {
@@ -188,7 +188,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 			}
 		});
 
-		//Here we register the engine our configuration using a persistent scope. 
+		//Here we register the engine our configuration using a persistent scope.
 		Univocity.registerEngine(config);
 
 		//Let's create a mapping to move some data around
@@ -204,7 +204,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 		engine.setPersistentVariable("processedCodes", new TreeSet<String>());
 
 		//This row reader will discard input rows where the value of "FdGrp_CD" has been already mapped.
-		//It uses the "processedCodes" variable to ensure each row is mapped only once. 
+		//It uses the "processedCodes" variable to ensure each row is mapped only once.
 		foodGroupMapping.addInputRowReader(new RowReader() {
 			@SuppressWarnings("unchecked")
 			@Override
@@ -229,10 +229,10 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 			}
 		});
 
-		//executes a cycle and returns the number of new rows mapped in this cycle 
+		//executes a cycle and returns the number of new rows mapped in this cycle
 		println(out, "Row count after first cycle: " + executeAndReturnRowCount());
 		println(out, "Shutting down...");
-		//shuts down the engine so we can see the persistence provider's messages while stopping and restarting     
+		//shuts down the engine so we can see the persistence provider's messages while stopping and restarting
 		Univocity.shutdown("Persistent");
 		println(out, "...Starting engine again");
 		//starts the engine and executes another cycle, then returns the number of new rows mapped
@@ -246,7 +246,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 	private int executeAndReturnRowCount() {
 		DataIntegrationEngine engine = Univocity.getEngine("Persistent");
 
-		//sets the "rowCount" to 0. It will be incremented in the input row reader defined previously. 
+		//sets the "rowCount" to 0. It will be incremented in the input row reader defined previously.
 		engine.setVariable("rowCount", 0);
 		engine.executeCycle();
 		return (Integer) engine.readVariable("rowCount");

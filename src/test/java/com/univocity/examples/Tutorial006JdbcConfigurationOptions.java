@@ -26,7 +26,7 @@ public class Tutorial006JdbcConfigurationOptions extends ExampleWithDatabase {
 		new JdbcTemplate(dataSource).update("ALTER TABLE locale ADD id_tracker INTEGER");
 		new JdbcTemplate(dataSource).update("ALTER TABLE locale ADD process_id INTEGER");
 
-		//The "locale" table also works with logical exclusion. 
+		//The "locale" table also works with logical exclusion.
 		new JdbcTemplate(dataSource).update("ALTER TABLE locale ADD deleted CHAR(1) DEFAULT 'N' NOT NULL");
 
 		JdbcEntityConfiguration config = database.getEntityConfiguration("locale");
@@ -34,7 +34,7 @@ public class Tutorial006JdbcConfigurationOptions extends ExampleWithDatabase {
 		//After each batch, uniVocity will fetch the ID's generated for each row using the information stored in these columns.
 		config.retrieveGeneratedKeysUsingNumericColumns("process_id", "id_tracker", "id");
 
-		//We also define a custom SQL producer to generate proper SELECT statements that 
+		//We also define a custom SQL producer to generate proper SELECT statements that
 		//take into account the logical exclusion implemented for the locale table..
 		config.setSqlProducer(new LogicalExclusionSelect());
 
@@ -82,7 +82,7 @@ public class Tutorial006JdbcConfigurationOptions extends ExampleWithDatabase {
 		//This will perform a logical exclusion here to "delete" some locales.
 		new JdbcTemplate(dataSource).update("UPDATE locale SET deleted = 'Y' WHERE acronym in ('en_US', 'en_AU', 'en_GB')");
 
-		//Now, let's map data from the locale table to a new dataset. 
+		//Now, let's map data from the locale table to a new dataset.
 		//It is just a map from the locale acronym to its generated ID in the locale table.
 		Map<String, String> generatedLocaleIds = new TreeMap<String, String>();
 		engine.addDataset("generatedLocaleIds", Univocity.datasetFactory().newDataset(generatedLocaleIds, "acronym", "generated_id"));

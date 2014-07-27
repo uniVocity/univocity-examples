@@ -11,7 +11,7 @@ import com.univocity.api.entity.custom.*;
 
 /**
  * This custom entity extends the {@link MyReadOnlyEntity} to provide methods for data modification.
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -21,7 +21,7 @@ public class MyEntity extends MyReadOnlyEntity implements CustomDataEntity {
 
 	/**
 	 * Creates a new instance of a custom data entity, with a given set of field names
-	 * 
+	 *
 	 * @param dataStore the data store that contains this entity (we need it to manage transactions)
 	 * @param entityName the name of the new custom data entity
 	 * @param fieldNames the fields in this entity.
@@ -39,7 +39,7 @@ public class MyEntity extends MyReadOnlyEntity implements CustomDataEntity {
 		//With the data safe and secure, uniVocity can execute a writing process.
 		return new WritingProcess() {
 
-			//This returns the last "row_id". We new row added to myData will 
+			//This returns the last "row_id". We new row added to myData will
 			//"generate" a new id that corresponds to its position in a list.
 			final int startIndex = getMyData().size();
 

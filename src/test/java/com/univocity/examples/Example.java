@@ -17,11 +17,11 @@ import com.univocity.api.entity.text.csv.*;
 import com.univocity.api.entity.text.fixed.*;
 
 /**
- * Just a parent class for all examples provided, with basic entity configurations and some utility methods to validate outputs. 
+ * Just a parent class for all examples provided, with basic entity configurations and some utility methods to validate outputs.
  */
 abstract class Example {
 
-	// To make testing easier and clearer, all data written in the example test cases will end up in a String 
+	// To make testing easier and clearer, all data written in the example test cases will end up in a String
 	protected StringWriterProvider foodGroupOutput;
 	protected StringWriterProvider foodOutput;
 
@@ -31,7 +31,7 @@ abstract class Example {
 		//but you can always create your own (see com.univocity.api.entity.custom.CustomDataStoreFactory)
 		CsvDataStoreConfiguration csvDataStore = new CsvDataStoreConfiguration("csvDataStore");
 
-		//This adds all files under the specified path to the data store. Each file will be 
+		//This adds all files under the specified path to the data store. Each file will be
 		//considered an individual data entity.
 		csvDataStore.addEntities("examples/source_data/csv");
 		//##CODE_END
@@ -40,11 +40,11 @@ abstract class Example {
 
 	protected FixedWidthDataStoreConfiguration getFixedWidthDataStore() {
 		//##CODE_START
-		//This creates a new data store for fixed-width entities. Let's call it "fixedWidthDestination" 
+		//This creates a new data store for fixed-width entities. Let's call it "fixedWidthDestination"
 		FixedWidthDataStoreConfiguration fixedWidthDataStore = new FixedWidthDataStoreConfiguration("fixedWidthDestination");
 
 		//Here we create a write-only fixed-with entity named "food_group". All data written to this entity
-		//will end up in a String. You can also use files, resources in the classpath or custom writers/readers as entities. 
+		//will end up in a String. You can also use files, resources in the classpath or custom writers/readers as entities.
 		foodGroupOutput = new StringWriterProvider();
 		fixedWidthDataStore.addEntity("food_group", foodGroupOutput);
 
@@ -52,7 +52,7 @@ abstract class Example {
 		foodOutput = new StringWriterProvider();
 		fixedWidthDataStore.addEntity("food", foodOutput);
 
-		//Let's define the default settings that should be used for all entities in this data store 
+		//Let's define the default settings that should be used for all entities in this data store
 		FixedWidthEntityConfiguration defaults = fixedWidthDataStore.getDefaultEntityConfiguration();
 
 		//By default, we want to write headers to the output (i.e. the first row that displays the name of each column).
@@ -67,13 +67,13 @@ abstract class Example {
 		//Let's configure the entities: uniVocity needs to know what the records of each entity look like.
 		//As these are not files with headers, nor database tables, we need to provide this information manually.
 
-		//To configure an entity, simply get its configuration from the data store: 
+		//To configure an entity, simply get its configuration from the data store:
 		FixedWidthEntityConfiguration foodGroupConfig = fixedWidthDataStore.getEntityConfiguration("food_group");
 
 		//Set the names of each field in the entity food_group. These will become the headers in the output.
 		foodGroupConfig.setHeaders("id", "name");
 
-		//A fixed-width entity depends on the length of each field. This configures "id" to use 6 spaces, and "name" to use 35 
+		//A fixed-width entity depends on the length of each field. This configures "id" to use 6 spaces, and "name" to use 35
 		foodGroupConfig.setFieldLengths(6, 35);
 
 		//Marks the "id" field as the identifier of records in food_group.
@@ -93,7 +93,7 @@ abstract class Example {
 		FixedWidthDataStoreConfiguration fixedWidthDataStore = getFixedWidthDataStore();
 
 		//##CODE_START
-		//Creates a new engine configuration to map data between entities in CSV and fixed-width data stores  
+		//Creates a new engine configuration to map data between entities in CSV and fixed-width data stores
 		EngineConfiguration engineConfig = new EngineConfiguration(engineName, csvDataStore, fixedWidthDataStore);
 
 		//Registers this engine configuration.
@@ -110,7 +110,7 @@ abstract class Example {
 	/**
 	 * Appends some content to the output and adds a newline at the end.
 	 * @param out the output to have content appended to.
-	 * @param content the content to be appended 
+	 * @param content the content to be appended
 	 */
 	public void println(StringBuilder out, Object content) {
 		out.append(content).append('\n');
@@ -125,9 +125,9 @@ abstract class Example {
 	}
 
 	/**
-	 * Prints the result to the standard output and validates it against the expected output 
+	 * Prints the result to the standard output and validates it against the expected output
 	 * stored in /examples/expectedOutputs/{test_class_name}/{test_method_name}
-	 * 
+	 *
 	 * @param output the result of the test case to be validated against the expected output of the test.
 	 */
 	public void printAndValidate(StringBuilder output) {
@@ -199,7 +199,7 @@ abstract class Example {
 		producedOutput = producedOutput.replaceAll("\\r", "");
 		expectedOutput = expectedOutput.replaceAll("\\r", "");
 
-		// adding newlines around the output so it becomes easier to read 
+		// adding newlines around the output so it becomes easier to read
 		// the error message in case of failure
 		producedOutput = "\n" + producedOutput + "\n";
 		expectedOutput = "\n" + expectedOutput + "\n";

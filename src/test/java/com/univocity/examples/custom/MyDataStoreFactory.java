@@ -11,10 +11,10 @@ import com.univocity.api.entity.custom.*;
 
 /**
  * This is a custom data store factory that "knows" how to instantiate and configure our custom data store {@link MyDataStore}
- * 
+ *
  * Use {@link EngineConfiguration#addCustomDataStoreFactories(CustomDataStoreFactory...)} to define your custom data store factories to be used
  * by a {@link DataIntegrationEngine}.
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */

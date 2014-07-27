@@ -10,16 +10,16 @@ import java.util.*;
 import com.univocity.api.entity.custom.*;
 
 /**
- * 
+ *
  * A custom query implementation that extends from {@link MyReadOnlyEntity} and translates String in the format
- * 
+ *
  * <code>
  * entityName (field1, field2, ...) with (field1 = ?, field2 = ?, ...)
  * </code>
- * 
+ *
  * This custom query will simply match the parameters provided for each field name in the "with" clause
- * and return the selected values from records that match this criteria.  
- * 
+ * and return the selected values from records that match this criteria.
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */

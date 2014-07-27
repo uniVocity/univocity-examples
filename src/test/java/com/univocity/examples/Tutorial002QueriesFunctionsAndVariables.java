@@ -26,10 +26,10 @@ public class Tutorial002QueriesFunctionsAndVariables extends Example {
 		//This enables operations such as updates and deletions in CSV files, and even creating SQL queries.
 		csvDataStore.enableDatabaseOperationsIn("FD_GROUP", "FOOD_DES");
 
-		//In order to enable database operations in a text-based data entity, some information is required, namely: 
-		//the length of each field and which ones can be used in primary key of the in-memory table  
+		//In order to enable database operations in a text-based data entity, some information is required, namely:
+		//the length of each field and which ones can be used in primary key of the in-memory table
 
-		//FdGrp_Cd will be the primary key of the in-memory table.  
+		//FdGrp_Cd will be the primary key of the in-memory table.
 		csvDataStore.getEntityConfiguration("FD_GROUP").setIdentifiers("FdGrp_Cd");
 		//As the FD_GROUP.csv file contains only two fields, we can simply give their lengths (the names will extracted from the first row in file)
 		csvDataStore.getEntityConfiguration("FD_GROUP").setFieldLengths(4, 40);
@@ -37,7 +37,7 @@ public class Tutorial002QueriesFunctionsAndVariables extends Example {
 		//"NDB_No" will be the primary key of the FOOD_DES in-memory table
 		csvDataStore.getEntityConfiguration("FOOD_DES").setIdentifiers("NDB_No");
 
-		//As FOOD_DES has lots of fields, it will be more convenient and clear to use a map 
+		//As FOOD_DES has lots of fields, it will be more convenient and clear to use a map
 		LinkedHashMap<String, Integer> foodFields = new LinkedHashMap<String, Integer>();
 		foodFields.put("NDB_No", 5);
 		foodFields.put("FdGrp_Cd", 4);
@@ -100,8 +100,8 @@ public class Tutorial002QueriesFunctionsAndVariables extends Example {
 		//We will print the data in the destination entities after each cycle to this string
 		StringBuilder output = new StringBuilder();
 
-		//In this example we want to use parameterized queries as source entities. 
-		//Different parameters will be used in each mapping cycle. 
+		//In this example we want to use parameterized queries as source entities.
+		//Different parameters will be used in each mapping cycle.
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
 
 		//##CODE_START
@@ -113,10 +113,10 @@ public class Tutorial002QueriesFunctionsAndVariables extends Example {
 				.fromString("SELECT fdgrp_cd FROM fd_group WHERE fdgrp_desc like :groupDescription")
 				.returnSingleValue() //expects one single result.
 				.directly() // just returns the result without applying any function to it.
-				.onErrorAbort(); //if the query does not return any value, or returns more than one value, abort the data mapping cycle. 
+				.onErrorAbort(); //if the query does not return any value, or returns more than one value, abort the data mapping cycle.
 
 		//Locates all foods that are part of a given group and that have a given description.
-		//In SQL queries used by uniVocity's entities, parameters must be set in the order they appear in a query. 
+		//In SQL queries used by uniVocity's entities, parameters must be set in the order they appear in a query.
 		//Parameters: foodGroupCode and foodDescription
 		//Custom entities provided by you can use any other approach to determine how queries and parameters are processed.
 		engine.addQuery(EngineScope.STATELESS, "foodsOfGroup")
@@ -131,10 +131,10 @@ public class Tutorial002QueriesFunctionsAndVariables extends Example {
 		// 1 - The value of the variable "groupName" will be sent to the "findGroupCode" query, producing the code of the given food group.
 		//     This result is then used to set the "foodGroupCode" parameter.
 		// 2 - The value of variable "foodName" will be used to set the "foodDescription" parameter
-		// 3 - The "foodsOfGroup" query will be called with these parameter values, and return a dataset that can be used to map data to "food". 
+		// 3 - The "foodsOfGroup" query will be called with these parameter values, and return a dataset that can be used to map data to "food".
 		EntityMapping queryMapping = mapping.map("{foodsOfGroup(findGroupCode($groupName), $foodName)}", "food");
 
-		//Here we map the column names in the dataset produced by the "foodsOfGroup" query to the fields in "food". 
+		//Here we map the column names in the dataset produced by the "foodsOfGroup" query to the fields in "food".
 		queryMapping.identity().associate("NDB_No").to("id");
 		queryMapping.value().copy("Long_Desc", "SciName").to("description", "scientific_name");
 		queryMapping.reference().using("{findGroupCode($groupName)}").referTo("{groupsInUse}", "food_group").on("group");

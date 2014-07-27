@@ -28,14 +28,14 @@ public class Tutorial005CustomEntities extends Example {
 	private Map<Object, Object[]> foodValues;
 
 	private MyDataStoreConfiguration getMyDataStore() {
-		//Let's create and configure our custom data store configuration class 
+		//Let's create and configure our custom data store configuration class
 		MyDataStoreConfiguration customDataStore = new MyDataStoreConfiguration("MyDataStore");
 
 		//These entities will be used to store data mapped from CSV files
 		customDataStore.addEntity("MyFoodGroupEntity", "description");
 		customDataStore.addEntity("MyFoodEntity", "group", "description");
 
-		//This data store supports querying through its own particular syntax  
+		//This data store supports querying through its own particular syntax
 		customDataStore.addQuery("queryCodeOf", " MyFoodGroupEntity (row_id, description) with (description = ?) ");
 
 		return customDataStore;
@@ -92,7 +92,7 @@ public class Tutorial005CustomEntities extends Example {
 	}
 
 	private void initialize() {
-		//Let's map data from CSVs to the custom entities   
+		//Let's map data from CSVs to the custom entities
 		EngineConfiguration engineConfig = new EngineConfiguration(ENGINE, getCsvDataStore(), getMyDataStore());
 		//The engine needs to know how obtain new instances of our custom data store. We need to provide a data store factory
 		//that knows how to build a data store from our custom configuration class.
@@ -110,7 +110,7 @@ public class Tutorial005CustomEntities extends Example {
 	@Test
 	public void example001MappingToAndFromCustomEntity() {
 		//##CODE_START
-		//Initializes the engine with the CSV and custom data stores. 
+		//Initializes the engine with the CSV and custom data stores.
 		initialize();
 		DataIntegrationEngine engine = Univocity.getEngine(ENGINE);
 
@@ -165,12 +165,12 @@ public class Tutorial005CustomEntities extends Example {
 			public Dataset getDataset(String datastoreName, String entityName) {
 				//Returns our data set. It will work as expected and the destination "MyFoodGroupEntity" will store this new data
 				if (datastoreName.equalsIgnoreCase("csvDataStore") && entityName.equalsIgnoreCase("FD_GROUP")) {
-					//Our custom data store is transactional. Let's try to insert some data and make the mapping process crash to see what happens 
+					//Our custom data store is transactional. Let's try to insert some data and make the mapping process crash to see what happens
 					List<Object[]> rows = new ArrayList<Object[]>();
 					rows.add(new Object[] { "1111", "I won't be inserted" });
 					rows.add(new Object[] { "9999", "I won't be updated" });
 
-					//Creates a regular dataset for food group 
+					//Creates a regular dataset for food group
 					return Univocity.datasetFactory().newDataset(rows, "FdGrp_CD", "FdGrp_CD", "FdGrp_Desc");
 				}
 				//Returns a dataset that will "explode" as soon as uniVocity tries to read its rows.
@@ -231,7 +231,7 @@ public class Tutorial005CustomEntities extends Example {
 				if (datastoreName.equalsIgnoreCase("csvDataStore") && entityName.equalsIgnoreCase("FD_GROUP")) {
 					List<Object[]> rows = new ArrayList<Object[]>();
 					rows.add(new Object[] { "0100", "Milk, eggs and stuff" }); //update to FD_GROUP with FdGrp_CD = "0100"
-					rows.add(new Object[] { "9999", "Some new group" }); // new row to insert into FD_GROUP with FdGrp_CD = "9999" 
+					rows.add(new Object[] { "9999", "Some new group" }); // new row to insert into FD_GROUP with FdGrp_CD = "9999"
 					rows.add(new Object[] { "1500", "Bird meat" });  //update to FD_GROUP with FdGrp_CD = "1500"
 
 					return Univocity.datasetFactory().newDataset(rows, "FdGrp_CD", "FdGrp_CD", "FdGrp_Desc");

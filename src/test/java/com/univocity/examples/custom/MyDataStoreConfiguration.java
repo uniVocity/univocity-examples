@@ -12,7 +12,7 @@ import com.univocity.api.entity.custom.*;
 /**
  * This is a configuration class for our custom data store {@link MyDataStore}.
  * It provides methods to add new custom data entities and queries ({@link MyReadOnlyEntity}, {@link MyEntity}, {@link MyQuery})
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -50,7 +50,7 @@ public class MyDataStoreConfiguration extends DataStoreConfiguration {
 	}
 
 	/**
-	 * Creates a definition of new {@link MyEntity} and defines its fields 
+	 * Creates a definition of new {@link MyEntity} and defines its fields
 	 * @param name the name of the custom entity
 	 * @param fields the fields of this entity
 	 */
@@ -59,7 +59,7 @@ public class MyDataStoreConfiguration extends DataStoreConfiguration {
 	}
 
 	/**
-	 * Creates a definition of new {@link MyReadOnlyEntity} and defines its fields 
+	 * Creates a definition of new {@link MyReadOnlyEntity} and defines its fields
 	 * @param name the name of the custom read-only entity
 	 * @param fields the fields of this entity
 	 */
@@ -68,7 +68,7 @@ public class MyDataStoreConfiguration extends DataStoreConfiguration {
 	}
 
 	/**
-	 * Creates a definition of new {@link MyQuery} 
+	 * Creates a definition of new {@link MyQuery}
 	 * @param name the name of the custom query
 	 * @param query the String that represents a selection of data from entities in this data store
 	 */
@@ -93,7 +93,7 @@ public class MyDataStoreConfiguration extends DataStoreConfiguration {
 
 	/**
 	 * We don't really care about the number of rows to load in memory in the example, as all data handled by our custom entities is in memory already
-	 * Let's just return a value that will avoid preallocating big chunks of memory unnecessarily. 
+	 * Let's just return a value that will avoid preallocating big chunks of memory unnecessarily.
 	 */
 	@Override
 	public int getLimitOfRowsLoadedInMemory() {

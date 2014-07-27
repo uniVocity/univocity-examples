@@ -11,14 +11,14 @@ import java.util.*;
 /**
  * This class defines the data used by our custom data entities, and also provides some methods
  * to facilitate reading/writing data in field selections.
- * 
+ *
  * The data generates ID's automatically in the "row_id" field. These ID's correspond to record position
  * in an ArrayList.
- * 
+ *
  * Rows are not physically deleted. Instead, the "row_id" of a deleted row is inserted into the {@link #removedIndexes} set.
- * 
+ *
  * When reading/writing the data, rows whose "row_id" is in the {@link #removedIndexes} set will be ignored.
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -39,12 +39,12 @@ public class MyData implements Iterable<Map<String, Object>>, Serializable {
 	private final Set<Integer> removedIndexes = new HashSet<Integer>();
 
 	/**
-	 * Converts the next element in the iterator to an object array. The output values will 
+	 * Converts the next element in the iterator to an object array. The output values will
 	 * correspond to the order defined by the fieldNames parameter.
-	 * 
+	 *
 	 * @param iterator the iterator to records of a {@link MyData} instance
 	 * @param fieldNames the sequence of field names whose values should be returned
-	 * @return 
+	 * @return
 	 * 		the values of each selected field name, in the same order of their selection;
 	 * 		or null if there are no more entries in the iterator
 	 */
@@ -58,12 +58,12 @@ public class MyData implements Iterable<Map<String, Object>>, Serializable {
 	}
 
 	/**
-	 * Converts a record to an object array. The output values will 
+	 * Converts a record to an object array. The output values will
 	 * correspond to the order defined by the fieldNames parameter.
-	 * 
+	 *
 	 * @param record an individual record of this {@link MyData} instance.
 	 * @param fieldNames the sequence of field names whose values should be returned
-	 * @return 
+	 * @return
 	 * 		the values of each selected field name, in the same order of their selection
 	 */
 	public Object[] toRow(Map<String, Object> record, String... fieldNames) {
@@ -84,8 +84,8 @@ public class MyData implements Iterable<Map<String, Object>>, Serializable {
 	}
 
 	/**
-	 * Identifies whether the values in a selection of fields of a given record match a sequence of values. 
-	 * 
+	 * Identifies whether the values in a selection of fields of a given record match a sequence of values.
+	 *
 	 * @param record the record whose values should be compared.
 	 * @param fieldsToMatch the fields to read from the given record
 	 * @param matchingValues the values to compare against the ones in this record.
@@ -114,7 +114,7 @@ public class MyData implements Iterable<Map<String, Object>>, Serializable {
 				}
 			}
 
-			//If we are not comparing "row_id" elements, then we are comparing values in the map. 
+			//If we are not comparing "row_id" elements, then we are comparing values in the map.
 			//Let's get the value for the field name and compare it to the expected value.
 			Object value = record.get(fieldName);
 			if (value == null || !value.equals(valueToMatch)) {
@@ -137,9 +137,9 @@ public class MyData implements Iterable<Map<String, Object>>, Serializable {
 
 	/**
 	 * Updates the values of a given record. Note "row_id" Can't be updated
-	 * 
+	 *
 	 * @param record the record to have its values updated.
-	 * @param fieldsToWrite names of the fields to update  
+	 * @param fieldsToWrite names of the fields to update
 	 * @param valuesToWrite values to set for each given field name
 	 */
 	public void setValues(Map<String, Object> record, String[] fieldsToWrite, Object[] valuesToWrite) {

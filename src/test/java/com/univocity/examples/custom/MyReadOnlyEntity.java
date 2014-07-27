@@ -13,7 +13,7 @@ import com.univocity.api.entity.custom.*;
 /**
  * A read only entity does not provide data update operations. All it does is expose the available fields in {@link #getFields()} and
  * creating a {@link ReadingProcess} for a selection of fields when uniVocity invokes its {@link #preareToRead(String[])} method.
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -62,7 +62,7 @@ public class MyReadOnlyEntity implements CustomReadableEntity {
 	@Override
 	public ReadingProcess preareToRead(final String[] fieldNames) {
 		//A reading process is used by uniVocity to extract data from any entity.
-		//In the case of our custom entity, we simply iterate over the list of records stored in a "MyData" object 
+		//In the case of our custom entity, we simply iterate over the list of records stored in a "MyData" object
 		return new ReadingProcess() {
 
 			final Iterator<Map<String, Object>> myDataIterator = myData.iterator();
@@ -73,7 +73,7 @@ public class MyReadOnlyEntity implements CustomReadableEntity {
 
 			@Override
 			public Object[] readNext() {
-				//uniVocity will keep reading rows until this returns null. 
+				//uniVocity will keep reading rows until this returns null.
 				return myData.toRow(myDataIterator, fieldNames);
 			}
 		};

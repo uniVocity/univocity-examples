@@ -13,11 +13,11 @@ import com.univocity.api.engine.*;
 
 /**
  * This class demonstrates how an object can be used to back some specific function used by uniVocity.
- * 
+ *
  * This is a simple example that splits strings between commas and converts them into a numeric code.
- * An input string such as "something, then something else, something" will have its 
+ * An input string such as "something, then something else, something" will have its
  * components converted to an output string such as "5|10|5"
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -29,7 +29,7 @@ public class NameSplitter {
 
 	//the scope of this function determines that this method will be called once for each individual parameter
 	//passed through the method. After that the previous result will be reused for repeated parameters.
-	//This is useful to manage expensive operations such as retrieving data from an external service. 
+	//This is useful to manage expensive operations such as retrieving data from an external service.
 	@FunctionWrapper(scope = EngineScope.APPLICATION)
 	public String toCodes(String name) {
 		StringBuilder out = new StringBuilder();

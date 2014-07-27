@@ -24,8 +24,8 @@ abstract class ExampleWithDatabase extends Example {
 	protected DataSource dataSource;
 
 	protected JdbcDataStoreConfiguration getNewSchemaDataStore() {
-		// The next three lines of code use some utility classes we created to easily 
-		// create and initialize in-memory databases for testing purposes. 
+		// The next three lines of code use some utility classes we created to easily
+		// create and initialize in-memory databases for testing purposes.
 
 		//creates an in-memory database with the name "database"
 		DatabaseConfig destinationConfig = new DatabaseConfig(UUID.randomUUID().toString());
@@ -46,7 +46,7 @@ abstract class ExampleWithDatabase extends Example {
 		JdbcDataStoreConfiguration newSchemaDataStore = new JdbcDataStoreConfiguration("newSchema", dataSource);
 
 		//The database contains lots of internal tables in addition to the tables we are interested in
-		//By setting the schema to "public", these internal database tables won't be made available to uniVocity. 
+		//By setting the schema to "public", these internal database tables won't be made available to uniVocity.
 		newSchemaDataStore.setSchema("public");
 		//##CODE_END
 		return newSchemaDataStore;
@@ -58,7 +58,7 @@ abstract class ExampleWithDatabase extends Example {
 		JdbcDataStoreConfiguration newSchemaDataStore = getNewSchemaDataStore();
 
 		//##CODE_START
-		//Creates a new engine configuration to map data between the entities in CSV and JDBC data stores  
+		//Creates a new engine configuration to map data between the entities in CSV and JDBC data stores
 		EngineConfiguration engineConfig = new EngineConfiguration(engineName, csvDataStore, newSchemaDataStore);
 
 		//Registers this engine configuration.

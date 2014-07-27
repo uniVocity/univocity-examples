@@ -11,28 +11,28 @@ import com.univocity.api.*;
 import com.univocity.api.data.*;
 
 /**
- * In this example we want to populate the particular states of a food (e.g. cooked, raw, sliced) based on its description in the source database. 
- * 
+ * In this example we want to populate the particular states of a food (e.g. cooked, raw, sliced) based on its description in the source database.
+ *
  * A dataset producer will be used to process food names in "FOOD_DES.csv" and split them into food names and states. For example, consider the row:
- *  
+ *
  * <p>"Butter, whipped, with salt"
- * 
+ *
  * <p> This row will be divided in two parts:
  * <ul>
  *  <li>"Butter": the first string before a comma is the food name</li>
- *  <li>"whipped", "with salt": values after each comma will be a food state</li> 
- * </ul> 
- * 
+ *  <li>"whipped", "with salt": values after each comma will be a food state</li>
+ * </ul>
+ *
  * Each row read from the input will be used to generate values to 4 datasets:
  * <ul>
  *  <li>foodNames: all food names processed from the input</li>
  *  <li>foodNameDetails: pairs of food name and food code</li>
  *  <li>foodStateNames: all food states processed from the input</li>
- *  <li>foodStateDetails: rows with food state, food code and the position this food state occurred in the input</li> 
+ *  <li>foodStateDetails: rows with food state, food code and the position this food state occurred in the input</li>
  * </ul>
- * 
+ *
  * With this information, we will create mappings to produce data to the following tables:
- * 
+ *
  * <ul>
  *  <li>FOOD_NAME - names of foods (without locale dependent information)</li>
  *  <li>FOOD_NAME_DETAILS - descriptions and locale dependent information of each FOOD_NAME</li>
@@ -41,7 +41,7 @@ import com.univocity.api.data.*;
  *  <li>FOOD_STATE_DETAILS - descriptions and locale dependent information of each FOOD_STATE</li>
  *  <li>STATE_OF_FOOD - join table between foods and different food states.</li>
  * </ul>
- * 
+ *
  * The destination schema was made complex on purpose so we can explore how uniVocity can be used to handle virtually any schema with ease.
  * We created an Entity-Relationship diagram in "resources/examples/new_schema/diagram.png" for your reference.
  */
@@ -56,7 +56,7 @@ public class FoodProcessor extends DatasetProducer {
 	private int nameIndex;
 
 	public FoodProcessor() {
-		//these are the dataset names this processor creates 
+		//these are the dataset names this processor creates
 		super("food_names", "food_name_details", "food_state_names", "food_state_details");
 	}
 
@@ -77,7 +77,7 @@ public class FoodProcessor extends DatasetProducer {
 		String code = String.valueOf(row[codeIndex]);
 		String description = String.valueOf(row[nameIndex]);
 
-		//splits the description, trims and lowercases each part in it 
+		//splits the description, trims and lowercases each part in it
 		String[] nameParts = splitFoodDescription(description);
 
 		//the first element is the food name. Whatever comes after is a food state

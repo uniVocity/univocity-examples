@@ -15,10 +15,10 @@ import com.univocity.examples.custom.MyDataStoreConfiguration.EntityConfig;
 /**
  * This {@link CustomDataStore} demonstrates how you can implement your own data store for
  * abstract virtually any repository of information you want to integrate with uniVocity.
- * 
+ *
  * We implemented simulated transactional support. It persists data of custom entities into a byte array
  * before any modification is made, and restores their data in case of errors.
- * 
+ *
  * @author uniVocity Software Pty Ltd - <a href="mailto:dev@univocity.com">dev@univocity.com</a>
  *
  */
@@ -58,7 +58,7 @@ public class MyDataStore implements CustomDataStore<MyReadOnlyEntity> {
 				entity = new MyEntity(this, config.name, config.fields);
 			}
 
-			//adds some data to the newly created entity 
+			//adds some data to the newly created entity
 			for (Object[] values : config.getInitialData()) {
 				entity.getMyData().insert(config.fields, values);
 			}
@@ -105,10 +105,10 @@ public class MyDataStore implements CustomDataStore<MyReadOnlyEntity> {
 	}
 
 	/**
-	 * Custom data entities will invoke this method from their parent data store in order to notify it 
+	 * Custom data entities will invoke this method from their parent data store in order to notify it
 	 * their data will change. This data store will serialize their data into a byte array and in any error
 	 * occurs in the transaction, the data store will automatically restore the data.
-	 * 
+	 *
 	 * @param entity the entity whose data will be modified by uniVocity within a {@link TransactionalOperation}
 	 */
 	void saveMyDataBeforeModifying(MyReadOnlyEntity entity) {
@@ -116,7 +116,7 @@ public class MyDataStore implements CustomDataStore<MyReadOnlyEntity> {
 		if (dataInTransaction == null) {
 			throw new IllegalStateException("No active transaction on data store " + getConfiguration().getDataStoreName());
 		}
-		//Serializes the entity data into a byte array. 
+		//Serializes the entity data into a byte array.
 		if (!dataInTransaction.containsKey(entity)) {
 			try {
 				ByteArrayOutputStream byteOutput = new ByteArrayOutputStream();
@@ -137,7 +137,7 @@ public class MyDataStore implements CustomDataStore<MyReadOnlyEntity> {
 
 	/**
 	 * In case of errors while executing the {@link TransactionalOperation#execute()},
-	 * this data store will restore the data serialized for each entity that got modified.  
+	 * this data store will restore the data serialized for each entity that got modified.
 	 */
 	private void rollbackChanges() {
 		for (Entry<MyReadOnlyEntity, byte[]> entry : dataInTransaction.entrySet()) {
