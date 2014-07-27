@@ -2,8 +2,7 @@
 
 Welcome to uniVocity
 ====================
-
-**[uniVocity](`www.univocity.com`)** is a data integration framework for java that provides a fast and flexible foundation for the 
+**[uniVocity](http://www.univocity.com)** is a data integration framework for java that provides a fast and flexible foundation for the 
 implementation of complex data mappings and transformations.
 
 ### uniVocity is not like other data integration solutions: ###
@@ -21,8 +20,7 @@ or simply execute a batch to map all data in a set of database tables, files and
 **Use data from anywhere and transform it into anything:** uniVocity provides an extremely simple and powerful API that allows you to use objects, methods and 
 services in your JVM-based applications while mapping data between data stores.
 
-**Backward compatibility - *for life*:** uniVocity is divided in 2 libraries: a public API library and an implementation library. Just write your code against 
-the public API, test and forget. Any new version of uniVocity will continue to support the existing public APIs.
+**Backward compatibility - *for life*:** uniVocity is divided in 2 libraries: a [public API](http://github.com/uniVocity/univocity-api) library and an implementation library. Just write your code against the public API, test and forget. Any new version of uniVocity will continue to support the existing public APIs.
 
 **Faster than anything else**: our team has years of experience with low latency, concurrent and distributed systems. Even if you try to implement your own
 data integration solution from scratch, it is likely to be error-prone, hard to maintain and slower than uniVocity.
@@ -31,14 +29,14 @@ data integration solution from scratch, it is likely to be error-prone, hard to 
 very quickly. uniVocity was carefully engineered to simplify the development process to a great extent. With it, you should be able to implement a full-fledged
 data integration solution in less than a day!
 
-We created the [uniVocity-examples](`http://github.com/uniVocity/univocity-examples`) project to demonstrate the capabilities of our product and to quickly guide you through the main functionalities that can be used to make your life easier. uniVocity provides a flexible and easy to use API that gives you total control over your data and how it is transformed.
+We created the [uniVocity-examples](http://github.com/uniVocity/univocity-examples) project to demonstrate the capabilities of our product and to quickly guide you through the main functionalities that can be used to make your life easier. uniVocity provides a flexible and easy to use API that gives you total control over your data and how it is transformed.
  
 Have a go and try uniVocity for free for 30 days, without any other restriction. 
 
-Just download it from our website: **[www.univocity.com](`www.univocity.com`)** and save you and your team from the pain of developing your own 
+Just download it from our website: **[www.univocity.com](http://www.univocity.com)** and save you and your team from the pain of developing your own 
 data integration solution from the ground up.
 
-**Don't forget to also check our open-source project [uniVocity-parsers](`http://github.com/uniVocity/univocity-parsers`)**:
+**Don't forget to also check our open-source project [uniVocity-parsers](http://github.com/uniVocity/univocity-parsers)**:
 
  It is developed and maintained by our team and made available to the open source community.
  We want you to contribute to this project! We documented everything to make it easier for you to modify or create new powerful and feature-complete 
@@ -52,9 +50,9 @@ data integration solution from the ground up.
 
 To install uniVocity, you need two artifacts: 
 
-1. the [public API](`http://www.univocity.com/pages/download`), which provides the essential interfaces and configuration options to configure data inputs,
+1. the [public API](http://github.com/uniVocity/univocity-api), which provides the essential interfaces and configuration options to configure data inputs,
    outputs, and their mappings. You must write your code against the interface provided by this API.   
-2. our data integration engine implementation, which can be downloaded from our [website](`www.univocity.com`).
+2. our data integration engine implementation, which can be downloaded from our [website](www.univocity.com).
 
 We split the API so your code can be totally isolated from our implementation code. Any new version of uniVocity will support the published API's 
 so you can update uniVocity transparently without worrying about compilation errors and code rewrites.  
@@ -105,9 +103,9 @@ That's all you need to know for now, so let's get started.
 In our example, we are interested in synchronizing data of foods and groups of foods with another data store.
 
 As the source data store, we will be using a stripped-down version of the nutrient database provided by the 
-[U.S. Department of Agriculture](`http://www.ars.usda.gov/ba/bhnrc/ndl`).
+[U.S. Department of Agriculture](http://www.ars.usda.gov/ba/bhnrc/ndl).
 
-We provide this data in a bunch of files that you can find  [here](./src/test/resources/examples/source_data/csv).
+We provide this data in a couple of files that you can find  [here](./src/test/resources/examples/source_data/csv).
 Some of the original data was modified to make the examples easier to read.
 
 The tables we are interested in are: FD_GROUP for general groups of food and FOOD_DES for individual food descriptions. 
@@ -418,8 +416,8 @@ Next, we set them again to "Baby Foods" and "%" respectively. The result of both
 ## Mapping between incompatible schemas ##
 
 One of the most powerful features of uniVocity is probably how easy it is to map data between different schemas, consistently. To demonstrate how this works
-we are going to map data in the [FD_GROUP](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) and 
-[FOOD_DES](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) CSV files to a a peculiar database.
+we are going to map data in the [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) and 
+[FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) files to a a peculiar database.
 This database stores food information and their descriptions in multiple languages
 
 The following entity-relationship diagram shows how its tables are associated:
