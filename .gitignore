@@ -1,0 +1,6 @@
+/target
+/src/main/resources/license.zip
+/test-output
+/src/test/resources/license.zip
+/src/test/resources/examples/new_schema/diagram.mwb.bak
+/license.zip

@@ -1,0 +1,7 @@
+Creating new persistent state
+Row count after first cycle: 5
+Shutting down...
+Persistent scope deactivated. Saving its state for later recovery.
+...Starting engine again
+Restored previous persistent state: {processedCodes=[0100, 0300, 1200, 1400, 1500]}
+Row count after shutting down and executing again: 0

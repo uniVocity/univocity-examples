@@ -1,0 +1,10 @@
+CREATE TABLE food_group_details(
+	id 						INTEGER,
+	loc 					INTEGER,
+	DESCRIPTION 			VARCHAR(128) NOT NULL,
+	
+	CONSTRAINT food_group_details_pk PRIMARY KEY(id,loc),
+	CONSTRAINT food_group_details_uq UNIQUE(loc, DESCRIPTION),
+	FOREIGN KEY(id) REFERENCES PUBLIC.food_group(id),
+	FOREIGN KEY(loc) REFERENCES PUBLIC.locale(id)
+)

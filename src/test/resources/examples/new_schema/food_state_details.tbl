@@ -1,0 +1,10 @@
+CREATE TABLE food_state_details(
+	id 						INTEGER,
+	loc 					INTEGER,
+	description 			VARCHAR(128) NOT NULL,
+	plural_description 		VARCHAR(128),
+	
+	CONSTRAINT food_state_details_pk PRIMARY KEY(id,loc),
+	CONSTRAINT food_state_details_uk UNIQUE(loc, description),
+	FOREIGN KEY(id) REFERENCES food_state(id),
+)

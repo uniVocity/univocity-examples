@@ -1,0 +1,24 @@
+<configuration>
+
+	<logger name="org.springframework" level="error" />
+		
+	<!-- uniVocity loggers -->
+	
+	<!-- data logs -->
+	<logger name="com.univocity.log.data" level="debug" />
+	<logger name="com.univocity.log.metadata.data" level="debug" />
+	
+	<!-- statement logs -->
+	<logger name="com.univocity.log.statement" level="debug" />
+	<logger name="com.univocity.log.metadata.statement" level="debug" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<root level="debug">
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>

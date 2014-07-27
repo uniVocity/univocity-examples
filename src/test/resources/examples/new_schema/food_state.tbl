@@ -1,0 +1,3 @@
+CREATE TABLE food_state (
+	id 					IDENTITY PRIMARY KEY
+)

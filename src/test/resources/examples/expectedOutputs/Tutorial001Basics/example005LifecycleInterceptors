@@ -1,0 +1,13 @@
+
+Starting new cycle: 5. Current scope: CYCLE
+  Executing: FOOD_DES --X food. Current scope: MAPPING
+  Completed: FOOD_DES --X food. Current scope: MAPPING
+  Executing: FD_GROUP --> food_group. Current scope: MAPPING
+  Completed: FD_GROUP --> food_group. Current scope: MAPPING
+  Executing: FOOD_DES --> food. Current scope: MAPPING
+  Completed: FOOD_DES --> food. Current scope: MAPPING
+Completed cycle: 5. Current scope: CYCLE
+
+engine_001 ready. Cycles executed: 5. Current scope: APPLICATION
+Shutting down engine_001
+engine_001 shut down.

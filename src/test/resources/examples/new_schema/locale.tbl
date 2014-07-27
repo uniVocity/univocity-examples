@@ -1,0 +1,5 @@
+CREATE TABLE locale (
+	id 							IDENTITY 			PRIMARY KEY,
+	acronym 					VARCHAR(10) 		NOT NULL 		UNIQUE,
+	description 				VARCHAR(100) 		NOT NULL 		UNIQUE
+)

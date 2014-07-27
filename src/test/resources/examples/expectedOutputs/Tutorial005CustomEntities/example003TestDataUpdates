@@ -1,0 +1,7 @@
+Food groups:
+0 => [0, Milk, eggs and stuff]
+4 => [4, Bird meat]
+5 => [5, Some new group]
+
+Query for dairy group:
+<empty>

@@ -1,0 +1,3 @@
+create table food_name(
+	id				IDENTITY PRIMARY KEY
+)

@@ -1,0 +1,3 @@
+CREATE TABLE food_group (
+	id 					IDENTITY PRIMARY KEY
+)

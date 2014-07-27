@@ -1,0 +1,13 @@
+NOTICE:  All information contained herein is, and remains the property
+of uniVocity Software Pty Ltd and its suppliers, if any.  The 
+intellectual and technical concepts contained herein are proprietary 
+to uniVocity Software Pty Ltd and its suppliers and may be covered by 
+Australian and Foreign Patents, patents in process, and are protected
+by trade secret or copyright law.
+
+uniVocity Software Pty Ltd authorizes you to disseminate and reproduce 
+this material without restriction. The source code available in this
+repository must only be executed in computers that store a valid 
+uniVocity license, which can be purchased in the website:
+
+                          www.univocity.com                           

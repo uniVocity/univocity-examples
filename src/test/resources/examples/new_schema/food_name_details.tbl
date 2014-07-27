@@ -1,0 +1,12 @@
+CREATE TABLE food_name_details(
+	id 						INTEGER,
+	loc 					INTEGER,
+	description 			VARCHAR(128) NOT NULL,
+	plural_description 		VARCHAR(128),
+	is_masculine			BOOLEAN,	
+	
+	CONSTRAINT food_name_details_pk PRIMARY KEY(id,loc),
+	CONSTRAINT food_name_details_uk UNIQUE(loc, description),
+	FOREIGN KEY(id) REFERENCES food_name(id),
+	FOREIGN KEY(loc) REFERENCES locale(id)
+)

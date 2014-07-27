@@ -1,0 +1,11 @@
+CREATE TABLE food(
+	id						IDENTITY PRIMARY KEY,
+	name_id					INTEGER NOT NULL,
+	energy					DOUBLE,
+	carbohydrate_factor		DOUBLE,
+	fat_factor				DOUBLE,
+	protein_factor			DOUBLE,
+	nitrogen_protein_factor DOUBLE,
+	
+	FOREIGN KEY(name_id) REFERENCES food_name(id)
+)
