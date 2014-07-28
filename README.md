@@ -525,7 +525,7 @@ The result shows the previous 2 rows in uppercase and 3 new, all in lower case a
 
 Analogous to foreign keys in a database, uniVocity supports the concept of references to identifiers produced in other mappings. 
 
-Now, we want to map the CSV entity `FOOD_DES` to the fixed-width entity `food`. The FOOD_DES.csv file has the field `FdGrp_Cd`, which contains references to FD_GROUP.
+Now, we want to map the CSV entity `FOOD_DES` to the fixed-width entity `food`. The [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) file has the field `FdGrp_Cd`, which contains references to [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv).
 
 In the previous example, the identity mapping between `FD_GROUP` and `food_group` was declared as: `identity().associate("FdGrp_CD").to("id")`. 
 We want to maintain this association on the destination data store, instead of simply copying from whatever is in the input. 
@@ -542,7 +542,7 @@ A reference mapping is declared like this: `reference().using("FdGrp_Cd").referT
 
 References that could not be matched will be set to null by default. You can also choose to discard the row entirely, use a placeholder or abort the mapping cycle entirely.
 
-The following example demonstrates how `FOOD_DES` can be mapped to `food`:
+The following example demonstrates how [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) can be mapped to `food`:
 
 
 ```java
@@ -921,7 +921,7 @@ Lastly, `queryMapping.autodetectMappings()` will create mappings between fields 
 field names *id* and *name*, and the destination entity *food_group* contains fields with these names, the mappings will be automatically created. As the destination 
 entity *food_group* was configured with *id* as its identifier, an identity mapping will be created for this field. 
 
-After executing the mapping cycle, the output contain only the food groups that are actually used in `FOOD_DES`:
+After executing the mapping cycle, the output contain only the food groups that are actually used in [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv):
 
 
 ``` 
@@ -1074,8 +1074,7 @@ Next, we set them again to "Baby Foods" and "%" respectively. The result of both
 ## Mapping between incompatible schemas ##
 
 One of the most powerful features of uniVocity is probably how easy it is to map data between different schemas, consistently. To demonstrate how this works
-we are going to map data in the [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) and 
-[FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) files to a a peculiar database.
+we are going to map data in the [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) and [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) files to a a peculiar database.
 This database stores food information and their descriptions in multiple languages
 
 The following entity-relationship diagram shows how its tables are associated:
@@ -1502,7 +1501,7 @@ First we enabled updates using `persistence().usingMetadata().deleteDisabled().u
 Then, a dataset with the identifiers of food group "Milk, eggs and stuff" is built.
 Finally, `engine.disableUpdateOnRecords("food_group_details", dataset)` is called to prevent this food group to be updated, and a mapping cycle is executed.
 
-The original data of "FD_GROUP" will be read, and the food group "Bird meat" will be updated to "Poultry Products", but "Milk, eggs and stuff" won't be changed.
+The original data of [FD_GROUP.csv](./src/test/resources/examples/source_data/csv/FD_GROUP.csv) will be read, and the food group "Bird meat" will be updated to "Poultry Products", but "Milk, eggs and stuff" won't be changed.
 
 After enabling updates again with `engine.enableUpdateOnAllRecords("food_group_details")` and executing another mapping cycle, the row with identifier `0, 1` will be updated
 from "Milk, eggs and stuff" to "Dairy and Egg Products".
@@ -1565,7 +1564,7 @@ In the end, we will have FOOD with a reference to a FOOD_NAME, and a join table 
 Review the [entity-relationship diagram](./src/test/resources/examples/new_schema/diagram.png) again if you find this too confusing. 
 We made it complex on purpose in order to demonstrate how far you can go with uniVocity.
 
-In this example, a [DatasetProducer](http://github.com/uniVocity/univocity-api/blob/master/src/main/java/com/univocity/api/data/DatasetProducer.java) will process the descriptions in each FOOD_DES record and generate different datasets for different destination entities.
+In this example, a [DatasetProducer](http://github.com/uniVocity/univocity-api/blob/master/src/main/java/com/univocity/api/data/DatasetProducer.java) will process the descriptions in each [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) record and generate different datasets for different destination entities.
 
 A [DatasetProducer](http://github.com/uniVocity/univocity-api/blob/master/src/main/java/com/univocity/api/data/DatasetProducer.java) is an abstract class that tells uniVocity what datasets it is able to generate from a data entity. Entity mappings can be created using these datasets
 as the source. Once a mapping cycle is started, and the mapping that uses one of these datasets is executed, the [DatasetProducer](http://github.com/uniVocity/univocity-api/blob/master/src/main/java/com/univocity/api/data/DatasetProducer.java) will produce
@@ -1763,7 +1762,7 @@ will be associated to the original food code. References to IDs of "food_name" a
 > Notice that "food_name_details" has been prepended with 
 > "<datasets>". This is required to resolve an ambiguity, as "food_name_details" exist in multiple data stores. "<datasets>" is a reserved data store name for uniVocity datasets.
 
-The last mapping, `dsMapping.map("FOOD_DES", "food")`,  reads the source entity "FOOD_DES" to load the food composition
+The last mapping, `dsMapping.map("FOOD_DES", "food")`,  reads the source entity [FOOD_DES.csv](./src/test/resources/examples/source_data/csv/FOOD_DES.csv) to load the food composition
 information required to fully populate the "FOOD" entities. This is a special case, because as this is a new mapping, uniVocity will produce new rows.
 However we *don't want to insert these new rows*: this is additional information we want to use in records previously created for 
 "FOOD" (in `dsMapping.map("<datasets>.food_name_details", "food")`).

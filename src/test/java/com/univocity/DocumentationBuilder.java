@@ -7,11 +7,8 @@ package com.univocity;
 
 import static org.testng.Assert.*;
 
-import java.awt.*;
 import java.io.*;
 import java.util.*;
-
-import javax.swing.*;
 
 import org.testng.annotations.*;
 
@@ -155,10 +152,12 @@ public class DocumentationBuilder {
 	}
 
 	private static String resolveLinkTo(String name) {
-		name = name + ".java";
+		if (!name.contains(".")) {
+			name = name + ".java";
+		}
 		File projectRoot = new File(".");
-
-		File linkedFile = find(projectRoot, name);
+		File sourceRoot = new File(projectRoot.getAbsolutePath() + "/src/test/");
+		File linkedFile = find(sourceRoot, name);
 		if (linkedFile != null) {
 			return "." + getRelativePath(projectRoot, linkedFile);
 		}
@@ -170,7 +169,8 @@ public class DocumentationBuilder {
 			throw new IllegalStateException("univocity-api project must be available alongside univocity-examples project in order to resolve link to class " + name);
 		}
 
-		linkedFile = find(projectRoot, name);
+		sourceRoot = new File(projectRoot.getAbsolutePath() + "/src/main/");
+		linkedFile = find(sourceRoot, name);
 		if (linkedFile != null) {
 			return REPO_URL + getRelativePath(projectRoot, linkedFile);
 		}
@@ -303,18 +303,19 @@ public class DocumentationBuilder {
 		return out.toString();
 	}
 
-	public static void main(String... args) {
+	public static void main(String... args) throws FileNotFoundException {
 		String doc = generateDocumentation();
 
-		JTextArea txt = new JTextArea(doc);
-		JDialog d = new JDialog((Frame) null, true);
-		d.add(new JScrollPane(txt));
+		PrintWriter readme = null;
+		try {
+			readme = new PrintWriter("README.md");
+			readme.print(doc);
+		} finally {
+			if (readme != null) {
+				readme.close();
+			}
+		}
 
-		d.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		d.setSize(800, 600);
-		d.setLocation(100, 100);
-		d.setVisible(true);
-
-		System.exit(0);
+		System.out.println("Documentation updated successfully: " + doc.length() + " characters written");
 	}
 }
