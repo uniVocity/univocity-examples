@@ -24,7 +24,8 @@ public class DocumentationBuilder {
 	private static final String CODE_START = "##CODE_START";
 	private static final String CODE_END = "##CODE_END";
 
-	private static final String REPO_URL = "http://github.com/uniVocity/univocity-api/blob/master";
+	private static final String API_REPO_URL = "http://github.com/uniVocity/univocity-api/tree/master";
+	private static final String EXAMPLE_REPO_URL = "http://github.com/uniVocity/univocity-examples/tree/master";
 
 	@Test
 	public void testDocumentationIsUpdated() {
@@ -159,7 +160,7 @@ public class DocumentationBuilder {
 		File sourceRoot = new File(projectRoot.getAbsolutePath() + "/src/test/");
 		File linkedFile = find(sourceRoot, name);
 		if (linkedFile != null) {
-			return "." + getRelativePath(projectRoot, linkedFile);
+			return EXAMPLE_REPO_URL + getRelativePath(projectRoot, linkedFile);
 		}
 
 		//look for class in univocity-api (hacky, but works)
@@ -172,7 +173,7 @@ public class DocumentationBuilder {
 		sourceRoot = new File(projectRoot.getAbsolutePath() + "/src/main/");
 		linkedFile = find(sourceRoot, name);
 		if (linkedFile != null) {
-			return REPO_URL + getRelativePath(projectRoot, linkedFile);
+			return API_REPO_URL + getRelativePath(projectRoot, linkedFile);
 		}
 
 		throw new IllegalStateException("Unable to resolve find link to class " + name);
@@ -309,6 +310,11 @@ public class DocumentationBuilder {
 		PrintWriter readme = null;
 		try {
 			readme = new PrintWriter("README.md");
+			readme.print(doc);
+
+			readme.close();
+
+			readme = new PrintWriter("../univocity-api/README.md");
 			readme.print(doc);
 		} finally {
 			if (readme != null) {

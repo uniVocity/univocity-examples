@@ -105,7 +105,7 @@ In our example, we are interested in synchronizing data of foods and groups of f
 As the source data store, we will be using a stripped-down version of the nutrient database provided by the 
 [U.S. Department of Agriculture](http://www.ars.usda.gov/ba/bhnrc/ndl).
 
-We provide this data in a couple of files that you can find  [here](./src/test/resources/examples/source_data/csv).
+We provide this data in a couple of files that you can find  [here](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/source_data/csv).
 Some of the original data was modified to make the examples easier to read.
 
 The tables we are interested in are: @@LINK(FD_GROUP.csv) for general
@@ -341,8 +341,8 @@ The output will be as follows:
 ## Queries, more functions, and variables ##
 
 uniVocity strives for convenience. We thought it would be convenient to use SQL to produce data from your entities. Your data store don't even need to be a database!
-In the following example, we tell uniVocity to enable database-like operations in the CSV entities. In this
-[example class](./src/test/java/com/univocity/examples/Tutorial002QueriesFunctionsAndVariables.java), we did that by configuring the data store width 
+In the following example, we tell uniVocity to enable database-like operations in the CSV entities. In the
+example class @@LINK(Tutorial002QueriesFunctionsAndVariables), we did that by configuring the data store width 
 `enableDatabaseOperationsIn("FD_GROUP", "FOOD_DES")` and providing the length of each field in entities *FD_GROUP* and *FOOD_DES*.
 
 When database operations are enabled for any entity, an in-memory database will be created automatically, and all data in these entities will be dumped
@@ -422,9 +422,9 @@ we are going to map data in the @@LINK(FD_GROUP.csv) and @@LINK(FOOD_DES.csv) fi
 This database stores food information and their descriptions in multiple languages
 
 The following entity-relationship diagram shows how its tables are associated:
-![alt text](./src/test/resources/examples/new_schema/diagram.png)
+![alt text](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/new_schema/diagram.png)
 
-The database DDL scripts are located [here](./src/test/resources/examples/new_schema). 
+The database DDL scripts are located [here](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/new_schema). 
 
 In this example, we will populate the following tables:
 
@@ -559,7 +559,7 @@ This means that FOOD_NAME_DETAILS will now contain the food name without its sta
 *"cheese,blue"* and *"cheese,brick"* will generate a single *"cheese"* record in FOOD_NAME_DETAILS; Values *"blue"* and *"brick"* will become records of FOOD_STATE_DETAILS.
 
 In the end, we will have FOOD with a reference to a FOOD_NAME, and a join table STATE_OF_FOOD with references to each FOOD_STATE of a particular FOOD. 
-Review the [entity-relationship diagram](./src/test/resources/examples/new_schema/diagram.png) again if you find this too confusing. 
+Review the [entity-relationship diagram](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/new_schema/diagram.png) again if you find this too confusing. 
 We made it complex on purpose in order to demonstrate how far you can go with uniVocity.
 
 In this example, a @@LINK(DatasetProducer) will process the descriptions in each @@LINK(FOOD_DES.csv) record and generate different datasets for different destination entities.
@@ -630,13 +630,13 @@ To use a persistent scope, you are expected to provide an implementation of @@LI
 The storage provider is the interface that is used by uniVocity store and retrieve values added to the persistent scope. 
 The storage is fully under your control, and you can choose whether to use files, a database, a distributed cache or anything else you need. 
 
-We have created an example method `example002PersistentScope` in [Tutorial004Advanced](./src/test/java/com/univocity/examples/Tutorial004Advanced.java) that
+We have created an example method `example002PersistentScope` in @@LINK(Tutorial004Advanced) that
 demonstrates how the persistent scope works.
 
 ## Custom entities ##
 
 uniVocity provides some basic data stores and entities but it also allows you to create your own. We created (and documented) examples exploring 
-the full set of features you can implement with custom entities [here](./src/test/java/com/univocity/examples/custom). These entities are based on in-memory data
+the full set of features you can implement with custom entities [here](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/custom). These entities are based on in-memory data
 stored in lists. You will want to implement your custom entities to process file formats or other structures not natively supported by uniVocity.
 The examples we provided include primitive transactions and custom `String`-based queries so that you can explore and quickly adapt to your own needs.
 
@@ -659,7 +659,7 @@ operations, which can be tricky in structures such as text files.
 6. (optional) If you want to be able to execute some form of querying against your data store, implement CustomQuery. A query does not need to be a SQL statement. It can
 be anything in a `String` that has a meaning in the context of your data store. 
 
-The (Tutorial005CustomEntities)[./src/test/java/com/univocity/examples/Tutorial005CustomEntities.java] puts our examples of custom entities to use,
+The @@LINK(Tutorial005CustomEntities) puts our examples of custom entities to use,
 and demonstrates how uniVocity simply isolates you from major intricacies. Please explore and let us know what you think of these examples.
 
 ## Advanced settings for JDBC entities ##
