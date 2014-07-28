@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.univocity</groupId>
 	<artifactId>univocity-examples</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>univocity-examples</name>
 	<description>Project with tutorials and examples demonstrating the features of uniVocity data integration</description>
 
@@ -12,6 +12,29 @@
 	</organization>
 
 	<url>http://github.com/uniVocity/univocity-examples</url>
+
+	<repositories>
+		<repository>
+			<id>private-releases</id>
+			<url>https://api.bitbucket.org/1.0/repositories/uniVocity/artifacts-private/raw/master/releases</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>private-snapshots</id>
+			<url>https://api.bitbucket.org/1.0/repositories/uniVocity/artifacts-private/raw/master/snapshots</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<issueManagement>
 		<system>GitHub Issues</system>
@@ -92,6 +115,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+		<univocity-api.version>1.0.0</univocity-api.version>
+		<univocity.version>1.0.0</univocity.version>
+		<univocity-parsers.version>1.0.0</univocity-parsers.version>
+
 		<spring.version>3.2.8.RELEASE</spring.version>
 		<slf4j.version>1.7.7</slf4j.version>
 		<logback.version>1.1.2</logback.version>
@@ -103,19 +130,19 @@
 		<dependency>
 			<groupId>com.univocity</groupId>
 			<artifactId>univocity-api</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${univocity-api.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.univocity</groupId>
 			<artifactId>univocity</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${univocity.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.univocity</groupId>
 			<artifactId>univocity-parsers</artifactId>
-			<version>1.0.0</version>
+			<version>${univocity-parsers.version}</version>
 		</dependency>
 
 		<dependency>
