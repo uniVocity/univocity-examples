@@ -422,7 +422,7 @@ we are going to map data in the @@LINK(FD_GROUP.csv) and @@LINK(FOOD_DES.csv) fi
 This database stores food information and their descriptions in multiple languages
 
 The following entity-relationship diagram shows how its tables are associated:
-![alt text](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/new_schema/diagram.png)
+![alt text](./images/diagram.png)
 
 The database DDL scripts are located [here](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/new_schema). 
 
