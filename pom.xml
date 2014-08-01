@@ -52,11 +52,23 @@
 		<repository>
 			<id>univocity-releases</id>
 			<url>http://artifacts.univocity.com/release</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
-		
+
 		<repository>
 			<id>univocity-snapshots</id>
 			<url>http://artifacts.univocity.com/snapshot</url>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 	
