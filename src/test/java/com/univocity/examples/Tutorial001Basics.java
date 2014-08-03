@@ -156,7 +156,7 @@ public class Tutorial001Basics extends Example {
 		EntityMapping foodGroupMapping = mapping.map("FD_GROUP", "food_group");
 
 		//Here we associate FD_GROUP.FdGrp_CD to food_group.id, but now FdGrp_CD will be converted to an integer value
-		//before being associated to the destination id
+		//before being associated with the destination id
 		foodGroupMapping.identity().associate("FdGrp_CD").to("id").readWith("toInteger");
 
 		//Copies values from FD_GROUP.FdGrp_Desc to food_group.name. All values read from FdGrp_Desc will be
@@ -319,7 +319,7 @@ public class Tutorial001Basics extends Example {
 		EntityMapping foodMapping = mapping.map("FOOD_DES", "food");
 		foodMapping.identity().associate("NDB_No").to("id");
 		//Here we invoke the "getNameOfGroup" function using values read from FdGrp_CD
-		//This will return the description associated to each code in the map.
+		//This will return the description associated with each code in the map.
 		foodMapping.value().copy("FdGrp_CD").to("group").readingWith("getNameOfGroup");
 		foodMapping.value().copy("Long_Desc").to("description");
 

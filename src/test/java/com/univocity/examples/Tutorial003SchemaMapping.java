@@ -64,12 +64,12 @@ public class Tutorial003SchemaMapping extends ExampleWithDatabase {
 
 		//Here we create mapping from expressions to the destination entity "locale". No data in the source data store is required
 		mapping = dsMapping.map("locale");
-		//The value of the "locale" variable will be associated to the generated ID in the "locale" table.
+		//The value of the "locale" variable will be associated with the generated ID in the "locale" table.
 		mapping.identity().associate("{$locale}").toGeneratedId("id");
 		//The values of variables "locale" and "localeDescription" will be copied to "acronym" and "description" columns
 		mapping.value().copy("{$locale}", "{$localeDescription}").to("acronym", "description");
 
-		//This mapping just creates generated ID's in "food_group". Each generated ID will be associated to a value of "FdGrp_CD"
+		//This mapping just creates generated ID's in "food_group". Each generated ID will be associated with a value of "FdGrp_CD"
 		mapping = dsMapping.map("FD_GROUP", "food_group");
 		mapping.identity().associate("FdGrp_CD").toGeneratedId("id");
 
@@ -115,7 +115,7 @@ public class Tutorial003SchemaMapping extends ExampleWithDatabase {
 		//In this cycle, the current locale is "en_US".
 		engine.executeCycle();
 
-		//Let's now use another locale. All tables with locale-specific data will have new descriptions associated to this new locale.
+		//Let's now use another locale. All tables with locale-specific data will have new descriptions associated with this new locale.
 		engine.setVariable("locale", "en_GB");
 		engine.setVariable("localeDescription", "British English");
 		engine.executeCycle();
