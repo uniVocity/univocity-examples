@@ -51,34 +51,72 @@ data integration solution from the ground up.
 To install uniVocity, you need two artifacts: 
 
 1. the [public API](http://github.com/uniVocity/univocity-api), which provides the essential interfaces and configuration options to configure data inputs,
-   outputs, and their mappings. You must write your code against the interface provided by this API.   
-2. our data integration engine implementation, which can be downloaded from our [website](www.univocity.com).
+   outputs, and their mappings. You must write your code against the interfaces provided by this API. 
+
+2. our data integration engine implementation, which can be downloaded from our [website](www.univocity.com) or from our [maven](http://maven.apache.org) repository (http://artifacts.univocity.com). 
 
 We split the API so your code can be totally isolated from our implementation code. Any new version of uniVocity will support the published API's 
 so you can update uniVocity transparently without worrying about compilation errors and code rewrites.  
 
+### Maven settings
 
-If you use Maven, this is what you'll need: 
+If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity` jar.
 
 ```xml
-
-...
-    <dependency>
-	    <groupId>com.univocity</groupId>
-        <artifactId>univocity</artifactId>
-        <version>1.0.0</version>
-        <type>jar</type>
-    </dependency>
     
-    <dependency>
-        <groupId>com.univocity</groupId>
-        <artifactId>univocity-api</artifactId>
-        <version>1.0.0</version>
-        <type>jar</type>
-    </dependency>
-...
+    <repositories>
+        <repository>
+            <id>univocity-releases</id>
+            <url>http://artifacts.univocity.com/release</url>
+        </repository>
+    </repositories>
+```
+
+These are the dependencies you need to include in your `pom.xml`:
 
 ```
+    
+    <dependencies>
+    ...
+        <dependency>
+            <groupId>com.univocity</groupId>
+            <artifactId>univocity</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+    
+        <dependency>
+            <groupId>com.univocity</groupId>
+            <artifactId>univocity-api</artifactId>
+            <version>1.0.0</version>
+            <type>jar</type>
+        </dependency>
+    ...
+    </dependencies>
+    
+```
+
+**Note**: univocity-api is in the [Maven Central Repository](http://search.maven.org)
+
+To get get access to uniVocity *snapshot* releases, add an additional `repository` entry to the `repositories` section of your `pom.xml`:
+
+```xml
+    
+    <repositories>
+        ...
+        <repository>
+            <id>univocity-releases</id>
+            <url>http://artifacts.univocity.com/snapshot</url>
+        </repository>
+    </repositories>
+    
+```
+
+### Obtaining a license
+
+uniVocity will only run with a license file. Simply execute the `com.univocity.LicenseRequest` class from the `univocity` jar file and provide your details to generate a license request file. Send your license request to licenses@univocity.com and you will receive your license file shortly after.  
+
+*You can find more details about licenses [here](http://www.univocity.com/pages/license-request)* 
 
 ## Background ##
 
@@ -272,7 +310,7 @@ With a data integration engine registered into uniVocity, we can obtain an insta
 	//Here we associate FD_GROUP.FdGrp_CD to food_group.id. Values will be copied directly between source and destination.
 	//The identity mapping defines that an association should be created for each record mapped between source and destination.
 	//A new entry will be added to uniVocity's metadata, containing the source and destination values mapped here.
-	//This linkage enables complex mapping operations that will be demonstrated later on.
+	//This linkage enables complex mapping operations that will be demonstrated later.
 	foodGroupMapping.identity().associate("FdGrp_CD").to("id");
 	
 	//Copies values from FD_GROUP.FdGrp_Desc to food_group.name
@@ -308,7 +346,7 @@ In this example, we will store the identity values in uniVocity's metadata, and 
 With the mappings properly defined, we can execute a data mapping cycle and see what data ended up being written in the `food_group` fixed-width entity :
 
 
-``` 
+```
 
 	id____name_______________________________
 	0100__Dairy and Egg Products_____________
@@ -397,7 +435,7 @@ acquire the positions of fields you are interested in manipulating using the `in
 After executing a data mapping cycle with these [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java) implementations, the output will contain 2 rows (the first 3 rows in the input were skipped): 
 
 
-``` 
+```
 
 	id____name_______________________________
 	1400__FATS AND OILS______________________
@@ -507,7 +545,7 @@ and the previous one was discarded, the metadata will be used to identify which 
 The result of the execution of this new mapping will be:
 
 
-``` 
+```
 
 	id____name_______________________________
 	1400__FATS AND OILS______________________
@@ -577,7 +615,7 @@ The following example demonstrates how [FOOD_DES.csv](http://github.com/uniVocit
 The output of this mapping will be:
 
 
-``` 
+```
 
 	id____name_______________________________
 	1400__FATS AND OILS______________________
@@ -709,7 +747,7 @@ The following example prints out a few messages of an [EngineLifecycleIntercepto
 The execution of this code will produce the following output: 
 
 
-``` 
+```
 
 	
 	Starting new cycle: 5. Current scope: CYCLE
@@ -767,7 +805,7 @@ written to the destination field `group`.
 The execution of this code will produce the following output: 
 
 
-``` 
+```
 
 	id______group_description_____________________________scientific_name_____
 	01001___Dairy_Butter, salted__________________________?___________________
@@ -828,7 +866,7 @@ food descriptions to this *toCodes* function and the result will be written to t
 The output will be as follows:
 	
 
-``` 
+```
 
 	1 - butter
 	2 - salted
@@ -924,7 +962,7 @@ entity *food_group* was configured with *id* as its identifier, an identity mapp
 After executing the mapping cycle, the output contains only the food groups that are actually used in [FOOD_DES.csv](http://github.com/uniVocity/univocity-examples/tree/master/src/test/resources/examples/source_data/csv/FOOD_DES.csv):
 
 
-``` 
+```
 
 	id____name_______________________________
 	0300__Baby Foods_________________________
@@ -1030,7 +1068,7 @@ Finally, we set the variables *groupName* to "Dairy%" and *foodName* to "CHEESE%
 Next, we set them again to "Baby Foods" and "%" respectively. The result of both mapping cycles is as follows:  
 
 
-``` 
+```
 
 	After first cycle:
 	-- Food groups --
@@ -1243,7 +1281,7 @@ in the engine context only.
 The remainder of this code is very similar and we hope it is easier to understand at this point. Here is how the migrated data should look like in the destination database:
 
 
-``` 
+```
 
 	===[ locale ]===
 	id___acronym___description________________________________________
@@ -1418,7 +1456,7 @@ Finally, we call `engine.executeCycle(increment)` to perform a mapping cycle usi
 After the cycle is executed, the destination entities *food_group* and *food_group_details* will have the following data:  
   
 
-``` 
+```
 
 	===[ food_group ]===
 	id___
@@ -1470,7 +1508,7 @@ The following example demonstrates how this works:
 	rowsToKeep.add(new Object[] { 0, 1 });  //we want to keep the row with description "Milk, eggs and stuff".
 	//0, 1 is the identifier of such row, as you can see in the output produced previously
 	
-	//Here we create a dataset with the row identifiers that indicate what records must be preserved
+	//Here we create a dataset with the row identifiers that indicate which records must be preserved
 	Dataset dataset = Univocity.datasetFactory().newDataset(rowsToKeep, new String[] { "id", "loc" });
 	
 	//This will disable updates on "food_group_details", where id = 0 and loc = 1.
@@ -1509,7 +1547,7 @@ from "Milk, eggs and stuff" to "Dairy and Egg Products".
 The output of this example is: 
 
 
-``` 
+```
 
 	-- After disabling updates --
 	===[ food_group_details ]===
@@ -1577,86 +1615,86 @@ data from fields *"Ndb_no"* and *"Long_Desc"*`:
 ```java
 
 	class FoodProcessor extends DatasetProducer {
-	    private final Set<String> foodNames = new TreeSet<String>();
-	    private final Set<Object[]> foodNameDetails = new LinkedHashSet<Object[]>();
+	private final Set<String> foodNames = new TreeSet<String>();
+	private final Set<Object[]> foodNameDetails = new LinkedHashSet<Object[]>();
 	
-	    private final Set<String> foodStateNames = new TreeSet<String>();
-	    private final Set<Object[]> foodStateDetails = new LinkedHashSet<Object[]>();
+	private final Set<String> foodStateNames = new TreeSet<String>();
+	private final Set<Object[]> foodStateDetails = new LinkedHashSet<Object[]>();
 	
-	    private int codeIndex;
-	    private int nameIndex;
+	private int codeIndex;
+	private int nameIndex;
 	
-	    public FoodProcessor() {
-	        //these are the dataset names this processor creates
-	        super("food_names", "food_name_details", "food_state_names", "food_state_details");
-	    }
+	public FoodProcessor() {
+	//these are the dataset names this processor creates
+	super("food_names", "food_name_details", "food_state_names", "food_state_details");
+	}
 	
-	    @Override
-	    public void processStarted() {
-	        foodNames.clear();
-	        foodNameDetails.clear();
-	        foodStateNames.clear();
-	        foodStateDetails.clear();
+	@Override
+	public void processStarted() {
+	foodNames.clear();
+	foodNameDetails.clear();
+	foodStateNames.clear();
+	foodStateDetails.clear();
 	
-	        //before starting to read all rows from the input, let's get the indexes of each input field we are interested in:
-	        codeIndex = getFieldPosition("Ndb_no");
-	        nameIndex = getFieldPosition("Long_Desc");
-	    }
+	//before starting to read all rows from the input, let's get the indexes of each input field we are interested in:
+	codeIndex = getFieldPosition("Ndb_no");
+	nameIndex = getFieldPosition("Long_Desc");
+	}
 	
-	    @Override
-	    public void processNext(Object[] row) {
-	        String code = String.valueOf(row[codeIndex]);
-	        String description = String.valueOf(row[nameIndex]);
+	@Override
+	public void processNext(Object[] row) {
+	String code = String.valueOf(row[codeIndex]);
+	String description = String.valueOf(row[nameIndex]);
 	
-	        //splits the description, trims and lowercases each part in it
-	        String[] nameParts = splitFoodDescription(description);
+	//splits the description, trims and lowercases each part in it
+	String[] nameParts = splitFoodDescription(description);
 	
-	        //the first element is the food name. Whatever comes after is a food state
-	        String foodName = nameParts[0];
+	//the first element is the food name. Whatever comes after is a food state
+	String foodName = nameParts[0];
 	
-	        //here we keep an association between the each name and the code that comes from the input row.
-	        foodNames.add(foodName);
-	        foodNameDetails.add(new Object[] { foodName, code });
+	//here we keep an association between the each name and the code that comes from the input row.
+	foodNames.add(foodName);
+	foodNameDetails.add(new Object[] { foodName, code });
 	
-	        //we do the same for each food state
-	        for (int order = 1; order < nameParts.length; order++) {
-		        String foodState = nameParts[order];
-		        foodStateNames.add(foodState);
-		        foodStateDetails.add(new Object[] { foodState, code, order });
-	        }
-	    }
+	//we do the same for each food state
+	for (int order = 1; order < nameParts.length; order++) {
+		String foodState = nameParts[order];
+		foodStateNames.add(foodState);
+		foodStateDetails.add(new Object[] { foodState, code, order });
+	}
+	}
 	
-	    @Override
-	    public Dataset getDataset(String name) {
-	        //returns one of the datasets produced by this class.
-	        DatasetFactory factory = Univocity.datasetFactory();
+	@Override
+	public Dataset getDataset(String name) {
+	//returns one of the datasets produced by this class.
+	DatasetFactory factory = Univocity.datasetFactory();
 	
-	        if ("food_names".equals(name)) {
-		        return factory.newDataset(foodNames, "name");
+	if ("food_names".equals(name)) {
+		return factory.newDataset(foodNames, "name");
 	
-	        } else if ("food_name_details".equals(name)) {
-		        return factory.newDataset(foodNameDetails, "name", "name", "food_code");
+	} else if ("food_name_details".equals(name)) {
+		return factory.newDataset(foodNameDetails, "name", "name", "food_code");
 	
-	        } else if ("food_state_names".equals(name)) {
-		        return factory.newDataset(foodStateNames, "name");
+	} else if ("food_state_names".equals(name)) {
+		return factory.newDataset(foodStateNames, "name");
 	
-	        } else if ("food_state_details".equals(name)) {
-		        return factory.newDataset(foodStateDetails, "name", "name", "food_code", "order");
+	} else if ("food_state_details".equals(name)) {
+		return factory.newDataset(foodStateDetails, "name", "name", "food_code", "order");
 	
-	        } else {
-		        throw new IllegalArgumentException("Unknown dataset name: " + name);
-	        }
-	    }
+	} else {
+		throw new IllegalArgumentException("Unknown dataset name: " + name);
+	}
+	}
 	
-	    public String[] splitFoodDescription(String description) {
-	        String[] parts = description.toLowerCase().split(",");
+	public String[] splitFoodDescription(String description) {
+	String[] parts = description.toLowerCase().split(",");
 	
-	        for (int i = 0; i < parts.length; i++) {
-		        parts[i] = parts[i].trim();
-	        }
+	for (int i = 0; i < parts.length; i++) {
+		parts[i] = parts[i].trim();
+	}
 	
-	        return parts;
-	    }
+	return parts;
+	}
 	}
 
 
@@ -1774,7 +1812,7 @@ The result of this mapping will be a bit harder to read as the information of a 
 use a query to reconstruct the information. This way we can confirm whether everything got mapped correctly: 
  
 
-``` 
+```
 
 	===[ food_name ]===
 	id___
@@ -1904,7 +1942,7 @@ To keep it short, to use your own custom entities with uniVocity, you need:
 5. (optional) If your entities must also be written to, implement [CustomDataEntity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/custom/CustomDataEntity.java). You don't need to support all data modification operations; 
 Simply return null and uniVocity will handle only the operations you implemented. Even with custom entities, you can enable database operations and load your data
 to uniVocity's in-memory database. If that is the case, you can implement only the `deleteAll()` and `write()` methods: at the end of a transaction, uniVocity will
-automatically invoke these methods and dump all contents in its in-memory database into your custom entity. This way you won't need to implement the `update()` and `delete()`
+automatically invoke these methods and dump all contents of its in-memory database into your custom entity. This way you won't need to implement the `update()` and `delete()`
 operations, which can be tricky in structures such as text files.
 
 6. (optional) If you want to be able to execute some form of querying against your data store, implement [CustomQuery](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/custom/CustomQuery.java). A query does not need to be a SQL statement. It can
@@ -1933,22 +1971,22 @@ For example, to properly select rows from *locale*, with logical exclusion, we c
 ```java
 
 	class LogicalExclusionSelect extends SqlProducer {
-		@Override
-		public String newSelectStatement(String tableName, String[] columnNames) {
-			//Only returns rows where the "deleted" flag is set to 'N'
-			return "select " + commas(columnNames) + " from " + tableName + " where deleted = 'N'";
+	@Override
+	public String newSelectStatement(String tableName, String[] columnNames) {
+	//Only returns rows where the "deleted" flag is set to 'N'
+	return "select " + commas(columnNames) + " from " + tableName + " where deleted = 'N'";
+	}
+	
+	private String commas(String[] columnNames) {
+	StringBuilder out = new StringBuilder();
+	for (String column : columnNames) {
+		if (out.length() > 0) {
+			out.append(',');
 		}
-
-		private String commas(String[] columnNames) {
-			StringBuilder out = new StringBuilder();
-			for (String column : columnNames) {
-				if (out.length() > 0) {
-					out.append(',');
-				}
-				out.append(column);
-			}
-			return out.toString();
-		}
+		out.append(column);
+	}
+	return out.toString();
+	}
 	}
 
 
@@ -2083,7 +2121,7 @@ The output of this mapping will display all rows in the "locale" table (includin
 and the values in the map wrapped by the `generatedLocaleIds` dataset. Note no locales with the deleted flag set to 'Y' are part of the map.
 
 
-``` 
+```
 
 	===[ locale ]===
 	id___acronym___description_________________________________________________deleted___
