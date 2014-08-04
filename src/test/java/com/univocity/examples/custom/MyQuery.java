@@ -117,7 +117,7 @@ public class MyQuery extends MyReadOnlyEntity implements CustomQuery {
 
 	@Override
 	public ReadingProcess preareToRead(final String[] fieldNames) {
-		//gets queried entity data. The reading process will iterate over it to identify what records to return
+		//gets queried entity data. The reading process will iterate over it to identify which records to return
 		final MyData entityData = queriedEntity.getMyData();
 
 		return new ReadingProcess() {

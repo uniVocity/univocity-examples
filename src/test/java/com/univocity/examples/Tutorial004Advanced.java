@@ -139,7 +139,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void initialize() {
-				//Here we restore the content stored in our "persistent" byte array.
+				//Here we restore the contents stored in our "persistent" byte array.
 				if (persistentState == null) {
 					//No byte array yet, let's just create an empty map
 					println(out, "Creating new persistent state");

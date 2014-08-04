@@ -137,7 +137,7 @@ public class MyDataStore implements CustomDataStore<MyReadOnlyEntity> {
 
 	/**
 	 * In case of errors while executing the {@link TransactionalOperation#execute()},
-	 * this data store will restore the data serialized for each entity that got modified.
+	 * this data store will restore the data serialized for each modified entity.
 	 */
 	private void rollbackChanges() {
 		for (Entry<MyReadOnlyEntity, byte[]> entry : dataInTransaction.entrySet()) {

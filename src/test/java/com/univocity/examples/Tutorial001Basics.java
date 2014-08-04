@@ -36,7 +36,7 @@ public class Tutorial001Basics extends Example {
 		//Here we associate FD_GROUP.FdGrp_CD to food_group.id. Values will be copied directly between source and destination.
 		//The identity mapping defines that an association should be created for each record mapped between source and destination.
 		//A new entry will be added to uniVocity's metadata, containing the source and destination values mapped here.
-		//This linkage enables complex mapping operations that will be demonstrated later on.
+		//This linkage enables complex mapping operations that will be demonstrated later.
 		foodGroupMapping.identity().associate("FdGrp_CD").to("id");
 
 		//Copies values from FD_GROUP.FdGrp_Desc to food_group.name

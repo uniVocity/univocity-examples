@@ -691,7 +691,7 @@ To keep it short, to use your own custom entities with uniVocity, you need:
 5. (optional) If your entities must also be written to, implement @@LINK(CustomDataEntity). You don't need to support all data modification operations; 
 Simply return null and uniVocity will handle only the operations you implemented. Even with custom entities, you can enable database operations and load your data
 to uniVocity's in-memory database. If that is the case, you can implement only the `deleteAll()` and `write()` methods: at the end of a transaction, uniVocity will
-automatically invoke these methods and dump all contents in its in-memory database into your custom entity. This way you won't need to implement the `update()` and `delete()`
+automatically invoke these methods and dump all contents of its in-memory database into your custom entity. This way you won't need to implement the `update()` and `delete()`
 operations, which can be tricky in structures such as text files.
 
 6. (optional) If you want to be able to execute some form of querying against your data store, implement @@LINK(CustomQuery). A query does not need to be a SQL statement. It can

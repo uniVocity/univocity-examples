@@ -196,7 +196,7 @@ public class Tutorial003SchemaMapping extends ExampleWithDatabase {
 		rowsToKeep.add(new Object[] { 0, 1 });  //we want to keep the row with description "Milk, eggs and stuff".
 		//0, 1 is the identifier of such row, as you can see in the output produced previously
 
-		//Here we create a dataset with the row identifiers that indicate what records must be preserved
+		//Here we create a dataset with the row identifiers that indicate which records must be preserved
 		Dataset dataset = Univocity.datasetFactory().newDataset(rowsToKeep, new String[] { "id", "loc" });
 
 		//This will disable updates on "food_group_details", where id = 0 and loc = 1.
