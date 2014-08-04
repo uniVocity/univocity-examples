@@ -12,7 +12,7 @@
 	</organization>
 
 	<url>http://github.com/uniVocity/univocity-examples</url>
-	
+
 	<licenses>
 		<license>
 			<name>uniVocity</name>
@@ -21,7 +21,7 @@
 			<comments>uniVocity data integration license</comments>
 		</license>
 	</licenses>
-	
+
 	<issueManagement>
 		<system>GitHub Issues</system>
 		<url>https://github.com/uniVocity/univocity-examples/issues</url>
@@ -40,7 +40,7 @@
 			<email>jbax@univocity.com</email>
 			<timezone>+9:30</timezone>
 		</developer>
-		
+
 		<developer>
 			<id>dev</id>
 			<name>uniVocity development team</name>
@@ -71,7 +71,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -109,7 +109,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -123,7 +123,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-enforcer-plugin</artifactId>
@@ -145,7 +145,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -163,8 +163,23 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>package</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
-		
+
 		<pluginManagement>
 			<!-- All this crap just to remove a warning from my eclipse workspace... -->
 			<plugins>
