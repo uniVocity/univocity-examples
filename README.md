@@ -47,63 +47,63 @@ data integration solution from the ground up.
 
 ### Table of contents ###
 
-[Installation](#installation)
+ * [Installation](#installation)
 
-  -[Maven settings](#maven-settings)
+  * [Maven settings](#maven-settings)
 
-  -[Obtaining a license](#obtaining-a-license)
+  * [Obtaining a license](#obtaining-a-license)
 
-[Introduction](#introduction)
+ * [Introduction](#introduction)
 
-  -[Background](#background)
+  * [Background](#background)
 
-  -[The data input example](#the-data-input-example)
+  * [The data input example](#the-data-input-example)
 
-  -[Configuring the data stores](#configuring-the-data-stores)
+  * [Configuring the data stores](#configuring-the-data-stores)
 
-  -[uniVocity engine initialization](#univocity-engine-initialization)
+  * [uniVocity engine initialization](#univocity-engine-initialization)
 
-[Essential building blocks](#essential-building-blocks)
+ * [Essential building blocks](#essential-building-blocks)
 
-  -[Copying data from CSV to Fixed-width entities](#copying-data-from-csv-to-fixed-width-entities)
+  * [Copying data from CSV to Fixed-width entities](#copying-data-from-csv-to-fixed-width-entities)
 
-  -[Using row readers to manage rows](#using-row-readers-to-manage-rows)
+  * [Using row readers to manage rows](#using-row-readers-to-manage-rows)
 
-  -[Functions](#functions)
+  * [Functions](#functions)
 
-  -[Reference mappings](#reference-mappings)
+  * [Reference mappings](#reference-mappings)
 
-  -[Intercepting engine lifecycle activities](#intercepting-engine-lifecycle-activities)
+  * [Intercepting engine lifecycle activities](#intercepting-engine-lifecycle-activities)
 
-  -[Map functions](#map-functions)
+  * [Map functions](#map-functions)
 
-  -[Objects with functions](#objects-with-functions)
+  * [Objects with functions](#objects-with-functions)
 
-[Queries, more functions, and variables](#queries,-more-functions,-and-variables)
+ * [Queries, more functions, and variables](#queries,-more-functions,-and-variables)
 
-  -[Using parameters and variables](#using-parameters-and-variables)
+  * [Using parameters and variables](#using-parameters-and-variables)
 
-[Mapping between incompatible schemas](#mapping-between-incompatible-schemas)
+ * [Mapping between incompatible schemas](#mapping-between-incompatible-schemas)
 
-[Input management](#input-management)
+ * [Input management](#input-management)
 
-  -[Input sharing](#input-sharing)
+  * [Input sharing](#input-sharing)
 
-  -[Data increments](#data-increments)
+  * [Data increments](#data-increments)
 
-  -[Update prevention](#update-prevention)
+  * [Update prevention](#update-prevention)
 
-  -[Dataset producers](#dataset-producers)
+  * [Dataset producers](#dataset-producers)
 
-[Advanced](#advanced)
+ * [Advanced](#advanced)
 
-  -[Persistent scope](#persistent-scope)
+  * [Persistent scope](#persistent-scope)
 
-  -[Custom entities](#custom-entities)
+  * [Custom entities](#custom-entities)
 
-  -[Advanced settings for JDBC entities](#advanced-settings-for-jdbc-entities)
+  * [Advanced settings for JDBC entities](#advanced-settings-for-jdbc-entities)
 
-[Project Roadmap](#project-roadmap)
+ * [Project Roadmap](#project-roadmap)
 
 
 
