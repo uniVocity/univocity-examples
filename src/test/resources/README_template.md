@@ -45,6 +45,8 @@ data integration solution from the ground up.
 
 ## Let's get started! ##
 
+@@TOC
+
 ## Installation ##
 
 
@@ -58,7 +60,7 @@ To install uniVocity, you need two artifacts:
 We split the API so your code can be totally isolated from our implementation code. Any new version of uniVocity will support the published API's 
 so you can update uniVocity transparently without worrying about compilation errors and code rewrites.  
 
-### Maven settings
+### Maven settings ###
 
 If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity` jar.
 
@@ -112,7 +114,7 @@ To get get access to uniVocity *snapshot* releases, add an additional `repositor
     
 ```
 
-### Obtaining a license
+### Obtaining a license ###
 
 uniVocity will only run with a license file. Simply execute the `com.univocity.LicenseRequest` class from the `univocity` jar file and provide your details to generate a license request file. Send your license request to licenses@univocity.com and you will receive your license file shortly after.  
 
@@ -517,7 +519,7 @@ The remainder of this code is very similar and we hope it is easier to understan
 
 @@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial003SchemaMapping/example001SchemaMapping)
 
-##Input sharing##
+## Input sharing ##
   
  In the previous example, there are 4 mappings reading from the source entity *FOOD_DES*. Does it mean uniVocity will read from it 4 times?
  The answer is: no, *unless you want it to*. uniVocity detects there are 4 *consecutive* mappings reading from the same source. By default, it will create a single reading
