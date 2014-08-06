@@ -110,7 +110,7 @@ abstract class Example {
 	/**
 	 * Appends some content to the output and adds a newline at the end.
 	 * @param out the output to have content appended to.
-	 * @param content the contents to be appended
+	 * @param contents the contents to be appended
 	 */
 	public void println(StringBuilder out, Object contents) {
 		out.append(contents).append('\n');
