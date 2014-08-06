@@ -45,6 +45,68 @@ data integration solution from the ground up.
 
 ## Let's get started! ##
 
+### Table of contents ###
+
+[Installation](#installation)
+
+  -[Maven settings](#maven-settings)
+
+  -[Obtaining a license](#obtaining-a-license)
+
+[Introduction](#introduction)
+
+  -[Background](#background)
+
+  -[The data input example](#the-data-input-example)
+
+  -[Configuring the data stores](#configuring-the-data-stores)
+
+  -[uniVocity engine initialization](#univocity-engine-initialization)
+
+[Essential building blocks](#essential-building-blocks)
+
+  -[Copying data from CSV to Fixed-width entities](#copying-data-from-csv-to-fixed-width-entities)
+
+  -[Using row readers to manage rows](#using-row-readers-to-manage-rows)
+
+  -[Functions](#functions)
+
+  -[Reference mappings](#reference-mappings)
+
+  -[Intercepting engine lifecycle activities](#intercepting-engine-lifecycle-activities)
+
+  -[Map functions](#map-functions)
+
+  -[Objects with functions](#objects-with-functions)
+
+[Queries, more functions, and variables](#queries,-more-functions,-and-variables)
+
+  -[Using parameters and variables](#using-parameters-and-variables)
+
+[Mapping between incompatible schemas](#mapping-between-incompatible-schemas)
+
+[Input management](#input-management)
+
+  -[Input sharing](#input-sharing)
+
+  -[Data increments](#data-increments)
+
+  -[Update prevention](#update-prevention)
+
+  -[Dataset producers](#dataset-producers)
+
+[Advanced](#advanced)
+
+  -[Persistent scope](#persistent-scope)
+
+  -[Custom entities](#custom-entities)
+
+  -[Advanced settings for JDBC entities](#advanced-settings-for-jdbc-entities)
+
+[Project Roadmap](#project-roadmap)
+
+
+
 ## Installation ##
 
 
@@ -58,7 +120,7 @@ To install uniVocity, you need two artifacts:
 We split the API so your code can be totally isolated from our implementation code. Any new version of uniVocity will support the published API's 
 so you can update uniVocity transparently without worrying about compilation errors and code rewrites.  
 
-### Maven settings
+### Maven settings ###
 
 If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity` jar.
 
@@ -112,13 +174,17 @@ To get get access to uniVocity *snapshot* releases, add an additional `repositor
     
 ```
 
-### Obtaining a license
+### Obtaining a license ###
 
 uniVocity will only run with a license file. Simply execute the `com.univocity.LicenseRequest` class from the `univocity` jar file and provide your details to generate a license request file. Send your license request to licenses@univocity.com and you will receive your license file shortly after.  
 
-*You can find more details about licenses [here](http://www.univocity.com/pages/license-request)* 
+Once you receive your `license.zip` file, all you need to do is to place it in your classpath so `uniVocity` can validate it and start up. You can also place the license file anywhere in your computer and invoke `Univocity.setLicensePath("/path/to/your/license.zip");` before starting the data integration engine.
 
-## Background ##
+*You can find more information about licenses [here](http://www.univocity.com/pages/license-request)* 
+
+## Introduction ##
+
+### Background ###
 
 uniVocity is essentially a data mapping framework built around the concept of data stores and their entities:
 
@@ -136,7 +202,7 @@ uniVocity is essentially a data mapping framework built around the concept of da
 With these components, uniVocity lets you create complex data mappings that define how information should flow from one data entity to another.
 That's all you need to know for now, so let's get started.
 
-## Introduction ##
+### The data input example ###
 
 In our example, we are interested in synchronizing data of foods and groups of foods with another data store.
 
@@ -183,6 +249,8 @@ And
 
 
 ```
+
+### Configuring the data stores ###
 
 To use these files as data entities in uniVocity, we need to configure a data store. uniVocity comes with its own
 CSV data store implementation, so all you need to do is configure it:
@@ -260,6 +328,8 @@ entities, their names, their fields and which fields should be used as identifie
 
 
 ```
+
+### uniVocity engine initialization ###
 
 Having the data stores configured, we can finally configure and initialize a data integration engine:
 
@@ -362,7 +432,7 @@ In general, the steps taken so far are the first thing you will do when creating
 be much, much more intricate than that. uniVocity provides many tools for you to easily handle such intricacies. Let's explore some of them.
 
 
-### Using row readers to manage input/output rows ###
+### Using row readers to manage rows ###
 
 One of the most powerful tools in uniVocity is the [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java). With it you can intercept rows as soon as they are loaded from the source,
 then modify, log, perform calculations, etc, and then send them over to uniVocity to continue with the mapping process. Once uniVocity has a mapped row, and is ready
@@ -1374,7 +1444,9 @@ The remainder of this code is very similar and we hope it is easier to understan
 
 ```
 
-##Input sharing##
+## Input management ##
+
+### Input sharing ###
   
  In the previous example, there are 4 mappings reading from the source entity *FOOD_DES*. Does it mean uniVocity will read from it 4 times?
  The answer is: no, *unless you want it to*. uniVocity detects there are 4 *consecutive* mappings reading from the same source. By default, it will create a single reading
@@ -1390,7 +1462,7 @@ The remainder of this code is very similar and we hope it is easier to understan
  mapping 2 from FD_GROUP, and mapping 3 from FOOD_DES again, then all rows of FOOD_DES will be read twice: first execute mapping 1, then again to execute mapping 3.     
 
 
-## Data increments ##
+### Data increments ###
 
 You probably don't want to execute a data mapping cycle using ALL records of your source entities every time a few changes were made. With uniVocity, you can 
 provide *data increments* to execute your mappings using limited datasets for each source entity. 
@@ -1484,7 +1556,7 @@ After the cycle is executed, the destination entities *food_group* and *food_gro
 
 ```
 
-## Update prevention ##
+### Update prevention ###
 
 Using uniVocity metadata, you can prevent further modification on some records that have already been mapped to the destination. Simply create a [Dataset](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/data/Dataset.java) 
 with identifiers of those records of the destination entity that should not be modified, then call `engine.disableUpdateOnRecords(entityName, dataset)`
@@ -1583,7 +1655,7 @@ The output of this example is:
 
 ```
 
-## Dataset producers ##
+### Dataset producers ###
 
 In the example to map data between different schemas some tables were left out:
  
@@ -1912,7 +1984,9 @@ use a query to reconstruct the information. This way we can confirm whether ever
 
 ```
 
-## Persistent scope ##
+## Advanced ##
+
+### Persistent scope ###
 
 uniVocity supports the concept of a persistent scope. This is a scope whose state is intended to outlive the data integration engine. 
 To use a persistent scope, you are expected to provide an implementation of [ScopeStorageProvider](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/ScopeStorageProvider.java) in an [EngineConfiguration](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/EngineConfiguration.java) object.
@@ -1922,7 +1996,7 @@ The storage is fully under your control, and you can choose whether to use files
 We have created an example method `example002PersistentScope` in [Tutorial004Advanced](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/Tutorial004Advanced.java) that
 demonstrates how the persistent scope works.
 
-## Custom entities ##
+### Custom entities ###
 
 uniVocity provides some basic data stores and entities but it also allows you to create your own. We created (and documented) examples exploring 
 the full set of features you can implement with custom entities [here](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/custom). These entities are based on in-memory data
@@ -1951,7 +2025,7 @@ be anything in a `String` that has a meaning in the context of your data store.
 The [Tutorial005CustomEntities](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/Tutorial005CustomEntities.java) puts our examples of custom entities to use,
 and demonstrates how uniVocity simply isolates you from major intricacies. Please explore and let us know what you think of these examples.
 
-## Advanced settings for JDBC entities ##
+### Advanced settings for JDBC entities ###
 
 In many situations, your database and development environment will have limitations and special cases. 
 uniVocity tries to provide options so you can get around them. Two of the most common situations are:
