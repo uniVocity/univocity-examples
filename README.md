@@ -79,7 +79,7 @@ data integration solution from the ground up.
 
   * [Objects with functions](#objects-with-functions)
 
- * [Queries, more functions, and variables](#queries,-more-functions,-and-variables)
+ * [Queries, more functions, and variables](#queries-more-functions-and-variables)
 
   * [Using parameters and variables](#using-parameters-and-variables)
 
