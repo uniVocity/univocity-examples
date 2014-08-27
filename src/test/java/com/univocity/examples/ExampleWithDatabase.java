@@ -27,11 +27,8 @@ abstract class ExampleWithDatabase extends Example {
 		// The next three lines of code use some utility classes we created to easily
 		// create and initialize in-memory databases for testing purposes.
 
-		//creates an in-memory database with the name "database"
-		DatabaseConfig destinationConfig = new DatabaseConfig(UUID.randomUUID().toString());
-
-		//defines a directory with table definition scripts.
-		destinationConfig.setDdlDirectory("examples/new_schema");
+		//creates an in-memory database with a random name and a directory with table definition scripts.
+		DatabaseAccessor destinationConfig = new DatabaseAccessor(UUID.randomUUID().toString(), "examples/new_schema");
 
 		//initializes the database, creates all tables and returns a javax.sql.DataSource
 		dataSource = destinationConfig.getDatabase().getDataSource();

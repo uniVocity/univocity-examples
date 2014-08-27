@@ -7,7 +7,7 @@ by trade secret or copyright law.
 
 uniVocity Software Pty Ltd authorizes you to disseminate and reproduce 
 this material without restriction. The source code available in this
-repository must only be executed in computers that store a valid 
-uniVocity license key, which can be purchased in the website:
+repository must only be executed with our data integration software 
+"uniVocity", which can be downloaded at no cost from our website:
 
 -------------------------[ www.univocity.com ]-------------------------
