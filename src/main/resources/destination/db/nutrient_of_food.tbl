@@ -1,0 +1,9 @@
+CREATE TABLE nutrient_of_food (
+	food_id			INTEGER NOT NULL,
+	nutrient_id		INTEGER NOT NULL,
+	amount			DOUBLE NOT NULL,
+	
+	CONSTRAINT nutrient_of_food_pk PRIMARY KEY (food_id, nutrient_id),
+	FOREIGN KEY (food_id) REFERENCES food(id),
+	FOREIGN KEY (nutrient_id) REFERENCES nutrient(id)
+)

@@ -1,0 +1,4 @@
+CREATE TABLE food_group (
+	id 					IDENTITY PRIMARY KEY,
+	description			VARCHAR(128) NOT NULL UNIQUE,
+)

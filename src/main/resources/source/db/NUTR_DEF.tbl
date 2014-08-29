@@ -1,0 +1,9 @@
+CREATE TABLE NUTR_DEF(
+	Nutr_No		CHAR(3) PRIMARY KEY,
+	Units		CHAR(7),
+	Tagname		VARCHAR(32),
+	NutrDesc	VARCHAR(64),
+	Num_Dec		CHAR(1),
+	SR_Order	INTEGER
+
+)

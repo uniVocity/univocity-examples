@@ -1,0 +1,9 @@
+CREATE TABLE state_of_food (
+	food_id			INTEGER NOT NULL,
+	state_id		INTEGER NOT NULL,
+	sequence		INTEGER NOT NULL,
+	
+	CONSTRAINT state_of_food_pk PRIMARY KEY (food_id, state_id, sequence),
+	FOREIGN KEY (food_id) REFERENCES food(id),
+	FOREIGN KEY (state_id) REFERENCES food_state(id)
+)

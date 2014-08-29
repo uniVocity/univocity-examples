@@ -15,6 +15,7 @@ import com.univocity.api.*;
 import com.univocity.api.config.*;
 import com.univocity.api.config.builders.*;
 import com.univocity.api.engine.*;
+import com.univocity.examples.etl.*;
 
 public class Tutorial004Advanced extends ExampleWithDatabase {
 

@@ -1,0 +1,10 @@
+CREATE TABLE weight_of_food (
+	food_id			INTEGER NOT NULL,
+	weight_id		INTEGER NOT NULL,
+	amount			DOUBLE NOT NULL,
+	grams			DOUBLE,
+	
+	CONSTRAINT weight_of_food_pk PRIMARY KEY (food_id, weight_id, amount),
+	FOREIGN KEY (food_id) REFERENCES food(id),
+	FOREIGN KEY (weight_id) REFERENCES weight(id)
+)

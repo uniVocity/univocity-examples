@@ -1,0 +1,4 @@
+CREATE TABLE weight (
+	id 					IDENTITY PRIMARY KEY,
+	description			VARCHAR(128) NOT NULL UNIQUE
+)

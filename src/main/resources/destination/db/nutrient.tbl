@@ -1,0 +1,8 @@
+CREATE TABLE nutrient (
+	id 					IDENTITY PRIMARY KEY,
+	description			VARCHAR(128) NOT NULL,
+	acronym				VARCHAR(32),
+	unit				VARCHAR(7) NOT NULL,
+	
+	CONSTRAINT nutrient_uq UNIQUE (description, acronym)
+)

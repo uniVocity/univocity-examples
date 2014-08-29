@@ -1,0 +1,216 @@
+/*******************************************************************************
+ * Copyright (c) 2014 uniVocity Software Pty Ltd. All rights reserved.
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE.txt', which is part of this source code package.
+ ******************************************************************************/
+package com.univocity.examples.app.swing;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.lang.reflect.*;
+
+import javax.swing.*;
+import javax.swing.border.*;
+
+import com.univocity.examples.app.data.*;
+import com.univocity.examples.utils.*;
+
+public class DataAnalysisWindow extends JFrame {
+
+	private static final long serialVersionUID = -4770569557233947796L;
+
+	private DataAnalysisPanel dataAnalysisPanel;
+	private final DataIntegrationConfig config;
+
+	private JPanel processPanel;
+	private JComboBox processList;
+	private JLabel processListLabel;
+	private JButton executeProcessButton;
+	private GlassPane glass;
+	private JPanel statusPanel;
+	private JLabel statusLabel;
+	private JLabel statusInformation;
+
+	public DataAnalysisWindow(DataIntegrationConfig config) {
+		this.config = config;
+		this.setTitle("uniVocity data integration test: " + config.getSourceDatabaseConfig().getDatabaseName() + " -> " + config.getDestinationDatabaseConfig().getDatabaseName());
+		this.setGlassPane(getGlass());
+		this.setIconImage(getIcon());
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		Container container = getContentPane();
+		container.setLayout(new BorderLayout());
+		container.add(getDataAnalysisPanel(), BorderLayout.CENTER);
+		container.add(getProcessPanel(), BorderLayout.NORTH);
+		container.add(getStatusPanel(), BorderLayout.SOUTH);
+
+		setSize(Toolkit.getDefaultToolkit().getScreenSize());
+		setLocationRelativeTo(null);
+
+		WindowUtils.fixDisplayOnLinux(this);
+
+	}
+
+	private Image getIcon() {
+		try {
+			return new ImageIcon(getClass().getResource("/icon128x128.png")).getImage();
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	protected JPanel getStatusPanel() {
+		if (statusPanel == null) {
+			statusPanel = new JPanel();
+			statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+			statusPanel.add(getStatusLabel());
+			statusPanel.add(Box.createHorizontalStrut(5));
+			statusPanel.add(getStatusInformation());
+		}
+		return statusPanel;
+	}
+
+	protected JLabel getStatusLabel() {
+		if (statusLabel == null) {
+			statusLabel = new JLabel();
+			statusLabel.setFont(new Font("Arial", Font.BOLD, 10));
+		}
+		return statusLabel;
+	}
+
+	protected JLabel getStatusInformation() {
+		if (statusInformation == null) {
+			statusInformation = new JLabel();
+			statusInformation.setFont(new Font("Arial", Font.PLAIN, 11));
+		}
+		return statusInformation;
+	}
+
+	protected JPanel getProcessPanel() {
+		if (processPanel == null) {
+			processPanel = new JPanel();
+			processPanel.setBorder(new TitledBorder("Process selection"));
+			processPanel.setLayout(new BoxLayout(processPanel, BoxLayout.X_AXIS));
+			addWithSpace(processPanel, getProcessListLabel(), 2);
+			addWithSpace(processPanel, getProcessList(), 2);
+			addWithSpace(processPanel, getExecuteProcessButton(), 2);
+		}
+		return processPanel;
+	}
+
+	private GlassPane getGlass() {
+		if (glass == null) {
+			glass = new GlassPane();
+		}
+		return glass;
+	}
+
+	private void addWithSpace(JPanel panel, Component c, int width) {
+		panel.add(Box.createRigidArea(new Dimension(width, 0)));
+		panel.add(c);
+		panel.add(Box.createRigidArea(new Dimension(width, 0)));
+	}
+
+	protected JComboBox getProcessList() {
+		if (processList == null) {
+			Object[] processNames = config.getProcessNames().toArray();
+			processList = new JComboBox(processNames);
+		}
+		return processList;
+	}
+
+	protected JLabel getProcessListLabel() {
+		if (processListLabel == null) {
+			processListLabel = new JLabel("Processes:");
+		}
+		return processListLabel;
+	}
+
+	protected JButton getExecuteProcessButton() {
+		if (executeProcessButton == null) {
+			executeProcessButton = new JButton("Execute process");
+			executeProcessButton.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					executeSelectedProcess();
+				}
+			});
+		}
+		return executeProcessButton;
+	}
+
+	protected DataAnalysisPanel getDataAnalysisPanel() {
+		if (dataAnalysisPanel == null) {
+			dataAnalysisPanel = new DataAnalysisPanel(config.getSourceDatabaseConfig(), config.getDestinationDatabaseConfig());
+			dataAnalysisPanel.setBorder(new TitledBorder("Data analysis"));
+		}
+		return dataAnalysisPanel;
+	}
+
+	protected void executeSelectedProcess() {
+		Object selection = getProcessList().getSelectedItem();
+		if (selection != null) {
+			String processName = String.valueOf(selection);
+			executeProcess(processName);
+		}
+	}
+
+	protected void executeProcess(String processName) {
+		final Runnable process = config.getProcess(processName);
+		getGlass().activate("Executing process: '" + processName + "'...");
+
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				try {
+					long start = System.currentTimeMillis();
+					SwingUtilities.invokeAndWait(process);
+					long timeTaken = System.currentTimeMillis() - start;
+					setStatus("Completed.", "Took " + timeTaken / 1000 + " seconds (" + timeTaken + " ms)");
+				} catch (InterruptedException ie) {
+					Thread.currentThread().interrupt();
+					setStatus("Interrupted", "");
+				} catch (InvocationTargetException ie) {
+					WindowUtils.showErrorMessage(DataAnalysisWindow.this, ie.getCause());
+					setStatus("Interrupted", "");
+				} finally {
+					getGlass().deactivate();
+				}
+				System.gc();
+			}
+		};
+		thread.start();
+	}
+
+	private void setStatus(String label, String message) {
+		if (label != null) {
+			getStatusLabel().setText(label);
+		}
+		if (message != null) {
+			getStatusInformation().setText(message);
+		}
+	}
+
+	public static void main(String... args) {
+		DatabaseAccessor source = new DatabaseAccessor("usda_db", "source/db", "source/db/queries.properties");
+		DatabaseAccessor destination = new DatabaseAccessor("destination", "destination/db", "destination/db/queries.properties");
+
+		DataIntegrationConfig config = new DataIntegrationConfig();
+		config.setSourceDatabaseConfig(source);
+		config.setDestinationDatabaseConfig(destination);
+
+		config.addProcess("Sleep and do nothing", new Runnable() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(2000);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		});
+
+		DataAnalysisWindow main = new DataAnalysisWindow(config);
+		WindowUtils.displayWindow(main);
+	}
+}
