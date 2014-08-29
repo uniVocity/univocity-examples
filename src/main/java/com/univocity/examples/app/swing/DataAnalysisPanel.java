@@ -36,14 +36,14 @@ public class DataAnalysisPanel extends JPanel {
 
 	protected JPanel getSourcePanel() {
 		if (sourcePanel == null) {
-			sourcePanel = newPanel(getSourceTable(), "Source - " + sourceConfig.getDatabaseName());
+			sourcePanel = newPanel(getSourceTable(), sourceConfig.getDatabaseName());
 		}
 		return sourcePanel;
 	}
 
 	protected JPanel getDestinationPanel() {
 		if (destinationPanel == null) {
-			destinationPanel = newPanel(getDestinationTable(), "Destination - " + destinationConfig.getDatabaseName());
+			destinationPanel = newPanel(getDestinationTable(), destinationConfig.getDatabaseName());
 		}
 		return destinationPanel;
 	}

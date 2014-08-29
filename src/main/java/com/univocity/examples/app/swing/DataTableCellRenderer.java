@@ -22,6 +22,7 @@ public class DataTableCellRenderer extends DefaultTableCellRenderer {
 
 	private static final Color background0 = Color.WHITE;
 	private static final Color background1 = new Color(220, 220, 220);
+	private static final Color selectionBackground = new Color(99, 162, 219, 125);
 	private static final Color disabledFontColor = Color.DARK_GRAY;
 	private static final Font disabledFont = new Font("Arial", Font.BOLD | Font.ITALIC, 12);
 	private static final Font enabledFont = new Font("Arial", Font.PLAIN, 11);
@@ -32,7 +33,11 @@ public class DataTableCellRenderer extends DefaultTableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-		c.setBackground(row % 2 == 0 ? background0 : background1);
+		if (isSelected) {
+			c.setBackground(selectionBackground);
+		} else {
+			c.setBackground(row % 2 == 0 ? background0 : background1);
+		}
 
 		if (!(c instanceof JComponent)) {
 			return c;

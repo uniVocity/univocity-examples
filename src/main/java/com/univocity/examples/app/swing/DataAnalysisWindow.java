@@ -31,12 +31,16 @@ public class DataAnalysisWindow extends JFrame {
 	private JLabel statusLabel;
 	private JLabel statusInformation;
 	private JPanel logoPanel;
+	private TableSearchField searchField;
+	private JLabel searchLabel;
+	private JButton btSearchNext;
+	private JButton btSearchPrevious;
 
 	public DataAnalysisWindow(DataIntegrationConfig config) {
 		setLookAndFeel();
 
 		this.config = config;
-		this.setTitle("uniVocity data integration test: " + config.getSourceDatabaseConfig().getDatabaseName() + " -> " + config.getDestinationDatabaseConfig().getDatabaseName());
+		this.setTitle("uniVocity data integration: " + config.getSourceDatabaseConfig().getDatabaseName() + " -> " + config.getDestinationDatabaseConfig().getDatabaseName());
 		this.setGlassPane(getGlass());
 		this.setIconImage(getIcon());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -73,6 +77,16 @@ public class DataAnalysisWindow extends JFrame {
 		}
 	}
 
+	private TableSearchField getSearchField() {
+		if (searchField == null) {
+			searchField = new TableSearchField();
+			searchField.addTable(getDataAnalysisPanel().getSourceTable().getDataTable());
+			searchField.addTable(getDataAnalysisPanel().getDestinationTable().getDataTable());
+			searchField.setFont(new Font("Arial", Font.PLAIN, 10));
+		}
+		return searchField;
+	}
+
 	private JPanel getLogoPanel() {
 		if (logoPanel == null) {
 			logoPanel = new JPanel();
@@ -100,12 +114,65 @@ public class DataAnalysisWindow extends JFrame {
 	protected JPanel getStatusPanel() {
 		if (statusPanel == null) {
 			statusPanel = new JPanel();
-			statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-			statusPanel.add(getStatusLabel());
-			statusPanel.add(Box.createHorizontalStrut(5));
-			statusPanel.add(getStatusInformation());
+			statusPanel.setLayout(new GridBagLayout());
+
+			GridBagConstraints c = new GridBagConstraints();
+			c.gridx = 0;
+			c.gridy = 0;
+			statusPanel.add(getSearchLabel(), c);
+
+			c.gridx++;
+			c.insets = new Insets(0, 5, 0, 5);
+			c.ipadx = 250;
+			statusPanel.add(getSearchField(), c);
+
+			c.gridx++;
+			c.ipadx = 0;
+			statusPanel.add(getBtSearchNext(), c);
+
+			c.gridx++;
+			c.insets = new Insets(0, 5, 0, 20);
+			statusPanel.add(getBtSearchPrevious(), c);
+
+			c.gridx++;
+			c.insets = new Insets(0, 5, 0, 5);
+			statusPanel.add(getStatusLabel(), c);
+
+			c.gridx++;
+			statusPanel.add(getStatusInformation(), c);
+
+			c.gridx++;
+			c.weightx = 1.0;
+			statusPanel.add(new JPanel(), c);
+
 		}
 		return statusPanel;
+	}
+
+	private JButton getBtSearchNext() {
+		if (btSearchNext == null) {
+			btSearchNext = new JButton("Next");
+			btSearchNext.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					getSearchField().searchNext();
+				}
+			});
+		}
+		return btSearchNext;
+	}
+
+	private JButton getBtSearchPrevious() {
+		if (btSearchPrevious == null) {
+			btSearchPrevious = new JButton("Previous");
+			btSearchPrevious.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					getSearchField().searchPrevious();
+				}
+			});
+		}
+		return btSearchPrevious;
 	}
 
 	protected JLabel getStatusLabel() {
@@ -114,6 +181,14 @@ public class DataAnalysisWindow extends JFrame {
 			statusLabel.setFont(new Font("Arial", Font.BOLD, 10));
 		}
 		return statusLabel;
+	}
+
+	protected JLabel getSearchLabel() {
+		if (searchLabel == null) {
+			searchLabel = new JLabel("Search:");
+			searchLabel.setFont(new Font("Arial", Font.BOLD, 10));
+		}
+		return searchLabel;
 	}
 
 	protected JLabel getStatusInformation() {

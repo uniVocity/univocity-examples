@@ -291,6 +291,7 @@ public class DaoTable extends DataTable {
 		getDeleteButton().setEnabled(!editing && isRowSelected());
 		getTableList().setEnabled(!editing);
 		getQueryInput().setEnabled(!editing);
+		getQueryList().setEnabled(!editing);
 	}
 
 	private boolean isRowSelected() {
