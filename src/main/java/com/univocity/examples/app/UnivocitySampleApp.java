@@ -5,6 +5,8 @@
  ******************************************************************************/
 package com.univocity.examples.app;
 
+import javax.swing.*;
+
 import com.univocity.examples.app.swing.*;
 
 public class UnivocitySampleApp extends DataAnalysisWindow {
@@ -13,6 +15,7 @@ public class UnivocitySampleApp extends DataAnalysisWindow {
 
 	public UnivocitySampleApp() {
 		super(new SampleAppConfig());
+		setIconImage(new ImageIcon(UnivocitySampleApp.class.getResource("/images/icon128x128.png")).getImage());
 	}
 
 	public static void main(String... args) {

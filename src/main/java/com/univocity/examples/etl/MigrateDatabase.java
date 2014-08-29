@@ -71,7 +71,7 @@ public class MigrateDatabase implements Runnable {
 		map.identity().associate("NDB_No").to("id");
 		map.reference().using("NDB_No").referTo("food_name_details", "food").on("id");
 		map.value().copy("CHO_Factor", "Fat_Factor", "Pro_Factor", "N_Factor")
-		.to("carbohydrate_factor", "fat_factor", "protein_factor", "nitrogen_protein_factor");
+				.to("carbohydrate_factor", "fat_factor", "protein_factor", "nitrogen_protein_factor");
 		map.persistence().usingMetadata().deleteDisabled().updateModified().updateNewRows();
 
 		map = mapping.map("FOOD_DES", "group_of_food");

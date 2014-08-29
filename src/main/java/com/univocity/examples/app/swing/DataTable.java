@@ -202,7 +202,18 @@ public class DataTable extends JRootPane {
 
 	protected JTable getDataTable() {
 		if (dataTable == null) {
-			dataTable = new JTable(getDataModel());
+			dataTable = new JTable(getDataModel()) {
+				private static final long serialVersionUID = -7873001059088797975L;
+
+				@Override
+				public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+					Component component = super.prepareRenderer(renderer, row, column);
+					int rendererWidth = component.getPreferredSize().width;
+					TableColumn tableColumn = getColumnModel().getColumn(column);
+					tableColumn.setPreferredWidth(Math.max(rendererWidth + getIntercellSpacing().width, tableColumn.getPreferredWidth()));
+					return component;
+				}
+			};
 			dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			dataTable.setColumnModel(getColumnModel());
 		}

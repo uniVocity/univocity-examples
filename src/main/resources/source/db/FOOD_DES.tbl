@@ -9,8 +9,8 @@ CREATE TABLE FOOD_DES(
 	Ref_Desc		VARCHAR(256),
 	Refuse			INTEGER,
 	SciName			VARCHAR(128),
-	N_Factor		DECIMAL(14,3),
-	Pro_Factor		DECIMAL(14,3),
-	Fat_Factor		DECIMAL(14,3),
-	CHO_Factor		DECIMAL(14,3)
+	N_Factor		DOUBLE,
+	Pro_Factor		DOUBLE,
+	Fat_Factor		DOUBLE,
+	CHO_Factor		DOUBLE
 )

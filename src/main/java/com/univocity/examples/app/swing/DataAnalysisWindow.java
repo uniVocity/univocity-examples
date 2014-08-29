@@ -30,8 +30,11 @@ public class DataAnalysisWindow extends JFrame {
 	private JPanel statusPanel;
 	private JLabel statusLabel;
 	private JLabel statusInformation;
+	private JPanel logoPanel;
 
 	public DataAnalysisWindow(DataIntegrationConfig config) {
+		setLookAndFeel();
+
 		this.config = config;
 		this.setTitle("uniVocity data integration test: " + config.getSourceDatabaseConfig().getDatabaseName() + " -> " + config.getDestinationDatabaseConfig().getDatabaseName());
 		this.setGlassPane(getGlass());
@@ -40,15 +43,50 @@ public class DataAnalysisWindow extends JFrame {
 
 		Container container = getContentPane();
 		container.setLayout(new BorderLayout());
+
+		JPanel northPanel = new JPanel(new BorderLayout());
+		northPanel.add(getProcessPanel(), BorderLayout.CENTER);
+		northPanel.add(getLogoPanel(), BorderLayout.NORTH);
+
+		container.add(northPanel, BorderLayout.NORTH);
 		container.add(getDataAnalysisPanel(), BorderLayout.CENTER);
-		container.add(getProcessPanel(), BorderLayout.NORTH);
 		container.add(getStatusPanel(), BorderLayout.SOUTH);
 
 		setSize(Toolkit.getDefaultToolkit().getScreenSize());
 		setLocationRelativeTo(null);
+	}
 
+	private void setLookAndFeel() {
+		System.setProperty("awt.useSystemAAFontSettings", "on");
+		System.setProperty("swing.aatext", "true");
 		WindowUtils.fixDisplayOnLinux(this);
 
+		try {
+			for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			//keep the default
+		}
+	}
+
+	private JPanel getLogoPanel() {
+		if (logoPanel == null) {
+			logoPanel = new JPanel();
+
+			logoPanel.setLayout(new BorderLayout());
+			logoPanel.setBackground(new Color(35, 39, 42));
+
+			ImageIcon image = new ImageIcon(getClass().getResource("/images/univocity_logo_250x86.png"));
+			JLabel logo = new JLabel(image);
+
+			logoPanel.add(logo, BorderLayout.CENTER);
+			logoPanel.setPreferredSize(new Dimension(250, 100));
+		}
+		return logoPanel;
 	}
 
 	private Image getIcon() {
