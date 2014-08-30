@@ -3,7 +3,8 @@
 Welcome to uniVocity
 ====================
 **[uniVocity](http://www.univocity.com)** is a data integration framework for Java that provides a fast and flexible foundation for the 
-implementation of complex data mappings and transformations. uniVocity gives you much more power and flexibility than a conventional ETL framework.
+implementation of complex data mappings and transformations. uniVocity is free for non-commercial use and gives you much more power and flexibility
+than a conventional ETL framework.
 This tutorial covers the essential building blocks you can use to develop powerful data integration solutions.
 
 @@TOC
@@ -23,7 +24,7 @@ so you can update uniVocity transparently without worrying about compilation err
 
 ### Maven settings ###
 
-If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity` jar.
+If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-[version]` jar.
 
 ```xml
     
@@ -44,14 +45,14 @@ These are the dependencies you need to include in your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity</artifactId>
-            <version>1.0.1</version>
+            <version>[version]</version>
             <type>jar</type>
         </dependency>
     
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity-api</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
             <type>jar</type>
         </dependency>
     ...
@@ -81,7 +82,7 @@ uniVocity is free for non-commercial use and can be used without a license. In t
 To unleash the true power of uniVocity, and experience maximum performance, we suggest you to obtain a license file.
 
 You can get a free 30-day trial immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
-the following classes from the `univocity-1.0.1.jar`, as regular java applications:
+the following classes from the `univocity-[version].jar`, as regular java applications:
 
  1. The graphical license request wizard: `com.univocity.LicenseRequestWizard` (if you have a graphical interface).
  2. The command-line license request script: `com.univocity.LicenseRequest` (if you want to execute from the command line)
@@ -592,7 +593,7 @@ the expected dataset.
 In the mapping example (presented later), we associate an instance of @@LINK(FoodProcessor) to the *FOOD_DES* source entity. @@LINK(FoodProcessor) will generate its datasets using
 data from fields *"Ndb_no"* and *"Long_Desc"*`:
 
-@@INCLUDE_CLASS(/src/test/java/com/univocity/examples/FoodProcessor)
+@@INCLUDE_CLASS(/src/main/java/com/univocity/examples/etl/FoodProcessor)
 
 In the @@LINK(FoodProcessor) constructor, we declare the names of each dataset it produces.
 
