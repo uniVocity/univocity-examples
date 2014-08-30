@@ -12,23 +12,21 @@ import com.univocity.api.engine.*;
 import com.univocity.api.entity.custom.*;
 import com.univocity.examples.etl.datastores.*;
 
-public class LoadSourceDatabase implements Runnable {
-
-	public static final String ENGINE = "sourceLoader";
+public class LoadSourceDatabase extends EtlProcess {
 
 	public LoadSourceDatabase() {
 		DataStores stores = DataStores.getInstance();
 		DataStoreConfiguration sourceDataConfig = stores.getSourceDataConfig();
 		DataStoreConfiguration sourceDatabaseConfig = stores.getSourceDatabaseConfig();
 
-		EngineConfiguration engineConfig = new EngineConfiguration(ENGINE, sourceDataConfig, sourceDatabaseConfig);
+		EngineConfiguration engineConfig = new EngineConfiguration(getEngineName(), sourceDataConfig, sourceDatabaseConfig);
 		Univocity.registerEngine(engineConfig);
 
 		configureMappings();
 	}
 
 	private void configureMappings() {
-		DataIntegrationEngine engine = Univocity.getEngine(ENGINE);
+		DataIntegrationEngine engine = Univocity.getEngine(getEngineName());
 
 		DataStoreMapping mapping = engine.map("data", "source");
 
@@ -40,11 +38,11 @@ public class LoadSourceDatabase implements Runnable {
 	}
 
 	@Override
-	public void run() {
-		Univocity.getEngine(ENGINE).executeCycle();
+	protected String getEngineName() {
+		return "sourceLoader";
 	}
 
 	public static void main(String... args) {
-		new LoadSourceDatabase().run();
+		new LoadSourceDatabase().execute();
 	}
 }

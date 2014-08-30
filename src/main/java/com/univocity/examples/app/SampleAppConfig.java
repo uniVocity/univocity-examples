@@ -16,48 +16,35 @@ public class SampleAppConfig extends DataIntegrationConfig {
 		setSourceDatabaseConfig(DataStores.getInstance().getSourceDatabase());
 		setDestinationDatabaseConfig(DataStores.getInstance().getDestinationDatabase());
 
-		final LoadSourceDatabase loadSourceDatabaseProcess = new LoadSourceDatabase();
-		final MigrateDatabase migrateFromSourceDatabaseProcess = new MigrateDatabase("source");
-		final MigrateDatabase migrateFromDataFileProcess = new MigrateDatabase("data");
+		LoadSourceDatabase loadSourceDatabaseProcess = new LoadSourceDatabase();
+		MigrateDatabase migrateFromSourceDatabaseProcess = new MigrateDatabase("source");
+		MigrateDatabase migrateFromDataFileProcess = new MigrateDatabase("data");
 
-		addProcess("Load/update source database using SR25 files", new Runnable() {
+		addProcess("Load/update source database using SR25 files", loadSourceDatabaseProcess, true);
+		addProcess("Load/update source database using SR26 files", loadSourceDatabaseProcess, false);
+		addProcess("Migrate from source database to destination database", migrateFromSourceDatabaseProcess, null);
+		addProcess("Migrate from SR25 files to destination database", migrateFromDataFileProcess, true);
+		addProcess("Migrate from SR26 files to destination database", migrateFromDataFileProcess, false);
+
+		String[] entities = new String[] { "FD_GROUP", "FOOD_DES", "NUTR_DEF", "WEIGHT" };
+		addProcess("Skip nutrient data - Load/update source database using SR25 files", loadSourceDatabaseProcess, true, entities);
+		addProcess("Skip nutrient data - Load/update source database using SR26 files", loadSourceDatabaseProcess, false, entities);
+
+		entities = new String[] { "food_name", "food_state", "food", "state_of_food", "food_group", "group_of_Food", "weight", "weight_of_food", "nutrient" };
+		addProcess("Skip nutrient data - Migrate from source database to destination database", migrateFromSourceDatabaseProcess, null, entities);
+		addProcess("Skip nutrient data - Migrate from SR25 files to destination database", migrateFromDataFileProcess, true, entities);
+		addProcess("Skip nutrient data - Migrate from SR26 files to destination database", migrateFromDataFileProcess, false, entities);
+	}
+
+	private void addProcess(String description, final EtlProcess process, final Boolean fileVersion, final String... entitiesToUse) {
+		addProcess(description, new Runnable() {
 			@Override
 			public void run() {
-				DataStores.getInstance().getSourceData().setOldVersion(true);
-				loadSourceDatabaseProcess.run();
-			}
-		});
-
-		addProcess("Load/update source database using SR26 files", new Runnable() {
-			@Override
-			public void run() {
-				DataStores.getInstance().getSourceData().setOldVersion(false);
-				loadSourceDatabaseProcess.run();
-			}
-		});
-
-		addProcess("Migrate from source database to destination database", new Runnable() {
-			@Override
-			public void run() {
-				migrateFromSourceDatabaseProcess.run();
-			}
-		});
-
-		addProcess("Migrate from SR25 files to destination database", new Runnable() {
-			@Override
-			public void run() {
-				DataStores.getInstance().getSourceData().setOldVersion(true);
-				migrateFromDataFileProcess.run();
-			}
-		});
-
-		addProcess("Migrate from SR26 files to destination database", new Runnable() {
-			@Override
-			public void run() {
-				DataStores.getInstance().getSourceData().setOldVersion(false);
-				migrateFromDataFileProcess.run();
+				if (fileVersion != null) {
+					DataStores.getInstance().getSourceData().setOldVersion(fileVersion);
+				}
+				process.execute(entitiesToUse);
 			}
 		});
 	}
-
 }

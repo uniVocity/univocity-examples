@@ -12,7 +12,7 @@ import com.univocity.api.engine.*;
 import com.univocity.api.entity.custom.*;
 import com.univocity.examples.etl.datastores.*;
 
-public class MigrateDatabase implements Runnable {
+public class MigrateDatabase extends EtlProcess {
 
 	private final String sourceToUse;
 
@@ -34,12 +34,12 @@ public class MigrateDatabase implements Runnable {
 		configureMappings();
 	}
 
+	@Override
 	public final String getEngineName() {
 		return "Schema migration from " + sourceToUse;
 	}
 
 	private void configureMappings() {
-
 		DataIntegrationEngine engine = Univocity.getEngine(getEngineName());
 		engine.addDatasetProducer(EngineScope.CYCLE, new FoodProcessor()).on("FOOD_DES", "Ndb_no", "Long_Desc");
 
@@ -109,12 +109,7 @@ public class MigrateDatabase implements Runnable {
 		map.value().copy("Nutr_Val").to("amount");
 	}
 
-	@Override
-	public void run() {
-		Univocity.getEngine(getEngineName()).executeCycle();
-	}
-
 	public static void main(String... args) {
-		new MigrateDatabase("data").run();
+		new MigrateDatabase("data").execute();
 	}
 }
