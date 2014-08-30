@@ -19,6 +19,8 @@ public class TableSearchField extends JTextField {
 	private final Map<JTable, Integer> nextRows = new HashMap<JTable, Integer>();
 	private final Map<JTable, Integer> previousRows = new HashMap<JTable, Integer>();
 
+	private final StringBuilder rowContent = new StringBuilder();
+
 	private String previousSearch = null;
 	private boolean findingNext = true;
 
@@ -71,13 +73,11 @@ public class TableSearchField extends JTextField {
 		}
 	}
 
-	private final StringBuilder rowContent = new StringBuilder();
-	
-	private boolean match(JTable table, int row, int cols, String search) {
+	private String getRowContent(JTable table, int row, int cols) {
 		rowContent.setLength(0);
-		
-		for(int col = 0; col < cols; col++){
-			if(rowContent.length() > 0){
+
+		for (int col = 0; col < cols; col++) {
+			if (rowContent.length() > 0) {
 				rowContent.append(", ");
 			}
 			Object value = table.getValueAt(row, col);
@@ -85,10 +85,16 @@ public class TableSearchField extends JTextField {
 				rowContent.append(value);
 			}
 		}
+		return rowContent.toString().toLowerCase();
+	}
 
-		if (rowContent.toString().toLowerCase().contains(search.toLowerCase())) {
+	private boolean match(JTable table, int row, int cols, String search) {
+		String content = getRowContent(table, row, cols);
+		if (content.contains(search.toLowerCase())) {
 			table.scrollRectToVisible(table.getCellRect(row, 0, true));
-			table.setRowSelectionInterval(row, row);
+			if (table.getSelectedRow() != row) {
+				table.setRowSelectionInterval(row, row);
+			}
 			nextRows.put(table, row + 1);
 			previousRows.put(table, row - 1);
 			return true;
@@ -125,7 +131,20 @@ public class TableSearchField extends JTextField {
 		}
 	}
 
-	public void addTable(JTable table) {
+	public void addTable(final JTable table) {
 		tables.add(table);
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					int row = table.getSelectedRow();
+					if (row != -1) {
+						String content = getRowContent(table, row, table.getColumnCount());
+						setText(content);
+					}
+				}
+			}
+		});
 	}
 }

@@ -119,11 +119,11 @@ public class DataAnalysisWindow extends JFrame {
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
+			c.insets = new Insets(0, 5, 0, 5);
 			statusPanel.add(getSearchLabel(), c);
 
 			c.gridx++;
-			c.insets = new Insets(0, 5, 0, 5);
-			c.ipadx = 250;
+			c.ipadx = 350;
 			statusPanel.add(getSearchField(), c);
 
 			c.gridx++;
