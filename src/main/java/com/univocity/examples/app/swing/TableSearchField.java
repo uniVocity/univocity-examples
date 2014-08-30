@@ -71,13 +71,22 @@ public class TableSearchField extends JTextField {
 		}
 	}
 
-	private boolean match(JTable table, int row, Object value, String search) {
-		if (value == null) {
-			return false;
+	private final StringBuilder rowContent = new StringBuilder();
+	
+	private boolean match(JTable table, int row, int cols, String search) {
+		rowContent.setLength(0);
+		
+		for(int col = 0; col < cols; col++){
+			if(rowContent.length() > 0){
+				rowContent.append(", ");
+			}
+			Object value = table.getValueAt(row, col);
+			if (value != null) {
+				rowContent.append(value);
+			}
 		}
-		String stringValue = String.valueOf(value).toLowerCase();
 
-		if (stringValue.contains(search.toLowerCase())) {
+		if (rowContent.toString().toLowerCase().contains(search.toLowerCase())) {
 			table.scrollRectToVisible(table.getCellRect(row, 0, true));
 			table.setRowSelectionInterval(row, row);
 			nextRows.put(table, row + 1);
@@ -104,13 +113,8 @@ public class TableSearchField extends JTextField {
 
 		int count = 0;
 		while (count++ < rows) {
-			for (int col = 0; col < cols; col++) {
-
-				Object value = table.getValueAt(row, col);
-
-				if (match(table, row, value, search)) {
-					return;
-				}
+			if (match(table, row, cols, search)) {
+				return;
 			}
 
 			if (findingNext) {
