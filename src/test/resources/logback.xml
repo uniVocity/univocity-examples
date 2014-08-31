@@ -5,8 +5,8 @@
 	<!-- uniVocity loggers -->
 	
 	<!-- data logs -->
-	<logger name="com.univocity.log.data" level="debug" />
-	<logger name="com.univocity.log.metadata.data" level="debug" />
+	<logger name="com.univocity.log.data" level="WARN" />
+	<logger name="com.univocity.log.metadata.data" level="WARN" />
 	
 	<!-- statement logs -->
 	<logger name="com.univocity.log.statement" level="debug" />

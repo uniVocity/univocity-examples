@@ -16,7 +16,7 @@ import com.univocity.api.*;
 import com.univocity.api.config.*;
 import com.univocity.api.entity.jdbc.*;
 import com.univocity.api.entity.text.csv.*;
-import com.univocity.examples.utils.*;
+import com.univocity.app.utils.*;
 import com.univocity.parsers.fixed.*;
 
 abstract class ExampleWithDatabase extends Example {
