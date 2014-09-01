@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2014 uniVocity Software Pty Ltd. All rights reserved.
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE.txt', which is part of this source code package.
+ ******************************************************************************/
 package com.univocity.app;
 
 import java.util.*;
@@ -10,10 +15,10 @@ public class RowDataCollector extends RowReader implements RowProcessor {
 
 	private final int[] fieldIndexes;
 	private final String[] fieldNames;
-	private final List<String> persisted = new ArrayList<String>();
+	private final Set<String> persisted = new HashSet<String>();
 	private final StringBuilder row = new StringBuilder();
 
-	private final List<String> expected = new ArrayList<String>();
+	private final Set<String> expected = new HashSet<String>();
 
 	public RowDataCollector(String... fieldNames) {
 		this.fieldNames = fieldNames.clone();
@@ -42,7 +47,7 @@ public class RowDataCollector extends RowReader implements RowProcessor {
 		persisted.add(row.toString());
 	}
 
-	public List<String> getPersistedData() {
+	public Set<String> getPersistedData() {
 		return persisted;
 	}
 
@@ -70,7 +75,11 @@ public class RowDataCollector extends RowReader implements RowProcessor {
 		expected.add(row.toString());
 	}
 
-	public List<String> getExpected() {
+	public String[] getFieldNames() {
+		return fieldNames;
+	}
+
+	public Set<String> getExpected() {
 		return expected;
 	}
 }
