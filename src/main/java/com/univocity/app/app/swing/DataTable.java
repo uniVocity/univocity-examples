@@ -45,15 +45,22 @@ public class DataTable extends JRootPane {
 	private JSplitPane splitPane;
 	private GlassPane glass;
 
+	private String databaseName;
+
 	public DataTable(DatabaseAccessor accessor) {
 		this.database = accessor.getDatabase();
 		this.queries = accessor.getQueries();
+		this.databaseName = accessor.getDatabaseName();
 
 		setGlassPane(getGlass());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(getSplitPane(), BorderLayout.CENTER);
 		getContentPane().add(getCommandPanel(), BorderLayout.SOUTH);
 
+	}
+
+	public String getDatabaseName() {
+		return databaseName;
 	}
 
 	protected GlassPane getGlass() {

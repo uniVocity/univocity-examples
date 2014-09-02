@@ -23,7 +23,8 @@ public class DaoTable extends DataTable {
 	private DefaultTableModel dataModel;
 	private JTable dataTable;
 	private Dao dao;
-	private final Set<Integer> primaryKeyIndexes = new HashSet<Integer>();
+	private final Set<Integer> primaryKeyIndexes = new TreeSet<Integer>();
+	private final List<String> primaryKeyNames = new ArrayList<String>();
 
 	private JButton deleteButton;
 	private JButton insertButton;
@@ -177,13 +178,20 @@ public class DaoTable extends DataTable {
 	}
 
 	protected void loadTableData() {
-		Object selection = tableList.getSelectedItem();
-		if (selection != null) {
-			String tableName = String.valueOf(selection);
+		String tableName = getSelectedTableName();
+		if (tableName != null) {
 			dao = new Dao(database, tableName);
 
 			reloadTable("select * from " + tableName);
 		}
+	}
+
+	public String getSelectedTableName() {
+		Object selection = tableList.getSelectedItem();
+		if (selection != null) {
+			return String.valueOf(selection);
+		}
+		return null;
 	}
 
 	@Override
@@ -202,6 +210,12 @@ public class DaoTable extends DataTable {
 				primaryKeyIndexes.add(i);
 			}
 		}
+
+		primaryKeyNames.clear();
+		for (int index : primaryKeyIndexes) {
+			primaryKeyNames.add(columns[index]);
+		}
+
 		getCellRenderer().setDisabledColumnIndexes(primaryKeyIndexes);
 	}
 
@@ -304,6 +318,29 @@ public class DaoTable extends DataTable {
 
 	private int getSelectedRow() {
 		return getDataTable().getSelectedRow();
+	}
+
+	public String[] getPrimaryKeyNames() {
+		return primaryKeyNames.toArray(new String[0]);
+	}
+
+	public Object[] getSelectedPrimaryKey() {
+		return getPrimaryKeyOfRow(getDataTable().getSelectedRow());
+	}
+
+	public Object[] getPrimaryKeyOfRow(int rowIndex) {
+		if (rowIndex == -1) {
+			return null;
+		}
+		Vector<?> row = getDataOfRow(rowIndex);
+		Object[] pk = new Object[primaryKeyIndexes.size()];
+
+		int i = 0;
+		for (int index : primaryKeyIndexes) {
+			pk[i++] = row.get(index);
+		}
+
+		return pk;
 	}
 
 	private Vector<?> getDataOfRow(int rowIndex) {

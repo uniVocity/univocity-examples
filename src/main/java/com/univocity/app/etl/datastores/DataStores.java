@@ -72,13 +72,13 @@ public class DataStores {
 	}
 
 	private void initializeSourceDatabaseConfig() {
-		sourceDatabaseConfig = new JdbcDataStoreConfiguration("source", this.sourceDatabase.getDataSource());
+		sourceDatabaseConfig = new JdbcDataStoreConfiguration(this.sourceDatabase.getDatabaseName(), this.sourceDatabase.getDataSource());
 		sourceDatabaseConfig.setSchema("public");
 		sourceDatabaseConfig.setLimitOfRowsLoadedInMemory(10000);
 	}
 
 	private void initializeDestinationDatabaseConfig() {
-		destinationDatabaseConfig = new JdbcDataStoreConfiguration("destination", this.destinationDatabase.getDataSource());
+		destinationDatabaseConfig = new JdbcDataStoreConfiguration(this.destinationDatabase.getDatabaseName(), this.destinationDatabase.getDataSource());
 		destinationDatabaseConfig.setSchema("public");
 		destinationDatabaseConfig.setLimitOfRowsLoadedInMemory(10000);
 		destinationDatabaseConfig.getDefaultEntityConfiguration().retrieveGeneratedKeysUsingStatement(true);

@@ -14,18 +14,9 @@ import com.univocity.app.etl.datastores.*;
 
 public class MigrateDatabase extends EtlProcess {
 
-	private final String sourceToUse;
-
-	/**
-	 * The source data store name from where to get data from.
-	 * @param sourceToUse "data" will create mappings against the original ASCII files provided by the USDA
-	 * 					  "source" will create mappings against the database created using data migrated from the ASCII files.
-	 */
-	public MigrateDatabase(String sourceToUse) {
-		this.sourceToUse = sourceToUse;
-
+	public MigrateDatabase() {
 		DataStores stores = DataStores.getInstance();
-		DataStoreConfiguration sourceConfig = "data".equals(sourceToUse) ? stores.getSourceDataConfig() : stores.getSourceDatabaseConfig();
+		DataStoreConfiguration sourceConfig = stores.getSourceDatabaseConfig();
 		DataStoreConfiguration destinationDatabaseConfig = stores.getDestinationDatabaseConfig();
 
 		EngineConfiguration engineConfig = new EngineConfiguration(getEngineName(), sourceConfig, destinationDatabaseConfig);
@@ -36,14 +27,14 @@ public class MigrateDatabase extends EtlProcess {
 
 	@Override
 	public final String getEngineName() {
-		return "Schema migration from " + sourceToUse;
+		return "Migration";
 	}
 
 	private void configureMappings() {
 		DataIntegrationEngine engine = Univocity.getEngine(getEngineName());
 		engine.addDatasetProducer(EngineScope.CYCLE, new FoodProcessor()).on("FOOD_DES", "Ndb_no", "Long_Desc");
 
-		DataStoreMapping mapping = engine.map(sourceToUse, "destination");
+		DataStoreMapping mapping = engine.map("source", "destination");
 		mapping.configurePersistenceDefaults().usingMetadata().deleteAbsent().updateModified().insertNewRows();
 
 		EntityMapping map = mapping.map("food_names", "food_name");
@@ -110,6 +101,7 @@ public class MigrateDatabase extends EtlProcess {
 	}
 
 	public static void main(String... args) {
-		new MigrateDatabase("data").execute();
+		new LoadSourceDatabase().execute();
+		new MigrateDatabase().execute();
 	}
 }

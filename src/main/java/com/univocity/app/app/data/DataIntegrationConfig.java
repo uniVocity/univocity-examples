@@ -15,6 +15,9 @@ public class DataIntegrationConfig {
 	private DatabaseAccessor destinationDatabaseConfig;
 	private final Map<String, Runnable> processes = new TreeMap<String, Runnable>();
 
+	private String sourceEngineName;
+	private String destinationEngineName;
+
 	public DataIntegrationConfig() {
 	}
 
@@ -45,4 +48,21 @@ public class DataIntegrationConfig {
 	public Runnable getProcess(String processName) {
 		return processes.get(processName);
 	}
+
+	public String getSourceEngineName() {
+		return sourceEngineName;
+	}
+
+	public void setSourceEngineName(String sourceEngineName) {
+		this.sourceEngineName = sourceEngineName;
+	}
+
+	public String getDestinationEngineName() {
+		return destinationEngineName;
+	}
+
+	public void setDestinationEngineName(String destinationEngineName) {
+		this.destinationEngineName = destinationEngineName;
+	}
+
 }

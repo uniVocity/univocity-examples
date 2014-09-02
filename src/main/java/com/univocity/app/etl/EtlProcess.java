@@ -14,7 +14,7 @@ public abstract class EtlProcess {
 		DataIntegrationEngine engine = Univocity.getEngine(getEngineName());
 		engine.executeCycle();
 	}
-	
+
 	public final void execute(String... entitiesToProcess) {
 		DataIntegrationEngine engine = Univocity.getEngine(getEngineName());
 		engine.executeCycle(entitiesToProcess);

@@ -39,7 +39,7 @@ public class LoadSourceDatabase extends EtlProcess {
 
 	@Override
 	public String getEngineName() {
-		return "sourceLoader";
+		return "SourceLoader";
 	}
 
 	public static void main(String... args) {

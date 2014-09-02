@@ -8,10 +8,16 @@ package com.univocity.app.app.swing;
 import java.awt.*;
 import java.awt.event.*;
 import java.lang.reflect.*;
+import java.util.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
+import org.apache.commons.lang.*;
+
+import com.univocity.api.*;
+import com.univocity.api.data.*;
+import com.univocity.api.engine.*;
 import com.univocity.app.app.data.*;
 import com.univocity.app.utils.*;
 
@@ -256,8 +262,73 @@ public class DataAnalysisWindow extends JFrame {
 		if (dataAnalysisPanel == null) {
 			dataAnalysisPanel = new DataAnalysisPanel(config.getSourceDatabaseConfig(), config.getDestinationDatabaseConfig());
 			dataAnalysisPanel.setBorder(new TitledBorder("Data analysis"));
+
+			addPopupMenuToTable(dataAnalysisPanel.getSourceTable(), true);
+			addPopupMenuToTable(dataAnalysisPanel.getDestinationTable(), false);
 		}
 		return dataAnalysisPanel;
+	}
+
+	private void addPopupMenuToTable(DaoTable daoTable, boolean isSourceTable) {
+		String engineName = isSourceTable ? config.getSourceEngineName() : config.getDestinationEngineName();
+
+		if (engineName == null) {
+			return;
+		}
+
+		final JTable table = daoTable.getDataTable();
+		final JPopupMenu menu = new JPopupMenu();
+		menu.add(newJMenuItem("Disable updates", daoTable, engineName, false, false));
+		menu.add(newJMenuItem("Enable updates", daoTable, engineName, true, false));
+		menu.add(new JSeparator());
+		menu.add(newJMenuItem("Disable updates on all rows", daoTable, engineName, false, true));
+		menu.add(newJMenuItem("Enable updates on all rows", daoTable, engineName, true, true));
+
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getButton() == MouseEvent.BUTTON3) {
+					int rowNumber = table.rowAtPoint(e.getPoint());
+					if (rowNumber != -1) {
+						table.getSelectionModel().setSelectionInterval(rowNumber, rowNumber);
+						menu.show(table, e.getX(), e.getY());
+					}
+				}
+			};
+		});
+	}
+
+	private JMenuItem newJMenuItem(String label, final DaoTable table, final String engineName, final boolean enableUpdates, final boolean applyToAll) {
+		JMenuItem item = new JMenuItem(label);
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Object[] primaryKey = table.getSelectedPrimaryKey();
+				if (ArrayUtils.isNotEmpty(primaryKey)) {
+					DataIntegrationEngine engine = Univocity.getEngine(engineName);
+
+					String entity = table.getDatabaseName() + "." + table.getSelectedTableName();
+
+					if (applyToAll) {
+						if (enableUpdates) {
+							engine.enableUpdateOnAllRecords(entity);
+						} else {
+							engine.disableUpdateOnAllRecords(entity);
+						}
+					} else {
+						ModifiableDataset dataset = Univocity.datasetFactory().newDataset(new ArrayList<Object[]>(), table.getPrimaryKeyNames());
+						dataset.insert(table.getSelectedPrimaryKey());
+
+						if (enableUpdates) {
+							engine.enableUpdateOnRecords(entity, dataset);
+						} else {
+							engine.disableUpdateOnRecords(entity, dataset);
+						}
+					}
+				}
+			}
+		});
+		return item;
 	}
 
 	protected void executeSelectedProcess() {

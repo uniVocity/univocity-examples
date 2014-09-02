@@ -17,7 +17,10 @@ public class SampleAppConfig extends DataIntegrationConfig {
 		setDestinationDatabaseConfig(DataStores.getInstance().getDestinationDatabase());
 
 		LoadSourceDatabase loadSourceDatabaseProcess = new LoadSourceDatabase();
-		MigrateDatabase migrateFromSourceDatabaseProcess = new MigrateDatabase("source");
+		MigrateDatabase migrateFromSourceDatabaseProcess = new MigrateDatabase();
+
+		setSourceEngineName(loadSourceDatabaseProcess.getEngineName());
+		setDestinationEngineName(migrateFromSourceDatabaseProcess.getEngineName());
 
 		addProcess("Load/update source database using SR25 files", loadSourceDatabaseProcess, true);
 		addProcess("Load/update source database using SR26 files", loadSourceDatabaseProcess, false);
