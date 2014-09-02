@@ -93,6 +93,7 @@
 					<suiteXmlFiles>
 						<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 					</suiteXmlFiles>
+					<argLine>-Xms2G -Xmx2G</argLine>
 				</configuration>
 			</plugin>
 
