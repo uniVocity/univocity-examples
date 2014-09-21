@@ -81,7 +81,7 @@ To get get access to uniVocity *snapshot* releases, add an additional `repositor
 uniVocity is free for non-commercial use and can be used without a license. In this case, batch operations are disabled. 
 To unleash the true power of uniVocity, and experience maximum performance, we suggest you to obtain a license file.
 
-You can get a free 30-day trial immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
+You can get a free 30-day trial license immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
 the following classes from the `univocity-[version].jar`, as regular java applications:
 
  1. The graphical license request wizard: `com.univocity.LicenseRequestWizard` (if you have a graphical interface).
@@ -593,7 +593,7 @@ the expected dataset.
 In the mapping example (presented later), we associate an instance of @@LINK(FoodProcessor) to the *FOOD_DES* source entity. @@LINK(FoodProcessor) will generate its datasets using
 data from fields *"Ndb_no"* and *"Long_Desc"*`:
 
-@@INCLUDE_CLASS(/src/main/java/com/univocity/examples/etl/FoodProcessor)
+@@INCLUDE_CLASS(/src/main/java/com/univocity/app/etl/FoodProcessor)
 
 In the @@LINK(FoodProcessor) constructor, we declare the names of each dataset it produces.
 

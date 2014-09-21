@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.univocity</groupId>
 	<artifactId>univocity-examples</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>univocity-examples</name>
 	<description>Project with tutorials and examples demonstrating the features of uniVocity data integration</description>
 
@@ -202,8 +202,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-		<univocity-api.version>1.0.1-SNAPSHOT</univocity-api.version>
-		<univocity.version>1.0.1-SNAPSHOT</univocity.version>
+		<univocity-api.version>1.0.1</univocity-api.version>
+		<univocity.version>1.0.1</univocity.version>
 		<univocity-parsers.version>1.0.1</univocity-parsers.version>
 
 		<spring.version>3.2.8.RELEASE</spring.version>

@@ -3,9 +3,9 @@
  * This file is subject to the terms and conditions defined in file
  * 'LICENSE.txt', which is part of this source code package.
  ******************************************************************************/
-package com.univocity.app.app;
+package com.univocity.app;
 
-import com.univocity.app.app.data.*;
+import com.univocity.app.data.*;
 import com.univocity.app.etl.*;
 import com.univocity.app.etl.datastores.*;
 

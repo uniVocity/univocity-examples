@@ -3,7 +3,7 @@
  * This file is subject to the terms and conditions defined in file
  * 'LICENSE.txt', which is part of this source code package.
  ******************************************************************************/
-package com.univocity.app.app.swing;
+package com.univocity.app.swing;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -18,7 +18,7 @@ import org.apache.commons.lang.*;
 import com.univocity.api.*;
 import com.univocity.api.data.*;
 import com.univocity.api.engine.*;
-import com.univocity.app.app.data.*;
+import com.univocity.app.data.*;
 import com.univocity.app.utils.*;
 
 public class DataAnalysisWindow extends JFrame {

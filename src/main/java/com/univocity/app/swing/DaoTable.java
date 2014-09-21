@@ -3,7 +3,7 @@
  * This file is subject to the terms and conditions defined in file
  * 'LICENSE.txt', which is part of this source code package.
  ******************************************************************************/
-package com.univocity.app.app.swing;
+package com.univocity.app.swing;
 
 import java.awt.event.*;
 import java.util.*;
@@ -12,7 +12,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 
-import com.univocity.app.app.data.*;
+import com.univocity.app.data.*;
 import com.univocity.app.utils.*;
 
 public class DaoTable extends DataTable {

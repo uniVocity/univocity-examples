@@ -211,7 +211,7 @@ public class Tutorial004Advanced extends ExampleWithDatabase {
 			@Override
 			public void processRow(Object[] inputRow, Object[] outputRow, RowMappingContext context) {
 				//gets the value of FdGrp_CD in the input
-				String code = (String) inputRow[context.getInputIndex("FdGrp_CD")];
+				String code = context.getInputValue("FdGrp_CD", String.class);
 
 				//gets the set of processed codes stored in the persistent variable "processedCodes"
 				Set<String> processedCodes = (Set<String>) context.readVariable("processedCodes");

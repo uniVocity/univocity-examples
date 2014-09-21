@@ -3,11 +3,11 @@
  * This file is subject to the terms and conditions defined in file
  * 'LICENSE.txt', which is part of this source code package.
  ******************************************************************************/
-package com.univocity.app.app;
+package com.univocity.app;
 
 import javax.swing.*;
 
-import com.univocity.app.app.swing.*;
+import com.univocity.app.swing.*;
 
 public class UnivocitySampleApp extends DataAnalysisWindow {
 

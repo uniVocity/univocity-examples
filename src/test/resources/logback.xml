@@ -1,24 +1,25 @@
 <configuration>
 
-	<logger name="org.springframework" level="error" />
+	<logger name="org.springframework" level="warn" />
 		
 	<!-- uniVocity loggers -->
-	
+	<logger name="com.univocity.log" level="info" />
+		
 	<!-- data logs -->
-	<logger name="com.univocity.log.data" level="WARN" />
-	<logger name="com.univocity.log.metadata.data" level="WARN" />
+	<logger name="com.univocity.log.data" level="warn" />
+	<logger name="com.univocity.log.metadata.data" level="warn" />
 	
 	<!-- statement logs -->
-	<logger name="com.univocity.log.statement" level="debug" />
-	<logger name="com.univocity.log.metadata.statement" level="debug" />
+	<logger name="com.univocity.log.statement" level="warn" />
+	<logger name="com.univocity.log.metadata.statement" level="warn" />
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
-			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level - %msg%n</pattern>
+			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level \(%file:%line\) - %msg%n</pattern>
 		</encoder>
 	</appender>
 
-	<root level="debug">
+	<root level="info">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>
