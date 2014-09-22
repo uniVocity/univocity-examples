@@ -80,10 +80,9 @@
 					<exclude>logback.xml</exclude>
 					<exclude>destination/**</exclude>
 					<exclude>source/**</exclude>
-				</excludes>				
+				</excludes>
 			</resource>
 		</resources>
-	
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

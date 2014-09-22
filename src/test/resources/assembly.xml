@@ -32,7 +32,7 @@
 				<include>**/*</include>
 			</includes>
 			<excludes>
-				<exclude>**/DocumentationBuilder*</exclude>
+				<exclude>**/app/</exclude>
 			</excludes>
 		</fileSet>
 		<fileSet>

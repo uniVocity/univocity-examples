@@ -8,8 +8,6 @@ package com.univocity.app.utils;
 import java.io.*;
 import java.util.*;
 
-import org.springframework.core.io.*;
-
 class QueriesImpl implements Queries {
 
 	private final Map<String, String> queries = new TreeMap<String, String>();
@@ -18,16 +16,13 @@ class QueriesImpl implements Queries {
 
 	}
 
-	public QueriesImpl(String queriesProperties) {
+	public QueriesImpl(File queriesProperties) {
 		Properties properties = new Properties();
-		Resource resource = new ClassPathResource(queriesProperties);
 
-		File file;
 		try {
-			file = resource.getFile();
-			properties.load(new FileInputStream(file));
+			properties.load(new FileInputStream(queriesProperties));
 		} catch (IOException e) {
-			throw new IllegalArgumentException("Error finding query properties path: " + queriesProperties, e);
+			throw new IllegalArgumentException("Error loading query properties from: " + queriesProperties, e);
 		}
 
 		for (Object key : properties.keySet()) {

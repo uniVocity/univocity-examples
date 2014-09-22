@@ -46,7 +46,7 @@ public class DatabaseAccessor {
 			if (queryProperties == null) {
 				queries = new QueriesImpl();
 			}
-			queries = new QueriesImpl(queryProperties);
+			queries = new QueriesImpl(FileFinder.findFile(queryProperties));
 		}
 		return queries;
 	}
@@ -56,7 +56,7 @@ public class DatabaseAccessor {
 			if (ddlDirectory == null) {
 				throw new IllegalStateException("Database definition directory not set");
 			}
-			database = new DatabaseImpl(databaseName, ddlDirectory);
+			database = new DatabaseImpl(databaseName, FileFinder.findFile(ddlDirectory));
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
@@ -78,4 +78,5 @@ public class DatabaseAccessor {
 	public DataSource getDataSource() {
 		return getDatabase().getDataSource();
 	}
+
 }

@@ -10,7 +10,6 @@ import java.util.*;
 
 import javax.sql.*;
 
-import org.springframework.core.io.*;
 import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.datasource.*;
 
@@ -19,12 +18,12 @@ class DatabaseImpl implements Database {
 	private final JdbcTemplate jdbcTemplate;
 	private final Set<String> tableNames = new TreeSet<String>();
 
-	public DatabaseImpl(DataSource dataSource, String dirWithCreateTableScripts) {
+	public DatabaseImpl(DataSource dataSource, File dirWithCreateTableScripts) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		createTables(dirWithCreateTableScripts);
 	}
 
-	public DatabaseImpl(String databaseName, String dirWithCreateTableScripts) {
+	public DatabaseImpl(String databaseName, File dirWithCreateTableScripts) {
 		try {
 			Class.forName("org.hsqldb.jdbcDriver");
 			DataSource dataSource = new SingleConnectionDataSource("jdbc:hsqldb:mem:" + databaseName, "sa", "", true);
@@ -36,18 +35,9 @@ class DatabaseImpl implements Database {
 		createTables(dirWithCreateTableScripts);
 	}
 
-	private void createTables(String dirWithCreateTableScripts) {
-
-		Resource resource = new ClassPathResource(dirWithCreateTableScripts);
-		File dir;
-		try {
-			dir = resource.getFile();
-		} catch (IOException e) {
-			throw new IllegalArgumentException("Error finding directory path: " + dirWithCreateTableScripts, e);
-		}
-
+	private void createTables(File dirWithCreateTableScripts) {
 		Map<String, String> scripts = new HashMap<String, String>();
-		for (File scriptFile : dir.listFiles()) {
+		for (File scriptFile : dirWithCreateTableScripts.listFiles()) {
 			if (scriptFile.isDirectory()) {
 				continue;
 			}

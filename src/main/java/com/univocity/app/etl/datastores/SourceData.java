@@ -9,6 +9,8 @@ import java.io.*;
 
 import org.zeroturnaround.zip.*;
 
+import com.univocity.app.utils.*;
+
 public class SourceData {
 
 	private boolean useOldVersion = true;
@@ -32,19 +34,13 @@ public class SourceData {
 	}
 
 	private Reader open(String entryName) {
-		InputStream zip = SourceData.class.getResourceAsStream("/source/data/data.zip");
+		File zip = FileFinder.findFile("source/data/data.zip");
 		try {
 			byte[] bytes = ZipUtil.unpackEntry(zip, entryName);
 			ByteArrayInputStream is = new ByteArrayInputStream(bytes);
 			return new InputStreamReader(is, "windows-1252");
 		} catch (Exception ex) {
 			throw new IllegalStateException("Error extracting contents of entry '" + entryName + "' from data.zip", ex);
-		} finally {
-			try {
-				zip.close();
-			} catch (IOException ex) {
-				throw new IllegalStateException("Error closing data.zip stream", ex);
-			}
 		}
 	}
 
