@@ -252,14 +252,14 @@
 			<groupId>com.univocity</groupId>
 			<artifactId>univocity-parsers</artifactId>
 			<version>${univocity-parsers.version}</version>
-			<scope>test</scope>
+			<!-- <scope>test</scope> Cannot use test scope. We need the library to generate a release package with correct dependencies -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
 			<version>${testng.version}</version>
-			<scope>test</scope>
+			<!-- <scope>test</scope> Cannot use test scope. We need the library to generate a release package with correct dependencies -->
 		</dependency>
 	</dependencies>
 
