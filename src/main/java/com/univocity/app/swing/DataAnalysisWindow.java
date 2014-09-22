@@ -100,7 +100,7 @@ public class DataAnalysisWindow extends JFrame {
 			logoPanel.setLayout(new BorderLayout());
 			logoPanel.setBackground(new Color(35, 39, 42));
 
-			ImageIcon image = new ImageIcon(getClass().getResource("/images/univocity_logo_250x86.png"));
+			ImageIcon image = new ImageIcon(DataAnalysisWindow.class.getResource("/images/univocity_logo_250x86.png"));
 			JLabel logo = new JLabel(image);
 
 			logoPanel.add(logo, BorderLayout.CENTER);

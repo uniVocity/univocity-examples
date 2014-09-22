@@ -32,7 +32,7 @@ public class DataStores {
 	private DataStores() {
 		sourceData = new SourceData();
 		sourceDatabase = new DatabaseAccessor("source", "source/db/", "source/db/queries.properties");
-		;
+		
 		destinationDatabase = new DatabaseAccessor("destination", "destination/db/", "destination/db/queries.properties");
 
 		initializeSourceDataConfig();

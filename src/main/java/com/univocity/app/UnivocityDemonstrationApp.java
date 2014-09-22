@@ -9,17 +9,17 @@ import javax.swing.*;
 
 import com.univocity.app.swing.*;
 
-public class UnivocitySampleApp extends DataAnalysisWindow {
+public class UnivocityDemonstrationApp extends DataAnalysisWindow {
 
 	private static final long serialVersionUID = -4290799952797464413L;
 
-	public UnivocitySampleApp() {
+	public UnivocityDemonstrationApp() {
 		super(new SampleAppConfig());
-		setIconImage(new ImageIcon(UnivocitySampleApp.class.getResource("/images/icon128x128.png")).getImage());
+		setIconImage(new ImageIcon(UnivocityDemonstrationApp.class.getResource("/images/icon128x128.png")).getImage());
 	}
 
 	public static void main(String... args) {
-		UnivocitySampleApp app = new UnivocitySampleApp();
+		UnivocityDemonstrationApp app = new UnivocityDemonstrationApp();
 		WindowUtils.displayWindow(app);
 	}
 
