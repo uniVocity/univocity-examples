@@ -28,6 +28,15 @@ public class Dao {
 		this.tableName = tableName;
 	}
 
+	private String escape(String s) {
+		List<String> toEscape = Arrays.asList("max", "min");
+
+		if (toEscape.contains(s.toLowerCase())) {
+			return "\"" + s + "\"";
+		}
+		return s;
+	}
+
 	private void removeSuffix(StringBuilder script, String str) {
 		if (script.toString().endsWith(str)) {
 			script.delete(script.length() - str.length(), script.length());
@@ -49,7 +58,7 @@ public class Dao {
 
 		final StringBuilder script = new StringBuilder(" where ");
 		for (Entry<String, Object> e : whereClauseEntries) {
-			script.append(e.getKey());
+			script.append(escape(e.getKey()));
 			script.append(" = ? and ");
 		}
 
@@ -64,7 +73,7 @@ public class Dao {
 		if (!data.isEmpty()) {
 			script.append(" set ");
 			for (Entry<String, Object> e : data) {
-				script.append(e.getKey());
+				script.append(escape(e.getKey()));
 				script.append(" = ?,");
 			}
 			removeSuffix(script, ",");
@@ -83,7 +92,7 @@ public class Dao {
 		} else {
 			script.append("(");
 			for (Entry<String, Object> e : newData) {
-				script.append(e.getKey());
+				script.append(escape(e.getKey()));
 				script.append(",");
 			}
 			removeSuffix(script, ",");
@@ -154,7 +163,7 @@ public class Dao {
 				ResultSet rs = metadata.getPrimaryKeys(null, null, tableName.toUpperCase());
 				try {
 					while (rs.next()) {
-						primaryKeys.add(rs.getString("COLUMN_NAME").toLowerCase());
+						primaryKeys.add(rs.getString("COLUMN_NAME"));
 					}
 				} finally {
 					rs.close();

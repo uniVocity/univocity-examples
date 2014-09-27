@@ -205,7 +205,7 @@ public class DaoTable extends DataTable {
 		Set<String> primaryKeys = dao.getPrimaryKeys();
 		String[] columns = data.getColumnNames();
 		for (int i = 0; i < columns.length; i++) {
-			String column = columns[i].toLowerCase();
+			String column = columns[i];
 			if (primaryKeys.contains(column)) {
 				primaryKeyIndexes.add(i);
 			}
@@ -359,7 +359,7 @@ public class DaoTable extends DataTable {
 
 		String[] columns = data.getColumnNames();
 		for (int i = 0; i < columns.length; i++) {
-			out.put(columns[i].toLowerCase(), row.get(i));
+			out.put(columns[i], row.get(i));
 		}
 
 		return out;

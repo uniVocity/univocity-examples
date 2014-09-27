@@ -225,7 +225,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<univocity-api.version>1.0.1</univocity-api.version>
-		<univocity.version>1.0.1</univocity.version>
+		<univocity.version>1.0.2-SNAPSHOT</univocity.version>
 		<univocity-parsers.version>1.0.1</univocity-parsers.version>
 
 		<spring.version>3.2.8.RELEASE</spring.version>
