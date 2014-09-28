@@ -111,7 +111,7 @@ public class DataAnalysisWindow extends JFrame {
 
 	private Image getIcon() {
 		try {
-			return new ImageIcon(getClass().getResource("/icon128x128.png")).getImage();
+			return new ImageIcon(DataAnalysisWindow.class.getResource("/icon128x128.png")).getImage();
 		} catch (Exception ex) {
 			return null;
 		}
