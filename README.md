@@ -84,7 +84,7 @@ so you can update uniVocity transparently without worrying about compilation err
 
 ### Maven settings ###
 
-If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.1` jar.
+If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.2` jar.
 
 ```xml
     
@@ -105,7 +105,7 @@ These are the dependencies you need to include in your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
             <type>jar</type>
         </dependency>
     
@@ -142,7 +142,7 @@ uniVocity is free for non-commercial use and can be used without a license. In t
 To unleash the true power of uniVocity, and experience maximum performance, we suggest you to obtain a license file.
 
 You can get a free 30-day trial license immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
-the following classes from the `univocity-1.0.1.jar`, as regular java applications:
+the following classes from the `univocity-1.0.2.jar`, as regular java applications:
 
  1. The graphical license request wizard: `com.univocity.LicenseRequestWizard` (if you have a graphical interface).
  2. The command-line license request script: `com.univocity.LicenseRequest` (if you want to execute from the command line)
@@ -1652,7 +1652,7 @@ A [DatasetProducer](http://github.com/uniVocity/univocity-api/tree/master/src/ma
 as the source. Once a mapping cycle is started, and the mapping that uses one of these datasets is executed, the [DatasetProducer](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/data/DatasetProducer.java) will produce
 the expected dataset.
 
-In the mapping example (presented later), we associate an instance of [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) to the *FOOD_DES* source entity. [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) will generate its datasets using
+In the mapping example (presented later), we associate an instance of [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) to the *FOOD_DES* source entity. [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) will generate its datasets using
 data from fields *"Ndb_no"* and *"Long_Desc"*`:
 
 
@@ -1761,14 +1761,14 @@ data from fields *"Ndb_no"* and *"Long_Desc"*`:
 
 ```
 
-In the [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) constructor, we declare the names of each dataset it produces.
+In the [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) constructor, we declare the names of each dataset it produces.
 
 The `processStarted()` method is invoked by uniVocity to prepare the dataset producer to process incoming rows.
 
-After notifying the producer, uniVocity will start reading rows from the input entity, and invoke `processNext()` for each one. The [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) splits the original food 
+After notifying the producer, uniVocity will start reading rows from the input entity, and invoke `processNext()` for each one. The [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) splits the original food 
 descriptions (in *"Long_Desc"*) into a food name and its states. The original food code (in *"Ndb_no"*) is also associated with each food name and state.
 
-After all rows were processed, uniVocity will invoke the `getDataset` method to execute its mappings. In the case of our [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java), the datasets will contain:
+After all rows were processed, uniVocity will invoke the `getDataset` method to execute its mappings. In the case of our [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java), the datasets will contain:
 
  * food_names = a set of all unique food names
  * food_name_details = a list containing the food name associated with the original value of *"Ndb_no"*
@@ -1845,10 +1845,10 @@ Finally. the mapping definition is as follows:
 As the destination tables depend on a locale, we created one for "American English" directly in the database and received its ID.
 This ID set as an engine constant with `engine.setConstant("locale", localeId)`. 
 
-Our [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) is then associated with the FOOD_DES entity, and configured to read values from fields *Ndb_no* and *Long_Desc*:
+Our [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) is then associated with the FOOD_DES entity, and configured to read values from fields *Ndb_no* and *Long_Desc*:
  `engine.addDatasetProducer(EngineScope.CYCLE, new FoodProcessor()).on("FOOD_DES", "Ndb_no", "Long_Desc")` 
 
-The mapping `dsMapping.map("food_names", "food_name")` uses the "food_names" dataset from [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/main/java/com/univocity/app/etl/FoodProcessor.java) to generate identifiers
+The mapping `dsMapping.map("food_names", "food_name")` uses the "food_names" dataset from [FoodProcessor](http://github.com/uniVocity/univocity-examples/tree/master/src/test/java/com/univocity/examples/FoodProcessor.java) to generate identifiers
 in *food_name*. uniVocity metadata will have associations between each food name and these identifiers.
 
 `dsMapping.map("food_names", "newSchema.food_name_details")` will copy the food names to "food_name_details", and create references
