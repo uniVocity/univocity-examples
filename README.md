@@ -84,7 +84,7 @@ so you can update uniVocity transparently without worrying about compilation err
 
 ### Maven settings ###
 
-If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.3` jar.
+If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.4` jar.
 
 ```xml
     
@@ -105,7 +105,7 @@ These are the dependencies you need to include in your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
             <type>jar</type>
         </dependency>
     
@@ -142,7 +142,7 @@ uniVocity is free for non-commercial use and can be used without a license. In t
 To unleash the true power of uniVocity, and experience maximum performance, we suggest you to obtain a license file.
 
 You can get a free 30-day trial license immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
-the following classes from the `univocity-1.0.3.jar`, as regular java applications:
+the following classes from the `univocity-1.0.4.jar`, as regular java applications:
 
  1. The graphical license request wizard: `com.univocity.LicenseRequestWizard` (if you have a graphical interface).
  2. The command-line license request script: `com.univocity.LicenseRequest` (if you want to execute from the command line)
