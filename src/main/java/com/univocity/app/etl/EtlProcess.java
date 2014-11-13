@@ -20,5 +20,9 @@ public abstract class EtlProcess {
 		engine.executeCycle(entitiesToProcess);
 	}
 
+	public final void shutdown() {
+		Univocity.shutdown(getEngineName());
+	}
+
 	public abstract String getEngineName();
 }

@@ -43,6 +43,11 @@ public class LoadSourceDatabase extends EtlProcess {
 	}
 
 	public static void main(String... args) {
-		new LoadSourceDatabase().execute();
+		LoadSourceDatabase process = new LoadSourceDatabase();
+		try {
+			process.execute();
+		} finally {
+			process.shutdown();
+		}
 	}
 }

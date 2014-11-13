@@ -101,7 +101,17 @@ public class MigrateDatabase extends EtlProcess {
 	}
 
 	public static void main(String... args) {
-		new LoadSourceDatabase().execute();
-		new MigrateDatabase().execute();
+		LoadSourceDatabase load = new LoadSourceDatabase();
+		MigrateDatabase migrate = new MigrateDatabase();
+		try {
+			load.execute();
+			migrate.execute();
+		} finally {
+			try {
+				load.shutdown();
+			} finally {
+				migrate.shutdown();
+			}
+		}
 	}
 }
