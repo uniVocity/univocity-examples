@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="ExamplesSuite" verbose="2">
-	<test name="Examples" preserve-order="true" >
+	<test name="Examples" preserve-order="true" parallel="false">
 		<classes>
 			<class name="com.univocity.examples.Tutorial001Basics" />
 			<class name="com.univocity.examples.Tutorial002QueriesFunctionsAndVariables" />
@@ -9,8 +9,6 @@
 			<class name="com.univocity.examples.Tutorial004Advanced" />
 			<class name="com.univocity.examples.Tutorial005CustomEntities" />
 			<class name="com.univocity.examples.Tutorial006JdbcConfigurationOptions" />
-			<class name="com.univocity.app.BasicDataMigrationTest" />
-			<class name="com.univocity.app.DataUpdateTest" />
 		</classes>
 	</test>
 </suite>

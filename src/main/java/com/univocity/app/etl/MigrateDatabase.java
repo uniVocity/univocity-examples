@@ -26,7 +26,7 @@ public class MigrateDatabase extends EtlProcess {
 	}
 
 	@Override
-	public final String getEngineName() {
+	public String getEngineName() {
 		return "Migration";
 	}
 

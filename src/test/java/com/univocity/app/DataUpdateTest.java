@@ -48,6 +48,12 @@ public class DataUpdateTest {
 		parserSettings.getFormat().setQuoteEscape('~');
 		parserSettings.setHeaderExtractionEnabled(false);
 	}
+	
+	@AfterClass
+	public void shutdown(){
+		loadProcess.shutdown();
+		DataStores.getInstance().getSourceDatabase().shutdown();
+	}
 
 	@DataProvider(name = "entityProvider")
 	public Object[][] entityProvider() {
