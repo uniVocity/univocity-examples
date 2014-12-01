@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.univocity</groupId>
 	<artifactId>univocity-examples</artifactId>
-	<version>1.0.6</version>
+	<version>1.0.7-SNAPSHOT</version>
 	<name>univocity-examples</name>
 	<description>Project with tutorials and examples demonstrating the features of uniVocity data integration</description>
 
@@ -227,6 +227,7 @@
 		<univocity-api.version>1.0.5</univocity-api.version>
 		<univocity.version>1.0.6</univocity.version>
 		<univocity-parsers.version>1.2.1</univocity-parsers.version>
+		<univocity-output-tester.version>1.0-SNAPSHOT</univocity-output-tester.version>
 
 		<spring.version>3.2.8.RELEASE</spring.version>
 		<slf4j.version>1.7.7</slf4j.version>
@@ -246,6 +247,13 @@
 			<groupId>com.univocity</groupId>
 			<artifactId>univocity</artifactId>
 			<version>${univocity.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.univocity</groupId>
+			<artifactId>univocity-output-tester</artifactId>
+			<version>${univocity-output-tester.version}</version>
+			<!-- <scope>test</scope> Cannot use test scope. We need the library to generate a release package with correct dependencies -->
 		</dependency>
 
 		<dependency>
