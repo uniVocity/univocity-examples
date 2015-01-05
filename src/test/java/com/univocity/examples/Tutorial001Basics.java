@@ -12,15 +12,75 @@ import org.testng.annotations.*;
 import com.univocity.api.*;
 import com.univocity.api.config.builders.*;
 import com.univocity.api.engine.*;
+import com.univocity.api.entity.*;
 
 public class Tutorial001Basics extends Example {
 
 	private static final String engineName = "engine_001";
 
 	@Test
-	public void example001SimpleCopy() {
+	public void example001EntityReading() {
 		initializeEngine(engineName);
 
+		//##CODE_START
+		//Obtains the configured engine instance
+		DataIntegrationEngine engine = Univocity.getEngine(engineName);
+
+		//obtains the entity from our configured CSV data store
+		Entity entity = engine.getEntity("csvDataStore.FD_GROUP");
+		try {
+			//This starts a reading process in parallel. This keeps a limited number
+			//or rows loaded in memory at any given time.
+
+			//Let's select only one column of the entity FD_GROUP.
+			entity.beginReading("FdGrp_Desc");
+
+			//let's read rows iterator-style and print them.
+			Object[] row = null;
+			while ((row = entity.readNext()) != null) {
+				println(row[0]);
+			}
+		} finally {
+			//We need to stop the reading process manually here (unless all data available has been read) 
+			entity.stopReading();
+		}
+		//##CODE_END
+		printAndValidate();
+	}
+
+	@Test(dependsOnMethods = "example001EntityReading")
+	public void example002EntityReadingWithTypes() {
+		//Obtains the configured engine instance
+		DataIntegrationEngine engine = Univocity.getEngine(engineName);
+
+		Entity entity = engine.getEntity("csvDataStore.FD_GROUP");
+		try {
+			//##CODE_START
+
+			//Here we start a reading process as before, but now we handle data differently:
+			//Field names are case insensitive
+			entity.beginReading("FdGrp_Desc", "FDGRP_CD");
+
+			//We don't need to retain the output array, just check whether it's null.
+			while (entity.readNext() != null) {
+				//let's read a field of the current row. The expected type is String.
+				String description = entity.valueOf("FdGrp_Desc", String.class); //
+
+				//field names are case insensitive
+				String code = entity.valueOf("fdgrp_cd", String.class);
+
+				//Let's print the results again
+				println(code + " - " + description);
+			}
+			//##CODE_END
+		} finally {
+			entity.stopReading();
+		}
+		printAndValidate();
+	}
+
+	@Test(dependsOnMethods = "example002EntityReadingWithTypes")
+	public void example003SimpleCopy() {
 		//##CODE_START
 		//Obtains the configured engine instance
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
@@ -56,8 +116,8 @@ public class Tutorial001Basics extends Example {
 		printAndValidate(writtenData);
 	}
 
-	@Test(dependsOnMethods = "example001SimpleCopy")
-	public void example002RowReaders() {
+	@Test(dependsOnMethods = "example003SimpleCopy")
+	public void example004RowReaders() {
 		//##CODE_START
 		//Obtains the engine instance already configured
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
@@ -110,8 +170,8 @@ public class Tutorial001Basics extends Example {
 		printAndValidate(writtenData);
 	}
 
-	@Test(dependsOnMethods = "example002RowReaders")
-	public void example003Functions() {
+	@Test(dependsOnMethods = "example004RowReaders")
+	public void example005Functions() {
 		//Obtains the engine instance already configured
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
 
@@ -177,8 +237,8 @@ public class Tutorial001Basics extends Example {
 		printAndValidate(writtenData);
 	}
 
-	@Test(dependsOnMethods = "example003Functions")
-	public void example004ReferenceMapping() {
+	@Test(dependsOnMethods = "example005Functions")
+	public void example006ReferenceMapping() {
 		//Obtains the engine instance already configured
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
 
@@ -212,8 +272,8 @@ public class Tutorial001Basics extends Example {
 		printAndValidate(foodGroupData + "\n" + foodData);
 	}
 
-	@Test(dependsOnMethods = "example004ReferenceMapping")
-	public void example005LifecycleInterceptors() {
+	@Test(dependsOnMethods = "example006ReferenceMapping")
+	public void example007LifecycleInterceptors() {
 		//In this test we will intercept lifecycle events of the data integration engine
 		//Let's print information obtained from these events into a String.
 		final StringBuilder out = new StringBuilder();
@@ -297,8 +357,8 @@ public class Tutorial001Basics extends Example {
 		printAndValidate(out);
 	}
 
-	@Test(dependsOnMethods = "example005LifecycleInterceptors")
-	public void example006MapFunctions() {
+	@Test(dependsOnMethods = "example007LifecycleInterceptors")
+	public void example008MapFunctions() {
 		initializeEngine("hashMap");
 		DataIntegrationEngine engine = Univocity.getEngine("hashMap");
 
@@ -329,8 +389,8 @@ public class Tutorial001Basics extends Example {
 
 	}
 
-	@Test(dependsOnMethods = "example006MapFunctions")
-	public void example007ObjectsWithFunctions() {
+	@Test(dependsOnMethods = "example008MapFunctions")
+	public void example009ObjectsWithFunctions() {
 
 		initializeEngine("functions");
 		DataIntegrationEngine engine = Univocity.getEngine("functions");
@@ -362,23 +422,25 @@ public class Tutorial001Basics extends Example {
 		Tutorial001Basics tutorial = new Tutorial001Basics();
 
 		try {
-			tutorial.example001SimpleCopy();
-			tutorial.example002RowReaders();
-			tutorial.example003Functions();
-			tutorial.example004ReferenceMapping();
-			tutorial.example005LifecycleInterceptors();
+			tutorial.example001EntityReading();
+			tutorial.example002EntityReadingWithTypes();
+			tutorial.example003SimpleCopy();
+			tutorial.example004RowReaders();
+			tutorial.example005Functions();
+			tutorial.example006ReferenceMapping();
+			tutorial.example007LifecycleInterceptors();
 		} finally {
 			Univocity.shutdown(engineName);
 		}
 
 		try {
-			tutorial.example006MapFunctions();
+			tutorial.example008MapFunctions();
 		} finally {
 			Univocity.shutdown("hashMap");
 		}
 
 		try {
-			tutorial.example007ObjectsWithFunctions();
+			tutorial.example009ObjectsWithFunctions();
 		} finally {
 			Univocity.shutdown("functions");
 		}
