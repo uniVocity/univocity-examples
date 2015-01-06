@@ -13,13 +13,13 @@
 	<logger name="com.univocity.log.statement" level="warn" />
 	<logger name="com.univocity.log.metadata.statement" level="warn" />
 
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+	<!-- appender name="FILE" class="ch.qos.logback.core.FileAppender">
 		<file>examples.log</file>
 		<append>false</append>
 		<encoder>
 			<pattern>%date{HH:mm:ss.SSS} [%thread] %-5level \(%file:%line\) - %msg%n</pattern>
 		</encoder>
-	</appender>
+	</appender -->
 
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>

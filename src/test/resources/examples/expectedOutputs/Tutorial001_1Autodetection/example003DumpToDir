@@ -1,0 +1,21 @@
+==[ FD_GROUP.tsv ]==
+FDGRP_CD	FDGRP_DESC
+0100	dairy and egg products
+0300	baby foods
+1200	spices and herbs
+1400	fats and oils
+1500	poultry products
+
+==[ FOOD_DES.tsv ]==
+NDB_NO	FDGRP_CD	LONG_DESC	SHRT_DESC	COMNAME	MANUFACNAME	SURVEY	REF_DESC	REFUSE	SCINAME	N_FACTOR	PRO_FACTOR	FAT_FACTOR	CHO_FACTOR
+01001	0100	detlas ,rettub	tlas htiw,rettub			y		0		2.380	4.270	1.890	8.870
+01002	1400	tlas htiw ,deppihw ,rettub	tlas htiw,deppihw,rettub			y		0		8.380	3.270	2.790	1.870
+01004	0100	eulb ,eseehc	eulb,eseehc			y		0		4.380	9.270	4.590	3.870
+01005	0100	kcirb ,eseehc	kcirb,eseehc			y		0		4.380	5.270	6.790	8.870
+01007	0100	trebmemac ,eseehc	trebmemac,eseehc			y		0		5.380	6.270	2.790	3.870
+01008	0100	yawarac ,eseehc	yawarac,eseehc					0		6.360	6.270	8.790	3.890
+01009	0100	raddehc ,eseehc	raddehc,eseehc			y		0		6.330	4.220	8.130	3.120
+01010	0100	erihsehc ,eseehc	erihsehc,eseehc					0		4.780	4.670	0.790	3.130
+01110	0300	etalocohc kciht ,sekahs klim	cohc kciht,sekahs klim					0		8.380	0.270	3.790	1.870
+01111	0300	allinav kciht ,sekahs klim	allinav kciht,sekahs klim					0		3.980	8.970	3.690	3.870
+

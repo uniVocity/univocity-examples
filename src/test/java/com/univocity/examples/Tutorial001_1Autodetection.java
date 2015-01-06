@@ -2,6 +2,7 @@ package com.univocity.examples;
 
 import java.io.*;
 
+import org.apache.commons.lang.*;
 import org.testng.annotations.*;
 
 import com.univocity.api.*;
@@ -44,7 +45,52 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 	}
 
 	@Test(dependsOnMethods = "example001AutodetectMappings")
-	public void example002DumpToDir() {
+	public void example002ApplyReadersAndFunctionsToMultipleMappings() {
+
+		//Obtains the configured engine instance
+		DataIntegrationEngine engine = Univocity.getEngine(engineName);
+
+		//Creates a mapping between the csv and fixed-width data stores.
+		engine.removeMapping("csvDataStore", "originalSchema");
+
+		DataStoreMapping mapping = engine.map("csvDataStore", "originalSchema");
+		mapping.configurePersistenceDefaults().notUsingMetadata().deleteAll().insertNewRows();
+
+		//Names of tables and columns match exactly. We can just autodetect everything.
+		mapping.autodetectMappings();
+
+		//Lowercases all strings in all rows processed by all entity mappings:
+		mapping.addInputRowReader(new RowReader() {
+			@Override
+			public void processRow(Object[] inputRow, Object[] outputRow, RowMappingContext context) {
+				for (int i = 0; i < inputRow.length; i++) {
+					if (inputRow[i] instanceof String) {
+						inputRow[i] = inputRow[i].toString().toLowerCase();
+					}
+				}
+			}
+		});
+
+		engine.addFunction(EngineScope.STATELESS, "reverse", new FunctionCall<String, String>() {
+			@Override
+			public String execute(String input) {
+				return StringUtils.reverse(input);
+			}
+		});
+
+		mapping.getMapping("FOOD_DES", "FOOD_DES").transformFields("reverse", "long_desc", "SHRT_DESC");
+
+		engine.executeCycle();
+		//##CODE_END
+
+		print(readFoodGroupTable());
+		print(readFoodDescriptionTable());
+
+		printAndValidate();
+	}
+
+	@Test(dependsOnMethods = "example002ApplyReadersAndFunctionsToMultipleMappings")
+	public void example003DumpToDir() {
 
 		//##CODE_START
 		//Now, let's map from the database tables to TSV files that do not exist anywhere (yet).
@@ -68,13 +114,13 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 		//Now, we map from our database to the TSV data store:
 		DataStoreMapping dsMapping = engine.map("database", "tsvOutput");
 		//dsMapping.configurePersistenceDefaults().notUsingMetadata().deleteAll().insertNewRows();
-		
+
 		//Here, the boolean argument means that destination entities should be created automatically.
 		//The destination entities will be created to match the respective configurations of detected source entities.
-		//The destination data store must support dynamic creation of entities for this to work. 
+		//The destination data store must support dynamic creation of entities for this to work.
 		dsMapping.autodetectMappings(true);
 
-		//After executing a mapping cycle, we will have a TSV file for each table in the database. 
+		//After executing a mapping cycle, we will have a TSV file for each table in the database.
 		engine.executeCycle();
 		//##CODE_END
 
@@ -86,13 +132,13 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 		printAndValidate();
 	}
 
-	@Test(dependsOnMethods = "example002DumpToDir")
-	public void example003GenerateSchema() {
+	@Test(dependsOnMethods = "example003DumpToDir")
+	public void example004GenerateSchema() {
 
 		DataIntegrationEngine engine = Univocity.getEngine("TSV_DUMP");
 
 		//##CODE_START
-		//Here we export each entity from the "database" data store to a SQL "create table" script 
+		//Here we export each entity from the "database" data store to a SQL "create table" script
 		String schemaExport = engine.exportEntities("database")
 				.asCreateTableScript(DatabaseDialect.HSQLDB) //generate the script using HSQLDB's dialect
 				.toObject(); //returns the export result as a String.
@@ -103,7 +149,7 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 
 		//Again, we export the same entities, but this time we want the script generated differently:
 		schemaExport = engine.exportEntities("database")
-				.asCreateTableScript(DatabaseDialect.SQLServer_2012) //generate a script compatible with SQL Server 2012 dialect 
+				.asCreateTableScript(DatabaseDialect.SQLServer_2012) //generate a script compatible with SQL Server 2012 dialect
 				.noNotNullConstraint() //do not create NOT NULL constraints
 				.noPrimaryKeyConstraint() // do not create PRIMARY KEY constraints
 				.toObject();
@@ -112,7 +158,7 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 		println("--[ SQL Server script ]--");
 		print(schemaExport);
 		//##CODE_END
-		
+
 		Univocity.shutdown("TSV_DUMP");
 
 		printAndValidate();
