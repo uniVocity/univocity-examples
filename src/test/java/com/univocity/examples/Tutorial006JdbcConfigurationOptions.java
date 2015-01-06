@@ -15,11 +15,11 @@ import com.univocity.api.config.builders.*;
 import com.univocity.api.engine.*;
 import com.univocity.api.entity.jdbc.*;
 
-public class Tutorial006JdbcConfigurationOptions extends ExampleWithDatabase {
+public class Tutorial006JdbcConfigurationOptions extends ExampleWithNewDatabase {
 
 	@Override
-	protected JdbcDataStoreConfiguration getNewSchemaDataStore() {
-		JdbcDataStoreConfiguration database = super.getNewSchemaDataStore();
+	protected JdbcDataStoreConfiguration newDatabaseConfiguration() {
+		JdbcDataStoreConfiguration database = super.newDatabaseConfiguration();
 
 		//##CODE_START
 		//Let's add new columns to store uniVocity's data to track generated IDs

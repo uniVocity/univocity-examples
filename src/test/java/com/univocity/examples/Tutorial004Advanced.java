@@ -16,7 +16,7 @@ import com.univocity.api.config.*;
 import com.univocity.api.config.builders.*;
 import com.univocity.api.engine.*;
 
-public class Tutorial004Advanced extends ExampleWithDatabase {
+public class Tutorial004Advanced extends ExampleWithNewDatabase {
 
 	@Test
 	public void example001DataSetProducer() {

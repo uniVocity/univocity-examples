@@ -115,7 +115,7 @@ public class Tutorial001Basics extends Example {
 		String writtenData = foodGroupOutput.getString();
 		printAndValidate(writtenData);
 	}
-
+	
 	@Test(dependsOnMethods = "example003SimpleCopy")
 	public void example004RowReaders() {
 		//##CODE_START

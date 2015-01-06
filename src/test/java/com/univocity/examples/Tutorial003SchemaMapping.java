@@ -14,7 +14,7 @@ import com.univocity.api.config.builders.*;
 import com.univocity.api.data.*;
 import com.univocity.api.engine.*;
 
-public class Tutorial003SchemaMapping extends ExampleWithDatabase {
+public class Tutorial003SchemaMapping extends ExampleWithNewDatabase {
 
 	private static final String engineName = "engine_003";
 

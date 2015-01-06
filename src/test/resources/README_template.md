@@ -763,57 +763,8 @@ and the values in the map wrapped by the `generatedLocaleIds` dataset. Note no l
 
 @@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial006JdbcConfigurationOptions/example001BatchInsertAndGeneratedKeyRetrieval)
 
+### That's all for now! In case of any errors, questions and suggestions, please don't hesitate to send an e-mail to support@univocity.com.
 
-## Project Roadmap ##
+You can always count on us to assist you solving your data problems!
 
-While you can do a lot with uniVocity already, we think there is a lot of room for improvements that will make your life even easier.
-
-We are just getting our feet wet! These some of the powerful new features in the pipeline!
-
-Note: the following feature plan is not set in stone and items/dates can be moved around. Send your suggestions to `dev@univocity.com`
-
-
-Version 1.1 (December, 2014)
-
-	- more options for storing and manipulating metadata
-	
-	- introduction of variable values in metadata (no need to duplicate entity mappings with different literals)
-
-	- introduce support for a name dictionary so that mappings can remain unchanged if entity or field names are not consistent in different environments, or if the original names were modified.
-
-	- add support for qualified objects with functions. This way different instances of the same class can be used in the same engine.
-
-	- better support for in-memory database generation, based on field types (no more Varchar for everything)
-
-	- easier modification of existing mappings.
-
-	- expressions (based on queries or functions) that produce data sets should be used as input entities in mappings
-
-	- provide convenience RowReader/FunctionCall implementations by default for easier manipulation of rows and values
-	
-	- API support for additional data store types (planned: POJO and JSON)
-	
-Version 1.2 (April, 2015)
-
-	- introduce support for Java 8 and provide an exclusive API that supports its new features. 
-
-	- reverse mappings (automatically generate a mapping from destination to source, based on existing mappings and their metadata)
-
-	- introduce auto-detection features for field types, lengths, formats, etc
-	
-	- support event-driven data updates in the API
-	
-	- API support for additional data store types (planned: XML, XBRL - we may introduce this in 1.1)
-	
-Version 1.3 (August, 2015)
-	
-	- JMX monitoring support and profiling tools
-	
-	- eclipse plug-in with code generation and easier configuration features
-	
-	- introduce support for data overflow to disk during the execution of data mappings
-	
-	- support for distributed transactions (JTA)
-	 
-	- API support for additional data store types (planned: JPA entities, Annotation-driven mappings)
-	
+[The uniVocity team](http://www.univocity.com)

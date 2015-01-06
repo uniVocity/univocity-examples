@@ -1,8 +1,3 @@
-/*******************************************************************************
- * Copyright (c) 2014 uniVocity Software Pty Ltd. All rights reserved.
- * This file is subject to the terms and conditions defined in file
- * 'LICENSE.txt', which is part of this source code package.
- ******************************************************************************/
 package com.univocity.examples;
 
 import java.io.*;
@@ -19,16 +14,23 @@ import com.univocity.api.entity.text.csv.*;
 import com.univocity.app.utils.*;
 import com.univocity.parsers.fixed.*;
 
-abstract class ExampleWithDatabase extends Example {
-
+public class ExampleWithDatabase extends Example{
 	protected DataSource dataSource;
+	
+	private final String schemaDirPath;
+	private final String dataStoreName;
 
-	protected JdbcDataStoreConfiguration getNewSchemaDataStore() {
+	public ExampleWithDatabase(String schemaDirPath, String dataStoreName){
+		this.schemaDirPath = schemaDirPath;
+		this.dataStoreName = dataStoreName;
+	}
+	
+	protected JdbcDataStoreConfiguration newDatabaseConfiguration() {
 		// The next three lines of code use some utility classes we created to easily
 		// create and initialize in-memory databases for testing purposes.
 
 		//creates an in-memory database with a random name and a directory with table definition scripts.
-		DatabaseAccessor destinationConfig = new DatabaseAccessor(UUID.randomUUID().toString(), "examples/new_schema");
+		DatabaseAccessor destinationConfig = new DatabaseAccessor(UUID.randomUUID().toString(), schemaDirPath);
 
 		//initializes the database, creates all tables and returns a javax.sql.DataSource
 		dataSource = destinationConfig.getDatabase().getDataSource();
@@ -40,7 +42,7 @@ abstract class ExampleWithDatabase extends Example {
 		//Creates a new JDBC data store based on a javax.sql.DataSource, with the name "new_schema".
 		//Upon initialization, uniVocity will try to auto-detect all available tables, columns and primary keys
 		//If this doesn't work you still can configure each table manually.
-		JdbcDataStoreConfiguration newSchemaDataStore = new JdbcDataStoreConfiguration("newSchema", dataSource);
+		JdbcDataStoreConfiguration newSchemaDataStore = new JdbcDataStoreConfiguration(dataStoreName, dataSource);
 
 		//The database contains lots of internal tables in addition to the tables we are interested in
 		//By setting the schema to "public", these internal database tables won't be made available to uniVocity.
@@ -48,11 +50,10 @@ abstract class ExampleWithDatabase extends Example {
 		//##CODE_END
 		return newSchemaDataStore;
 	}
-
 	@Override
 	protected void initializeEngine(String engineName) {
 		CsvDataStoreConfiguration csvDataStore = getCsvDataStore();
-		JdbcDataStoreConfiguration newSchemaDataStore = getNewSchemaDataStore();
+		JdbcDataStoreConfiguration newSchemaDataStore = newDatabaseConfiguration();
 
 		//##CODE_START
 		//Creates a new engine configuration to map data between the entities in CSV and JDBC data stores
@@ -79,7 +80,7 @@ abstract class ExampleWithDatabase extends Example {
 		return fieldLengths;
 	}
 
-	protected String printRows(List<Map<String, Object>> results, String table, String... columns) {
+	protected final String printRows(List<Map<String, Object>> results, String table, String... columns) {
 		FixedWidthFieldLengths fieldLengths = calculateFieldLengths(results.get(0), columns);
 		FixedWidthWriterSettings writerSettings = new FixedWidthWriterSettings(fieldLengths);
 		writerSettings.setHeaders(columns);
@@ -104,7 +105,7 @@ abstract class ExampleWithDatabase extends Example {
 		return output.toString();
 	}
 
-	protected String printTable(String table, String... columns) {
+	protected final String printTable(String table, String... columns) {
 		JdbcTemplate db = new JdbcTemplate(dataSource);
 
 		StringBuilder order = new StringBuilder();
@@ -118,48 +119,5 @@ abstract class ExampleWithDatabase extends Example {
 		List<Map<String, Object>> results = db.queryForList("select " + names + " from " + table + " order by " + names);
 
 		return printRows(results, table, columns);
-	}
-
-	public String printFoodGroupDetailsTable() {
-		return printTable("food_group_details", "id", "loc", "description");
-	}
-
-	public String printFoodGroupTables() {
-		StringBuilder out = new StringBuilder();
-
-		out.append(printTable("food_group", "id"));
-		out.append(printFoodGroupDetailsTable());
-
-		return out.toString();
-	}
-
-	public String printFoodNameTables() {
-		StringBuilder out = new StringBuilder();
-		out.append(printTable("food_name", "id"));
-		out.append(printTable("food_name_details", "id", "loc", "description"));
-		return out.toString();
-	}
-
-	public String printLocaleTable() {
-		return printTable("locale", "id", "acronym", "description");
-	}
-
-	public String printFoodTable() {
-		return printTable("food", "id", "name_id", "carbohydrate_factor", "fat_factor", "protein_factor", "nitrogen_protein_factor");
-	}
-
-	public String printGroupOfFoodTable() {
-		return printTable("group_of_food", "group_id", "food_id");
-	}
-
-	public String printFoodStateTables() {
-		StringBuilder out = new StringBuilder();
-		out.append(printTable("food_state", "id"));
-		out.append(printTable("food_state_details", "id", "loc", "description"));
-		return out.toString();
-	}
-
-	public String printStateOfFoodTable() {
-		return printTable("state_of_food", "food_id", "state_id", "sequence");
 	}
 }

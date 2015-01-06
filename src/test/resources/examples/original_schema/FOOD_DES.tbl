@@ -1,0 +1,16 @@
+CREATE TABLE FOOD_DES(
+	NDB_No			char(5) primary key,
+	FdGrp_Cd 		char(4) foreign key references FD_GROUP(FdGrp_CD), 	
+	Long_Desc		varchar(256) 	not null,
+	Shrt_Desc		varchar(64),
+	ComName			varchar(128),
+	ManufacName		varchar(128),
+	Survey			char(1),
+	Ref_Desc		varchar(256),
+	Refuse			int,
+	SciName			varchar(128),
+	N_Factor		decimal(14,3),
+	Pro_Factor		decimal(14,3),
+	Fat_Factor		decimal(14,3),
+	CHO_Factor		decimal(14,3)
+)

@@ -1,0 +1,4 @@
+CREATE TABLE FD_GROUP(
+	FdGrp_CD	char(4) primary key,
+	FdGrp_Desc 	varchar(128) not null
+)
