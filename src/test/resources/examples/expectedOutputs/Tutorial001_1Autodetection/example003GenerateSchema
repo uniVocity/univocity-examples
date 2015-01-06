@@ -1,0 +1,7 @@
+--[ HSQLDB script ]--
+create table FD_GROUP (FDGRP_CD char(4), FDGRP_DESC varchar(128) not null, primary key (FDGRP_CD));
+create table FOOD_DES (NDB_NO char(5), FDGRP_CD char(4), LONG_DESC varchar(256) not null, SHRT_DESC varchar(64), COMNAME varchar(128), MANUFACNAME varchar(128), SURVEY char(1), REF_DESC varchar(256), REFUSE integer, SCINAME varchar(128), N_FACTOR decimal(14,3), PRO_FACTOR decimal(14,3), FAT_FACTOR decimal(14,3), CHO_FACTOR decimal(14,3), primary key (NDB_NO));
+
+--[ SQL Server script ]--
+create table FD_GROUP (FDGRP_CD char(4), FDGRP_DESC varchar(128)) GO 
+create table FOOD_DES (NDB_NO char(5), FDGRP_CD char(4), LONG_DESC varchar(256), SHRT_DESC varchar(64), COMNAME varchar(128), MANUFACNAME varchar(128), SURVEY char(1), REF_DESC varchar(256), REFUSE int, SCINAME varchar(128), N_FACTOR decimal(14,3), PRO_FACTOR decimal(14,3), FAT_FACTOR decimal(14,3), CHO_FACTOR decimal(14,3)) GO 
