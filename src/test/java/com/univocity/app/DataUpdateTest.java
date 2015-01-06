@@ -48,9 +48,9 @@ public class DataUpdateTest {
 		parserSettings.getFormat().setQuoteEscape('~');
 		parserSettings.setHeaderExtractionEnabled(false);
 	}
-	
+
 	@AfterClass
-	public void shutdown(){
+	public void shutdown() {
 		loadProcess.shutdown();
 		DataStores.getInstance().getSourceDatabase().shutdown();
 	}

@@ -1,8 +1,12 @@
+/*******************************************************************************
+ * Copyright (c) 2015 uniVocity Software Pty Ltd. All rights reserved.
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE.txt', which is part of this source code package.
+ ******************************************************************************/
 package com.univocity.examples;
 
 import java.io.*;
 import java.util.*;
-
 
 public class ExampleWithOriginalDatabase extends ExampleWithDatabase {
 
@@ -17,9 +21,9 @@ public class ExampleWithOriginalDatabase extends ExampleWithDatabase {
 	public String readFoodDescriptionTable() {
 		return printTable("FOOD_DES", "NDB_No", "FdGrp_Cd", "Long_Desc", "Shrt_Desc", "ComName", "ManufacName", "Survey", "Ref_Desc", "Refuse", "SciName", "N_Factor", "Pro_Factor", "Fat_Factor", "CHO_Factor");
 	}
-	
-	public String readFile(File file){
-		String result = "==[ " +file.getName() + " ]==\n";
+
+	public String readFile(File file) {
+		String result = "==[ " + file.getName() + " ]==\n";
 		Scanner scanner = null;
 		try {
 			scanner = new Scanner(file, "UTF-8");

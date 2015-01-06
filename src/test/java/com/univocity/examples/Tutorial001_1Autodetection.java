@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2015 uniVocity Software Pty Ltd. All rights reserved.
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE.txt', which is part of this source code package.
+ ******************************************************************************/
 package com.univocity.examples;
 
 import java.io.*;
@@ -50,16 +55,19 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 		//Obtains the configured engine instance
 		DataIntegrationEngine engine = Univocity.getEngine(engineName);
 
-		//Creates a mapping between the csv and fixed-width data stores.
+		//Removes the mappings between the csv and fixed-width data stores.
 		engine.removeMapping("csvDataStore", "originalSchema");
 
+		//Let's map everything again
 		DataStoreMapping mapping = engine.map("csvDataStore", "originalSchema");
 		mapping.configurePersistenceDefaults().notUsingMetadata().deleteAll().insertNewRows();
 
-		//Names of tables and columns match exactly. We can just autodetect everything.
+		//Let's autodetect again.
 		mapping.autodetectMappings();
 
-		//Lowercases all strings in all rows processed by all entity mappings:
+		//##CODE_START
+		//We can manipulate the rows of multiple mappings at once.
+		//This RowReader lowercases all strings in all rows processed by all entity mappings:
 		mapping.addInputRowReader(new RowReader() {
 			@Override
 			public void processRow(Object[] inputRow, Object[] outputRow, RowMappingContext context) {
@@ -71,6 +79,8 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 			}
 		});
 
+		//We can also associate specific functions with fields of source entities in existing mappings.
+		//This function reverses strings
 		engine.addFunction(EngineScope.STATELESS, "reverse", new FunctionCall<String, String>() {
 			@Override
 			public String execute(String input) {
@@ -78,8 +88,11 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 			}
 		});
 
+		//Here, we associate the "reverse" function with 2 fields of source entity "FOOD_DES"
 		mapping.getMapping("FOOD_DES", "FOOD_DES").transformFields("reverse", "long_desc", "SHRT_DESC");
 
+		//Let's execute a mapping cycle. We expect to have all data in lower case, in all tables.
+		//We also expect to have reversed descriptions in FOOD_DES
 		engine.executeCycle();
 		//##CODE_END
 
@@ -163,6 +176,25 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 
 		printAndValidate();
 
+	}
+
+	public static void main(String... args) {
+		Tutorial001_1Autodetection tutorial = new Tutorial001_1Autodetection();
+
+		try {
+			tutorial.example001AutodetectMappings();
+			tutorial.example002ApplyReadersAndFunctionsToMultipleMappings();
+		} finally {
+			Univocity.shutdown(engineName);
+		}
+
+		try {
+			tutorial.example003DumpToDir();
+			tutorial.example004GenerateSchema();
+		} finally {
+			Univocity.shutdown("TSV_DUMP");
+		}
+		System.exit(0);
 	}
 
 }

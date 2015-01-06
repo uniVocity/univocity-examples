@@ -41,7 +41,7 @@ public class Tutorial001Basics extends Example {
 				println(row[0]);
 			}
 		} finally {
-			//We need to stop the reading process manually here (unless all data available has been read) 
+			//We need to stop the reading process manually here (unless all data available has been read)
 			entity.stopReading();
 		}
 		//##CODE_END
@@ -115,7 +115,7 @@ public class Tutorial001Basics extends Example {
 		String writtenData = foodGroupOutput.getString();
 		printAndValidate(writtenData);
 	}
-	
+
 	@Test(dependsOnMethods = "example003SimpleCopy")
 	public void example004RowReaders() {
 		//##CODE_START

@@ -1,3 +1,8 @@
+/*******************************************************************************
+ * Copyright (c) 2015 uniVocity Software Pty Ltd. All rights reserved.
+ * This file is subject to the terms and conditions defined in file
+ * 'LICENSE.txt', which is part of this source code package.
+ ******************************************************************************/
 package com.univocity.examples;
 
 import java.io.*;
@@ -14,17 +19,17 @@ import com.univocity.api.entity.text.csv.*;
 import com.univocity.app.utils.*;
 import com.univocity.parsers.fixed.*;
 
-public class ExampleWithDatabase extends Example{
+public class ExampleWithDatabase extends Example {
 	protected DataSource dataSource;
-	
+
 	private final String schemaDirPath;
 	private final String dataStoreName;
 
-	public ExampleWithDatabase(String schemaDirPath, String dataStoreName){
+	public ExampleWithDatabase(String schemaDirPath, String dataStoreName) {
 		this.schemaDirPath = schemaDirPath;
 		this.dataStoreName = dataStoreName;
 	}
-	
+
 	protected JdbcDataStoreConfiguration newDatabaseConfiguration() {
 		// The next three lines of code use some utility classes we created to easily
 		// create and initialize in-memory databases for testing purposes.
@@ -50,6 +55,7 @@ public class ExampleWithDatabase extends Example{
 		//##CODE_END
 		return newSchemaDataStore;
 	}
+
 	@Override
 	protected void initializeEngine(String engineName) {
 		CsvDataStoreConfiguration csvDataStore = getCsvDataStore();
