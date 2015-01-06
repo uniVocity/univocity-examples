@@ -27,6 +27,8 @@ This tutorial covers the essential building blocks you can use to develop powerf
 
  * [Essential building blocks](#essential-building-blocks)
 
+  * [Reading data from an entity](#reading-data-from-an-entity)
+
   * [Copying data from CSV to Fixed-width entities](#copying-data-from-csv-to-fixed-width-entities)
 
   * [Using row readers to manage rows](#using-row-readers-to-manage-rows)
@@ -40,6 +42,16 @@ This tutorial covers the essential building blocks you can use to develop powerf
   * [Map functions](#map-functions)
 
   * [Objects with functions](#objects-with-functions)
+
+ * [Auto-detection and other useful capabilities](#auto-detection-and-other-useful-capabilities)
+
+  * [Auto-detection of mappings](#auto-detection-of-mappings)
+
+  * [Applying readers and functions to multiple mappings at once](#applying-readers-and-functions-to-multiple-mappings-at-once)
+
+  * [Dumping data](#dumping-data)
+
+  * [Generating database schemas](#generating-database-schemas)
 
  * [Queries, more functions, and variables](#queries-more-functions-and-variables)
 
@@ -65,8 +77,6 @@ This tutorial covers the essential building blocks you can use to develop powerf
 
   * [Advanced settings for JDBC entities](#advanced-settings-for-jdbc-entities)
 
- * [Project Roadmap](#project-roadmap)
-
 
 
 ## Installation ##
@@ -84,7 +94,7 @@ so you can update uniVocity transparently without worrying about compilation err
 
 ### Maven settings ###
 
-If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.6` jar.
+If you use [Maven](http://maven.apache.org), you'll need to add an entry for our repository to your `pom.xml` in order to obtain the `univocity-1.0.7` jar.
 
 ```xml
     
@@ -105,14 +115,14 @@ These are the dependencies you need to include in your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity</artifactId>
-            <version>1.0.6</version>
+            <version>1.0.7</version>
             <type>jar</type>
         </dependency>
     
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity-api</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.6</version>
             <type>jar</type>
         </dependency>
     ...
@@ -142,7 +152,7 @@ uniVocity is free for non-commercial use and can be used without a license. In t
 To unleash the true power of uniVocity, and experience maximum performance, we suggest you to obtain a license file.
 
 You can get a free 30-day trial license immediately by simply creating a license request for your computer and sending it to us. To create a license request, you can execute one of
-the following classes from the `univocity-1.0.6.jar`, as regular java applications:
+the following classes from the `univocity-1.0.7.jar`, as regular java applications:
 
  1. The graphical license request wizard: `com.univocity.LicenseRequestWizard` (if you have a graphical interface).
  2. The command-line license request script: `com.univocity.LicenseRequest` (if you want to execute from the command line)
@@ -329,6 +339,97 @@ Make sure your [EngineConfiguration](http://github.com/uniVocity/univocity-api/t
 ## Essential building blocks ##
 
 The following sections introduce the basic building blocks that allow you to use uniVocity to create powerful data mappings.
+
+### Reading data from an entity ###
+
+Any data entity accessible through a data store can be read using the exact same interface: @@Link(Entity). It doesn't matter if the entity is a file, a database table or any other [CustomDataEntity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/custom/CustomDataEntity.java) you define. Once the `beginReading` method is invoked, a concurrent process will start to read data from your entity into an in-memory buffer. All you need to do is to consume the rows, as demonstrated in the following example:
+
+
+```java
+
+	
+	//Obtains the configured engine instance
+	DataIntegrationEngine engine = Univocity.getEngine(engineName);
+	
+	//obtains the entity from our configured CSV data store
+	Entity entity = engine.getEntity("csvDataStore.FD_GROUP");
+	try {
+		//This starts a reading process in parallel. This keeps a limited number
+		//or rows loaded in memory at any given time.
+	
+		//Let's select only one column of the entity FD_GROUP.
+		entity.beginReading("FdGrp_Desc");
+	
+		//let's read rows iterator-style and print them.
+		Object[] row = null;
+		while ((row = entity.readNext()) != null) {
+			println(row[0]);
+		}
+	} finally {
+		//We need to stop the reading process manually here (unless all data available has been read)
+		entity.stopReading();
+	}
+	
+
+
+```
+
+Here only the `FdGrp_Desc` column is selected from the underlying CSV. The output is printed out as follows:
+
+
+```
+
+	Dairy and Egg Products
+	Spices and Herbs
+	Baby Foods
+	Fats and Oils
+	Poultry Products
+
+
+```
+
+Reading data from `Object` arrays can be annoying, but the @@Link(Entity) offers a few useful methods to make the reading process less cumbersome:
+
+
+```java
+
+	
+	
+		//Here we start a reading process as before, but now we handle data differently:
+		//Field names are case insensitive
+		entity.beginReading("FdGrp_Desc", "FDGRP_CD");
+	
+		//We don't need to retain the output array, just check whether it's null.
+		while (entity.readNext() != null) {
+			//let's read a field of the current row. The expected type is String.
+			String description = entity.valueOf("FdGrp_Desc", String.class); //
+	
+			//field names are case insensitive
+			String code = entity.valueOf("fdgrp_cd", String.class);
+	
+			//Let's print the results again
+			println(code + " - " + description);
+		}
+	
+
+
+```
+
+Now, we are reading the description and code of all food groups, which produces the following output:
+
+
+```
+
+	0100 - Dairy and Egg Products
+	1200 - Spices and Herbs
+	0300 - Baby Foods
+	1400 - Fats and Oils
+	1500 - Poultry Products
+
+
+```
+
+Reading from the data entities directly is simple and extremely fast. However, we are usually interested in mapping the data returned by the entities into some destination, which usually is very different from the source. Writing code to map from each row to a wildly different destination becomes increasingly error-prone and complicated. The [uniVocity data integration framework](http://www.univocity.com/pages/about-univocity) was carefully designed to mitigate this sort of issue and let you map data easily while being fast, flexible and consistent.
 
 ### Copying data from CSV to Fixed-width entities ###
 
@@ -940,6 +1041,269 @@ The output will be as follows:
 
 ```
 
+
+## Auto-detection and other useful capabilities ##
+
+uniVocity provides many useful features to make your life much easier when you need to implement common tasks. Let's see a few powerful and extremely convenient features.
+
+### Auto-detection of mappings ### 
+
+When mapping data from multiple fields on a given source to a destination, the most common operation one need to execute is to define mappings. uniVocity makes this process much more efficient with its *auto-detection* features. By default, uniVocity will map entities and their fields automatically if their names are similar.
+
+Let's have a look at the following example, where we map the contents of a set of CSV files to database tables with matching names and columns:  
+
+
+```java
+
+	
+	//Let's create a mapping between the CSV and JDBC data stores
+	DataStoreMapping dsMapping = engine.map("csvDataStore", "originalSchema");
+	
+	//Names of tables and columns match exactly. We can just autodetect everything.
+	dsMapping.autodetectMappings();
+	
+	//And map all data from CSV to our database tables.
+	engine.executeCycle();
+	
+	//Let's print the data migrated to database tables
+	print(readFoodGroupTable());
+	print(readFoodDescriptionTable());
+	
+	
+
+
+```
+
+That's *3 lines of code!* All we have to do is to create a mapping between two data stores, invoke `autodetectMappings` and execute a mapping cycle. This is the data migrated into our database:  
+
+
+```
+
+	===[ FD_GROUP ]===
+	FdGrp_CD___FdGrp_Desc___________________________________________________________
+	0100_______Dairy and Egg Products_______________________________________________
+	0300_______Baby Foods___________________________________________________________
+	1200_______Spices and Herbs_____________________________________________________
+	1400_______Fats and Oils________________________________________________________
+	1500_______Poultry Products_____________________________________________________
+	
+	===[ FOOD_DES ]===
+	NDB_No___FdGrp_Cd___Long_Desc____________________________________Shrt_Desc__________________________________________ComName___ManufacName___Survey___Ref_Desc___Refuse___SciName___N_Factor___Pro_Factor___Fat_Factor___CHO_Factor___
+	01001____0100_______Butter, salted_______________________________BUTTER,WITH SALT___________________________________________________________Y___________________0__________________2.380______4.270________1.890________8.870________
+	01002____1400_______Butter, whipped, with salt___________________BUTTER,WHIPPED,WITH SALT___________________________________________________Y___________________0__________________8.380______3.270________2.790________1.870________
+	01004____0100_______Cheese, blue_________________________________CHEESE,BLUE________________________________________________________________Y___________________0__________________4.380______9.270________4.590________3.870________
+	01005____0100_______Cheese, brick________________________________CHEESE,BRICK_______________________________________________________________Y___________________0__________________4.380______5.270________6.790________8.870________
+	01007____0100_______Cheese, camembert____________________________CHEESE,CAMEMBERT___________________________________________________________Y___________________0__________________5.380______6.270________2.790________3.870________
+	01008____0100_______Cheese, caraway______________________________CHEESE,CARAWAY_________________________________________________________________________________0__________________6.360______6.270________8.790________3.890________
+	01009____0100_______Cheese, cheddar______________________________CHEESE,CHEDDAR_____________________________________________________________Y___________________0__________________6.330______4.220________8.130________3.120________
+	01010____0100_______Cheese, cheshire_____________________________CHEESE,CHESHIRE________________________________________________________________________________0__________________4.780______4.670________0.790________3.130________
+	01110____0300_______Milk shakes, thick chocolate_________________MILK SHAKES,THICK CHOC_________________________________________________________________________0__________________8.380______0.270________3.790________1.870________
+	01111____0300_______Milk shakes, thick vanilla___________________MILK SHAKES,THICK VANILLA______________________________________________________________________0__________________3.980______8.970________3.690________3.870________
+
+
+```
+
+But if everything is auto-detected, how can you have any flexibility over how the data is processed and transferred? Read on. 
+
+### Applying readers and functions to multiple mappings at once ### 
+
+uniVocity lets you assign one or more [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java)'s to the input, output and persisted data of any [EntityMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/EntityMapping.java) in a [DataStoreMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/DataStoreMapping.java).
+You can also assign functions to any field mapping of an [EntityMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/EntityMapping.java). Let's have a look at the following example:
+
+
+```java
+
+	
+	//We can manipulate the rows of multiple mappings at once.
+	//This RowReader lowercases all strings in all rows processed by all entity mappings:
+	mapping.addInputRowReader(new RowReader() {
+		@Override
+		public void processRow(Object[] inputRow, Object[] outputRow, RowMappingContext context) {
+			for (int i = 0; i < inputRow.length; i++) {
+				if (inputRow[i] instanceof String) {
+					inputRow[i] = inputRow[i].toString().toLowerCase();
+				}
+			}
+		}
+	});
+	
+	//We can also associate specific functions with fields of source entities in existing mappings.
+	//This function reverses strings
+	engine.addFunction(EngineScope.STATELESS, "reverse", new FunctionCall<String, String>() {
+		@Override
+		public String execute(String input) {
+			return StringUtils.reverse(input);
+		}
+	});
+	
+	//Here, we associate the "reverse" function with 2 fields of source entity "FOOD_DES"
+	mapping.getMapping("FOOD_DES", "FOOD_DES").transformFields("reverse", "long_desc", "SHRT_DESC");
+	
+	//Let's execute a mapping cycle. We expect to have all data in lower case, in all tables.
+	//We also expect to have reversed descriptions in FOOD_DES
+	engine.executeCycle();
+	
+
+
+```
+
+Here an anonymous [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java) is added to the input of all [EntityMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/EntityMapping.java)s to convert any `String` value to lower case. Following that, we also create a function to reverse `Strings`. This will be applied to the description fields of the source entity, `Long_Desc` and `Shrt_Desc`. After executing this mapping cycle, the data in the database will look like this: 
+
+
+```
+
+	===[ FD_GROUP ]===
+	FdGrp_CD___FdGrp_Desc___________________________________________________________
+	0100_______dairy and egg products_______________________________________________
+	0300_______baby foods___________________________________________________________
+	1200_______spices and herbs_____________________________________________________
+	1400_______fats and oils________________________________________________________
+	1500_______poultry products_____________________________________________________
+	
+	===[ FOOD_DES ]===
+	NDB_No___FdGrp_Cd___Long_Desc____________________________________Shrt_Desc__________________________________________ComName___ManufacName___Survey___Ref_Desc___Refuse___SciName___N_Factor___Pro_Factor___Fat_Factor___CHO_Factor___
+	01001____0100_______detlas ,rettub_______________________________tlas htiw,rettub___________________________________________________________y___________________0__________________2.380______4.270________1.890________8.870________
+	01002____1400_______tlas htiw ,deppihw ,rettub___________________tlas htiw,deppihw,rettub___________________________________________________y___________________0__________________8.380______3.270________2.790________1.870________
+	01004____0100_______eulb ,eseehc_________________________________eulb,eseehc________________________________________________________________y___________________0__________________4.380______9.270________4.590________3.870________
+	01005____0100_______kcirb ,eseehc________________________________kcirb,eseehc_______________________________________________________________y___________________0__________________4.380______5.270________6.790________8.870________
+	01007____0100_______trebmemac ,eseehc____________________________trebmemac,eseehc___________________________________________________________y___________________0__________________5.380______6.270________2.790________3.870________
+	01008____0100_______yawarac ,eseehc______________________________yawarac,eseehc_________________________________________________________________________________0__________________6.360______6.270________8.790________3.890________
+	01009____0100_______raddehc ,eseehc______________________________raddehc,eseehc_____________________________________________________________y___________________0__________________6.330______4.220________8.130________3.120________
+	01010____0100_______erihsehc ,eseehc_____________________________erihsehc,eseehc________________________________________________________________________________0__________________4.780______4.670________0.790________3.130________
+	01110____0300_______etalocohc kciht ,sekahs klim_________________cohc kciht,sekahs klim_________________________________________________________________________0__________________8.380______0.270________3.790________1.870________
+	01111____0300_______allinav kciht ,sekahs klim___________________allinav kciht,sekahs klim______________________________________________________________________0__________________3.980______8.970________3.690________3.870________
+
+
+```
+
+### Dumping data ### 
+
+Dumping data from a database can become a cumbersome task, especially if you want to have some control over what information should be extracted. uniVocity allows you to auto-generate mappings from any source of data to a resource that does not exist. What happens is that uniVocity will attempt to create destination entities to accomodate the data of each source entity. For example: if you auto-detect mappings from a JDBC data store to a CSV data store with an output directory, a new CSV file will be created in the output directory. This file will contain all columns of the source table, and the proper mappings will be created automatically to transfer data into the file.
+
+The following example demonstrates how you can dump your entire database to TSV files.:
+
+
+```java
+
+	
+	//Now, let's map from the database tables to TSV files that do not exist anywhere (yet).
+	//All we need to do is to provide an output directory where the files should be created:
+	File tsvOutputDir = new File(System.getProperty("user.home") + File.separator + "TSV");
+	
+	//Let's create a TSV data store configuration with this output directory:
+	TsvDataStoreConfiguration tsvConfig = new TsvDataStoreConfiguration("tsvOutput");
+	tsvConfig.setOutputDirectory(tsvOutputDir, "UTF-8");
+	//We want to print out headers on the TSV files to identify the column names
+	tsvConfig.getDefaultEntityConfiguration().setHeaderWritingEnabled(true);
+	
+	//Let's just reuse the dataSource we already have to connect to the database loaded in the previous example
+	JdbcDataStoreConfiguration jdbcConfig = new JdbcDataStoreConfiguration("database", this.dataSource);
+	jdbcConfig.setSchema("public");
+	
+	//And let's configure a new data integration engine for our purposes.
+	Univocity.registerEngine(new EngineConfiguration("TSV_DUMP", tsvConfig, jdbcConfig));
+	DataIntegrationEngine engine = Univocity.getEngine("TSV_DUMP");
+	
+	//Now, we map from our database to the TSV data store:
+	DataStoreMapping dsMapping = engine.map("database", "tsvOutput");
+	//dsMapping.configurePersistenceDefaults().notUsingMetadata().deleteAll().insertNewRows();
+	
+	//Here, the boolean argument means that destination entities should be created automatically.
+	//The destination entities will be created to match the respective configurations of detected source entities.
+	//The destination data store must support dynamic creation of entities for this to work.
+	dsMapping.autodetectMappings(true);
+	
+	//After executing a mapping cycle, we will have a TSV file for each table in the database.
+	engine.executeCycle();
+	
+
+
+```
+
+Once you execute this example, expect to find a folder `TSV` on your home directory, with the following files:
+
+
+```
+
+	==[ FD_GROUP.tsv ]==
+	FDGRP_CD	FDGRP_DESC
+	0100	dairy and egg products
+	0300	baby foods
+	1200	spices and herbs
+	1400	fats and oils
+	1500	poultry products
+	
+	==[ FOOD_DES.tsv ]==
+	NDB_NO	FDGRP_CD	LONG_DESC	SHRT_DESC	COMNAME	MANUFACNAME	SURVEY	REF_DESC	REFUSE	SCINAME	N_FACTOR	PRO_FACTOR	FAT_FACTOR	CHO_FACTOR
+	01001	0100	detlas ,rettub	tlas htiw,rettub			y		0		2.380	4.270	1.890	8.870
+	01002	1400	tlas htiw ,deppihw ,rettub	tlas htiw,deppihw,rettub			y		0		8.380	3.270	2.790	1.870
+	01004	0100	eulb ,eseehc	eulb,eseehc			y		0		4.380	9.270	4.590	3.870
+	01005	0100	kcirb ,eseehc	kcirb,eseehc			y		0		4.380	5.270	6.790	8.870
+	01007	0100	trebmemac ,eseehc	trebmemac,eseehc			y		0		5.380	6.270	2.790	3.870
+	01008	0100	yawarac ,eseehc	yawarac,eseehc					0		6.360	6.270	8.790	3.890
+	01009	0100	raddehc ,eseehc	raddehc,eseehc			y		0		6.330	4.220	8.130	3.120
+	01010	0100	erihsehc ,eseehc	erihsehc,eseehc					0		4.780	4.670	0.790	3.130
+	01110	0300	etalocohc kciht ,sekahs klim	cohc kciht,sekahs klim					0		8.380	0.270	3.790	1.870
+	01111	0300	allinav kciht ,sekahs klim	allinav kciht,sekahs klim					0		3.980	8.970	3.690	3.870
+
+
+```
+
+You can easily determine what data should be dumped into the generated files using a [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java). Simply discard the rows with values you don't want. This is very convenient to produce test datasets to reproduce isolated scenarios. But wait, there's more...
+
+### Generating database schemas ### 
+
+Based on the configurations of your input data stores, you can easily generate a database schema for your favorite database and store data coming from your input entities.
+The following example demonstrates how to generate an equivalent database schema based on the entities and configurations of your data store:
+
+
+```java
+
+	
+	//Here we export each entity from the "database" data store to a SQL "create table" script
+	String schemaExport = engine.exportEntities("database")
+			.asCreateTableScript(DatabaseDialect.HSQLDB) //generate the script using HSQLDB's dialect
+			.toObject(); //returns the export result as a String.
+	
+	//Let's print the script:
+	println("--[ HSQLDB script ]--");
+	println(schemaExport);
+	
+	//Again, we export the same entities, but this time we want the script generated differently:
+	schemaExport = engine.exportEntities("database")
+			.asCreateTableScript(DatabaseDialect.SQLServer_2012) //generate a script compatible with SQL Server 2012 dialect
+			.noNotNullConstraint() //do not create NOT NULL constraints
+			.noPrimaryKeyConstraint() // do not create PRIMARY KEY constraints
+			.toObject();
+	
+	//Let's see how this one shows up:
+	println("--[ SQL Server script ]--");
+	print(schemaExport);
+	
+
+
+```
+
+You have some degree of control over the ouput result and it's easy to omit some constraints such as NOT NULL or even PRIMARY KEY. This may be desirable especially if you are generating a test database to be loaded with files containing data samples.
+
+
+```
+
+	--[ HSQLDB script ]--
+	create table FD_GROUP (FDGRP_CD char(4), FDGRP_DESC varchar(128) not null, primary key (FDGRP_CD));
+	create table FOOD_DES (NDB_NO char(5), FDGRP_CD char(4), LONG_DESC varchar(256) not null, SHRT_DESC varchar(64), COMNAME varchar(128), MANUFACNAME varchar(128), SURVEY char(1), REF_DESC varchar(256), REFUSE integer, SCINAME varchar(128), N_FACTOR decimal(14,3), PRO_FACTOR decimal(14,3), FAT_FACTOR decimal(14,3), CHO_FACTOR decimal(14,3), primary key (NDB_NO));
+	
+	--[ SQL Server script ]--
+	create table FD_GROUP (FDGRP_CD char(4), FDGRP_DESC varchar(128)) GO
+	create table FOOD_DES (NDB_NO char(5), FDGRP_CD char(4), LONG_DESC varchar(256), SHRT_DESC varchar(64), COMNAME varchar(128), MANUFACNAME varchar(128), SURVEY char(1), REF_DESC varchar(256), REFUSE int, SCINAME varchar(128), N_FACTOR decimal(14,3), PRO_FACTOR decimal(14,3), FAT_FACTOR decimal(14,3), CHO_FACTOR decimal(14,3)) GO
+
+
+```
+
+You can quickly create test scenarios for systems that depend of complicated databases: use uniVocity to export the schema to an in-memory database such as HSQLDB, and dump the contents you need to work with into CSV files. Then, simply use the autodection feature to generate mappings from these files to your in-memory database tables and you are ready to test your application.
+
+There are many more features options in the API that you can explore. For example, the auto-detection mechanism allows you to specific a [NameMatcher](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/NameMatcher.java) for example, to control what field names and entity names to match, and how. Check the [uniVocity-API](http://docs.univocity.com/api/1.0.3/index.html) and the [javadocs](http://docs.univocity.com/api/1.0.6/index.html) for more information.
+
 ## Queries, more functions, and variables ##
 
 uniVocity strives for convenience. We thought it would be convenient to use SQL to produce data from your entities. Your data store doesn't even need to be a database!
@@ -1183,7 +1547,7 @@ the configuration effort is fairly minimal:
 	//Creates a new JDBC data store based on a javax.sql.DataSource, with the name "new_schema".
 	//Upon initialization, uniVocity will try to auto-detect all available tables, columns and primary keys
 	//If this doesn't work you still can configure each table manually.
-	JdbcDataStoreConfiguration newSchemaDataStore = new JdbcDataStoreConfiguration("newSchema", dataSource);
+	JdbcDataStoreConfiguration newSchemaDataStore = new JdbcDataStoreConfiguration(dataStoreName, dataSource);
 	
 	//The database contains lots of internal tables in addition to the tables we are interested in
 	//By setting the schema to "public", these internal database tables won't be made available to uniVocity.
@@ -2207,57 +2571,8 @@ and the values in the map wrapped by the `generatedLocaleIds` dataset. Note no l
 
 ```
 
+### That's all for now! In case of any errors, questions and suggestions, please don't hesitate to send an e-mail to support@univocity.com.
 
-## Project Roadmap ##
+You can always count on us to assist you solving your data problems!
 
-While you can do a lot with uniVocity already, we think there is a lot of room for improvements that will make your life even easier.
-
-We are just getting our feet wet! These some of the powerful new features in the pipeline!
-
-Note: the following feature plan is not set in stone and items/dates can be moved around. Send your suggestions to `dev@univocity.com`
-
-
-Version 1.1 (December, 2014)
-
-	- more options for storing and manipulating metadata
-	
-	- introduction of variable values in metadata (no need to duplicate entity mappings with different literals)
-
-	- introduce support for a name dictionary so that mappings can remain unchanged if entity or field names are not consistent in different environments, or if the original names were modified.
-
-	- add support for qualified objects with functions. This way different instances of the same class can be used in the same engine.
-
-	- better support for in-memory database generation, based on field types (no more Varchar for everything)
-
-	- easier modification of existing mappings.
-
-	- expressions (based on queries or functions) that produce data sets should be used as input entities in mappings
-
-	- provide convenience RowReader/FunctionCall implementations by default for easier manipulation of rows and values
-	
-	- API support for additional data store types (planned: POJO and JSON)
-	
-Version 1.2 (April, 2015)
-
-	- introduce support for Java 8 and provide an exclusive API that supports its new features. 
-
-	- reverse mappings (automatically generate a mapping from destination to source, based on existing mappings and their metadata)
-
-	- introduce auto-detection features for field types, lengths, formats, etc
-	
-	- support event-driven data updates in the API
-	
-	- API support for additional data store types (planned: XML, XBRL - we may introduce this in 1.1)
-	
-Version 1.3 (August, 2015)
-	
-	- JMX monitoring support and profiling tools
-	
-	- eclipse plug-in with code generation and easier configuration features
-	
-	- introduce support for data overflow to disk during the execution of data mappings
-	
-	- support for distributed transactions (JTA)
-	 
-	- API support for additional data store types (planned: JPA entities, Annotation-driven mappings)
-	
+[The uniVocity team](http://www.univocity.com)
