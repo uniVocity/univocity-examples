@@ -39,7 +39,7 @@ public class Tutorial001_1Autodetection extends ExampleWithOriginalDatabase {
 		//And map all data from CSV to our database tables.
 		engine.executeCycle();
 
-		//Let's print the data in our database tables
+		//Let's print the data migrated to database tables
 		print(readFoodGroupTable());
 		print(readFoodDescriptionTable());
 

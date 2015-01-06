@@ -52,7 +52,7 @@ These are the dependencies you need to include in your `pom.xml`:
         <dependency>
             <groupId>com.univocity</groupId>
             <artifactId>univocity-api</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.6</version>
             <type>jar</type>
         </dependency>
     ...
@@ -165,6 +165,26 @@ Make sure your @@LINK(EngineConfiguration) provides access to these tables in a 
 ## Essential building blocks ##
 
 The following sections introduce the basic building blocks that allow you to use uniVocity to create powerful data mappings.
+
+### Reading data from an entity ###
+
+Any data entity accessible through a data store can be read using the exact same interface: @@Link(Entity). It doesn't matter if the entity is a file, a database table or any other @@LINK(CustomDataEntity) you define. Once the `beginReading` method is invoked, a concurrent process will start to read data from your entity into an in-memory buffer. All you need to do is to consume the rows, as demonstrated in the following example:
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example001EntityReading)
+
+Here only the `FdGrp_Desc` column is selected from the underlying CSV. The output is printed out as follows:
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001Basics/example001EntityReading).
+
+Reading data from `Object` arrays can be annoying, but the @@Link(Entity) offers a few useful methods to make the reading process less cumbersome:
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001Basics.example002EntityReadingWithTypes)
+
+Now, we are reading the description and code of all food groups, which produces the following output:
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001Basics/example002EntityReadingWithTypes).
+
+Reading from the data entities directly is simple and extremely fast. However, we are usually interested in mapping the data returned by the entities into some destination, which usually is very different from the source. Writing code to map from each row to a wildly different destination becomes increasingly error-prone and complicated. The [uniVocity data integration framework](http://www.univocity.com/pages/about-univocity) was carefully designed to mitigate this sort of issue and let you map data easily while being fast, flexible and consistent.
 
 ### Copying data from CSV to Fixed-width entities ###
 
@@ -434,6 +454,64 @@ Finally, we set the variables *groupName* to "Dairy%" and *foodName* to "CHEESE%
 Next, we set them again to "Baby Foods" and "%" respectively. The result of both mapping cycles is as follows:  
 
 @@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial002QueriesFunctionsAndVariables/example002QueryWithParameters)
+
+## Auto-detection and other useful capabilities ##
+
+uniVocity provides many useful features to make your life much easier when you need to implement common tasks. Let's see a few powerful and extremely convenient features.
+
+### Auto-detection of mappings
+
+When mapping data from multiple fields on a given source to a destination, the most common operation one need to execute is to define mappings. uniVocity makes this process much more efficient with its *auto-detection* features. By default, uniVocity will map entities and their fields automatically if their names are similar.
+
+Let's have a look at the following example, where we map the contents of a set of CSV files to database tables with matching names and columns:  
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001_1Autodetection.example001AutodetectMappings)
+
+That's *3 lines of code!* All we have to do is to create a mapping between two data stores, invoke `autodetectMappings` and execute a mapping cycle. This is the data migrated into our database:  
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001_1Autodetection/example001AutodetectMappings)
+
+But if everything is auto-detected, how can you have any flexibility over how the data is processed and transferred? Read on. 
+
+### Applying readers and functions to multiple mappings at once
+
+uniVocity lets you assign one or more @@LINK(RowReader)'s to the input, output and persisted data of any @@LINK(EntityMapping) in a @@LINK(DataStoreMapping).
+You can also assign functions to any field mapping of an @@LINK(EntityMapping). Let's have a look at the following example:
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001_1Autodetection.example002ApplyReadersAndFunctionsToMultipleMappings)
+
+Here an anonymous @@LINK(RowReader) is added to the input of all @@LINK(EntityMapping)s to convert any `String` value to lower case. Following that, we also create a function to reverse `Strings`. This will be applied to the description fields of the source entity, `Long_Desc` and `Shrt_Desc`. After executing this mapping cycle, the data in the database will look like this: 
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001_1Autodetection/example002ApplyReadersAndFunctionsToMultipleMappings)
+
+### Dumping data
+
+Dumping data from a database can become a cumbersome task, especially if you want to have some control over what information should be extracted. uniVocity allows you to auto-generate mappings from any source of data to a resource that does not exist. What happens is that uniVocity will attempt to create destination entities to accomodate the data of each source entity. For example: if you auto-detect mappings from a JDBC data store to a CSV data store with an output directory, a new CSV file will be created in the output directory. This file will contain all columns of the source table, and the proper mappings will be created automatically to transfer data into the file.
+
+The following example demonstrates how you can dump your entire database to TSV files.:
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001_1Autodetection.example003DumpToDir)
+
+Once you execute this example, expect to find a folder `TSV` on your home directory, with the following files:
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001_1Autodetection/example003DumpToDir)
+
+You can easily determine what data should be dumped into the generated files using a @@LINK(RowReader). Simply discard the rows with values you don't want. This is very convenient to produce test datasets to reproduce isolated scenarios. But wait, there's more...
+
+### Generating database schemas
+
+Based on the configurations of your input data stores, you can easily generate a database schema for your favorite database and store data coming from your input entities.
+The following example demonstrates how to generate an equivalent database schema based on the entities and configurations of your data store:
+
+@@INCLUDE_METHOD(/src/test/java/com/univocity/examples/Tutorial001_1Autodetection.example004GenerateSchema)
+
+You have some degree of control over the ouput result and it's easy to omit some constraints such as NOT NULL or even PRIMARY KEY. This may be desirable especially if you are generating a test database to be loaded with files containing data samples.
+
+@@INCLUDE_CONTENT(0, /src/test/resources/examples/expectedOutputs/Tutorial001_1Autodetection/example004GenerateSchema)
+
+You can quickly create test scenarios for systems that depend of complicated databases: use uniVocity to export the schema to an in-memory database such as HSQLDB, and dump the contents you need to work with into CSV files. Then, simply use the autodection feature to generate mappings from these files to your in-memory database tables and you are ready to test your application.
+
+There are many more features options in the API that you can explore. For example, the auto-detection mechanism allows you to specific a @@LINK(NameMatcher) for example, to control what field names and entity names to match, and how. Check the [uniVocity-API](http://docs.univocity.com/api/1.0.3/index.html) and the [javadocs](http://docs.univocity.com/api/1.0.6/index.html) for more information.
 
 ## Mapping between incompatible schemas ##
 
