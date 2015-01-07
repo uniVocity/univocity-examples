@@ -342,7 +342,7 @@ The following sections introduce the basic building blocks that allow you to use
 
 ### Reading data from an entity ###
 
-Any data entity accessible through a data store can be read using the exact same interface: @@Link(Entity). It doesn't matter if the entity is a file, a database table or any other [CustomDataEntity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/custom/CustomDataEntity.java) you define. Once the `beginReading` method is invoked, a concurrent process will start to read data from your entity into an in-memory buffer. All you need to do is to consume the rows, as demonstrated in the following example:
+Any data entity accessible through a data store can be read using the exact same interface: [Entity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/Entity.java). It doesn't matter if the entity is a file, a database table or any other [CustomDataEntity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/custom/CustomDataEntity.java) you define. Once the `beginReading` method is invoked, a concurrent process will start to read data from your entity into an in-memory buffer. All you need to do is to consume the rows, as demonstrated in the following example:
 
 
 ```java
@@ -388,7 +388,7 @@ Here only the `FdGrp_Desc` column is selected from the underlying CSV. The outpu
 
 ```
 
-Reading data from `Object` arrays can be annoying, but the @@Link(Entity) offers a few useful methods to make the reading process less cumbersome:
+Reading data from `Object` arrays can be annoying, but the [Entity](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/entity/Entity.java) offers a few useful methods to make the reading process less cumbersome:
 
 
 ```java
@@ -1046,7 +1046,7 @@ The output will be as follows:
 
 uniVocity provides many useful features to make your life much easier when you need to implement common tasks. Let's see a few powerful and extremely convenient features.
 
-### Auto-detection of mappings ### 
+### Auto-detection of mappings ###
 
 When mapping data from multiple fields on a given source to a destination, the most common operation one need to execute is to define mappings. uniVocity makes this process much more efficient with its *auto-detection* features. By default, uniVocity will map entities and their fields automatically if their names are similar.
 
@@ -1105,7 +1105,7 @@ That's *3 lines of code!* All we have to do is to create a mapping between two d
 
 But if everything is auto-detected, how can you have any flexibility over how the data is processed and transferred? Read on. 
 
-### Applying readers and functions to multiple mappings at once ### 
+### Applying readers and functions to multiple mappings at once ###
 
 uniVocity lets you assign one or more [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java)'s to the input, output and persisted data of any [EntityMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/EntityMapping.java) in a [DataStoreMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/DataStoreMapping.java).
 You can also assign functions to any field mapping of an [EntityMapping](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/config/builders/EntityMapping.java). Let's have a look at the following example:
@@ -1176,7 +1176,7 @@ Here an anonymous [RowReader](http://github.com/uniVocity/univocity-api/tree/mas
 
 ```
 
-### Dumping data ### 
+### Dumping data ###
 
 Dumping data from a database can become a cumbersome task, especially if you want to have some control over what information should be extracted. uniVocity allows you to auto-generate mappings from any source of data to a resource that does not exist. What happens is that uniVocity will attempt to create destination entities to accomodate the data of each source entity. For example: if you auto-detect mappings from a JDBC data store to a CSV data store with an output directory, a new CSV file will be created in the output directory. This file will contain all columns of the source table, and the proper mappings will be created automatically to transfer data into the file.
 
@@ -1251,7 +1251,7 @@ Once you execute this example, expect to find a folder `TSV` on your home direct
 
 You can easily determine what data should be dumped into the generated files using a [RowReader](http://github.com/uniVocity/univocity-api/tree/master/src/main/java/com/univocity/api/engine/RowReader.java). Simply discard the rows with values you don't want. This is very convenient to produce test datasets to reproduce isolated scenarios. But wait, there's more...
 
-### Generating database schemas ### 
+### Generating database schemas ###
 
 Based on the configurations of your input data stores, you can easily generate a database schema for your favorite database and store data coming from your input entities.
 The following example demonstrates how to generate an equivalent database schema based on the entities and configurations of your data store:
