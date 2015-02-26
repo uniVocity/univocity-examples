@@ -4,6 +4,7 @@
 	<test name="Examples" preserve-order="true" parallel="false">
 		<classes>
 			<class name="com.univocity.examples.Tutorial001Basics" />
+			<class name="com.univocity.examples.Tutorial001_1Autodetection" />
 			<class name="com.univocity.examples.Tutorial002QueriesFunctionsAndVariables" />
 			<class name="com.univocity.examples.Tutorial003SchemaMapping" />
 			<class name="com.univocity.examples.Tutorial004Advanced" />
